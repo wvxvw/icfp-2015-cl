@@ -1,0 +1,75 @@
+* About
+  This file will contain all info related to the project we will
+  work on for ICFP 2015.
+
+* Announcements
+  This section will contain important updates, which need to be
+  communicated to all members of the team.
+
+** Fill in contact details
+   Please go through the setup process and confirm success by updating
+   this document with your contact information.
+
+** Meeting next Sunday
+   <2015-06-28 Sun 20:00 GMT+0>
+
+   Please be awailable for a short meeting.  The purpose of this
+   meeting is to make sure we use same or compatible setup.  We will
+   use IRC for communication, so please also set up your account on
+   Freenode.  If you've never done this before, read this:
+   https://freenode.net/faq.shtml#contents-userregistration. Contact
+   me if you have problems registering, or if you will not be able to
+   attend.
+
+* Installation
+  This section has instructions for setting up the project.
+
+** Clone the project
+   #+begin_src sh
+     cd ~/quicklisp/local-projects/
+     git clone https://github.com/wvxvw/icfp-2015-cl.git
+     # Or replace `$USER' with whatever name you prefer
+     # to be identified with
+     git checkout -b $USER
+     # Edit the README file and push your changes while setting
+     # the upstream branch
+     git push -u $USER
+   #+end_src
+
+   Alternatively, using Magit:
+   #+begin_src emacs-lisp
+     (let ((icfp-dir "~/quicklisp/local-projects/icfp-2015-cl/"))
+       (unless (file-exists-p icfp-dir)
+         (make-directory icfp-dir))
+       (cd icfp-dir)
+       (magit-init icfp-dir)
+       (unless (file-exists-p (format "%s/.git/" icfp-dir))
+         (magit-add-remote "github" "https://github.com/wvxvw/icfp-2015-cl.git"))
+       (magit-pull)
+       (magit-git-command (format "checkout -b %s" (getenv "USER")) icfp-dir)
+       ;; Edit the README file and then run
+       ;; M-x magit-status
+       ;; P C-u P
+       ;; The last command should instruct git to set your branch upstream
+       )
+   #+end_src
+
+** Make sure the project is operational
+   #+begin_src lisp
+     (ql:quickload :icfp-2015-cl)
+   #+end_src
+
+   #+RESULTS:
+   | :ICFP-2015-CL |
+
+   If you can run this code without errors, you've set up the project
+   successfully.
+
+* Contacts
+  Please add yourself to the table below:
+  
+  /Note the repository is public!/
+  /Don't put here anything you don't want to be known to the world!/
+
+  | Oleg | olegsivokon@gmail.com | GMT+2 |
+  |      |                       |       |
