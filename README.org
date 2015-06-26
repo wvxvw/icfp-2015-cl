@@ -11,7 +11,7 @@
    this document with your contact information.
 
 ** Meeting next Sunday
-   <2015-06-28 Sun 20:00 GMT+0>
+   <2015-07-05 Sun 20:00 GMT+0>
 
    Please be awailable for a short meeting.  The purpose of this
    meeting is to make sure we use same or compatible setup.  We will
@@ -53,6 +53,8 @@
        ;; The last command should instruct git to set your branch upstream
        )
    #+end_src
+
+   /You will need to tell me your GitHub user name to become a committer!/
 
 ** Make sure the project is operational
    #+begin_src lisp
