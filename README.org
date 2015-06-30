@@ -73,5 +73,6 @@
   /Note the repository is public!/
   /Don't put here anything you don't want to be known to the world!/
 
-  | Oleg | olegsivokon@gmail.com   | GMT+2 |
-  | Zach | zachkostsmith@gmail.com | GMT-5 |
+  | Oleg  | olegsivokon@gmail.com   | GMT+2 |
+  | Zach  | zachkostsmith@gmail.com | GMT-5 |
+  | Jacob | jaccarmac@gmail.com     | GMT-7 |
