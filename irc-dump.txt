@@ -1,0 +1,190 @@
+<smithzv> I just upgraded to 24.4 so I could use the new Magit.  It is very different.  I hope I can figure it out as I go
+<wvxvw> oh, I didn't upgrade magit yet
+<smithzv> Magit that is, 24.4 seems identical to 24.3 AFAICT
+<wvxvw> My version is 20140623.1208
+<wvxvw> bah... I'm very far behind
+<wvxvw> But my Emacs is probably newer
+<wvxvw> 25.0.50.1
+<smithzv> There have been these bugs in Magit that bother me pretty consistently.  Now I hope they are fixed.  Right, 25 is prerelease, right?
+<wvxvw> I just building from the stable branch, once every month or so.
+<wvxvw> Actually, I don't have a reason to do it, not now at least. I tried once the Guilemacs, but not doing it anymore.
+<smithzv> Magit's development method is pretty annoying, they have this "next" branch that is _wayyy_ ahead of master.  So, if you fix a bug on master you can be pretty sure that it was already fixed years ago but hasn't made it to a release yet.
+<smithzv> No Josh huh... he was going to make it, right?
+<jaccarmac> quelpa boys.
+<jaccarmac> If you wanna automatically build from next you can easy peasy.
+<wvxvw> yeah, but he didn't reply to the reminder, so, I'm gussing the chance is low.
+<smithzv> I try to stay as vanilla as I can on stuff unless I really care about it (or need a new feature).  There is a reason I was using 24.3 until about half an hour ago.
+<wvxvw> ahhh... there is no way to update just the magit package from melpa, is it?
+<jaccarmac> No.
+<wvxvw> It wants me to update 60 of them otherwise
+<jaccarmac> Wait.
+<jaccarmac> Are you using the package manager?
+<wvxvw> yup
+<smithzv> Pretty sure you can, you have to delete magit, restart emacs and install
+<jaccarmac> Can you just mark it to install?
+<smithzv> An existing magit will foul the compile
+<jaccarmac> The delete method is the one, then.
+<wvxvw> it's already installed, so no. well, yes, I can install/unistall it, but I'll probably do the full upgrade anyway. Haven't done it in a long time + I still have time to deal with the consequences.
+<wvxvw> there's so much stuff in there I didn't know I have...
+<smithzv> should we get started?
+<wvxvw> oh, yes, sure.
+<wvxvw> well, so, basically, the idea was to get synced wrt versions and the way to work with the repository.
+<wvxvw> So, what are your SLIME, SBCL and Emacs versions?
+<jaccarmac> First off, I'm working off Windows now. Hasn't caused problems so far, but I'll need to be careful with pathnames.
+<wvxvw> and that's what you are going to use at the contest too?
+<jaccarmac> Emacs 24.5.1, SLIME 2015-06-27, SBCL 1.2.12
+<jaccarmac> Latest Quicklisp.
+<smithzv> sbcl: 1.2.12; Emacs 24.4; slime: 2015-02-19
+<jaccarmac> I have no physical *nix machine right no. I can spin up a VM if I really need to.
+<smithzv> emacs 24.4.1
+<wvxvw> SLIME 2015-02-19, SBCL 1.2.4-1.fc21, GNU Emacs 25.0.50.1
+<wvxvw> No, I don't think VM is a good idea / not that we'll need something Linux-specific.
+<wvxvw> Though I know that SBCL typically doesn't have threads on Windows (or is this a dated info?)
+<jaccarmac> No idea.
+<jaccarmac> We'll have to find out I guess.
+<wvxvw> did you build it yourself or did you use someone else's binaries?
+<jaccarmac> I'm using the binaries from the site.
+<jaccarmac> The make-thread example from http://www.sbcl.org/1.0/manual/Threading-basics.html fails.
+<wvxvw> that's not good... will you be able to build it yourself?
+<wvxvw> I think you'd need MingW for it
+<jaccarmac> Probably. I'll look into it.
+<smithzv> Well, we will most likely be writing single threaded code.  Worst case we may write code that will utilize a thread pool which will still work on a single threaded implementation.  That is, unless we need a server of some type.  Those are annoying to hack on if there isn't a thread running the server in the background.
+<jaccarmac> NVM.
+<jaccarmac> make-thread is in a package
+<jaccarmac> Works perfectly if I use the FQN.
+<wvxvw> still, while we have time, it'd be better to have this working. I'm not entirely sure why SBCL comes without thread support on Windows, but I know that people who use it there typically build it with thread support.
+<wvxvw> well, then worst case it doesn't actually fork, just runs in the same thread/process. OK, then.
+<jaccarmac> Is there any way to check for sure?
+<jaccarmac> StackOverflow seems to indicate it does thread on Windows.
+<jaccarmac> Windows threads are in the changelog.
+<jaccarmac> The win32-threads fork last commit is from two years ago.
+<smithzv> there has definitely been work on it, I wonder if it made in into the main line branch
+<wvxvw> (member :sb-thread *features*)
+<jaccarmac> (:SB-THREAD :SB-THRUPTION :SB-UNICODE :SB-WTIMER :SBCL
+<jaccarmac>  :STACK-ALLOCATABLE-CLOSURES :STACK-ALLOCATABLE-FIXED-OBJECTS
+<jaccarmac>  :STACK-ALLOCATABLE-LISTS :STACK-ALLOCATABLE-VECTORS
+<jaccarmac>  :STACK-GROWS-DOWNWARD-NOT-UPWARD :SYMBOL-INFO-VOPS
+<jaccarmac>  :UNWIND-TO-FRAME-AND-CALL-VOP :WIN32 :X86-64)
+<wvxvw> yeah, you have it.
+<smithzv> great
+<wvxvw> Alright, otherwise I'm the one who needs to update stuff. Both SBCL and Slime.
+<smithzv> Well, I'm on your slime as well
+<smithzv> I think this is from quicklisp, no?
+<wvxvw> maybe, but I didn't update it in few months for sure.
+<jaccarmac> Because of the way I install and update SLIME, I'm on the git version.
+<smithzv> It looks like wvxvw and I have the newest version of slime from quicklisp.
+<smithzv> I usually stick with that as Xach works hard to ensure that it works with recent SBCL
+<smithzv> but, we can upgrade, I'm fine with it
+<jaccarmac> I can probably still connect to a server running an older version, right?
+<smithzv> yes, almost always, but there are sometimes breaks in compatibility
+<jaccarmac> We can cross that bridge when we come to it.
+<jaccarmac> I can easily install an older version on the fly.
+<smithzv> well, wvxvw, do we need to have a fixed set of versions for everything?
+<wvxvw> Oh, it appears I have SBCL 1.2.11.20-532afc8 version built here, but for some reason am using the one from Fedora's repo :S
+<smithzv> So, we have Ubuntu, Fedora, and Windows so far...
+<wvxvw> I'm not really sure it's needed, especially SLIME, since we probably won't be sharing REPL anyway, so that's not important. SBCL version is important however
+<wvxvw> So, I'll need to remember to update SBCL to 1.2.12
+<smithzv> well, 1.2.13 is the "newest"
+<wvxvw> do you want to update too? To be honest, I didn't write almost any Common Lisp in a while, so I don't know if there were any issues with it recently.
+<smithzv> Same here.  I usually lag 6 months behind SBCL (on average).  It usually isn't an issue until it is (like if slime stops working).  I am fine with 1.2.12, I'm fine with mixed versions.
+<smithzv> That should read, I'm even fine with mixed versions.
+<smithzv> but perhaps we should play it safe and stick with one
+<jaccarmac> 1.2.13 looks like it fixes an issue with symlinks I was having on Windows.
+<smithzv> okay, good enough reason for me, let's upgrade
+<wvxvw> OK, I'll update to 13 then.
+<wvxvw> Next, and this is something a little new: git branches.
+<wvxvw> So, why did I want that everyone have their own branch: this is purely based on my (failed) experience at my last workplace.
+<wvxvw> The sistuation there was that there was a host of branches, but all programmers worked on the same, arbitrary chosen branch, and that made them wait in a queue all the time.
+<wvxvw> I.e. programmer X waited for programmer Y to commit their changes before they can commit their own changes and so on.
+<jaccarmac> Separating branches is the right idea, however, I don't think user-specific ones are the way to do it.
+<wvxvw> I'm not saying they ran into this situation entirely by chance (in Dilbert terms they are more of a Wally kind programmers)
+<jaccarmac> The workflow you put in the email is somewhat redundant, since git treats local branches and remotes as unique entities.
+<wvxvw> yeah, typically, you want to separate by feature, and then there is a whole develop-test-stage-production cycle, but that's too much for us, methinks.
+<jaccarmac> You can do it all locally though.
+<jaccarmac> pull master, merge into feature, merge feature into master, push
+<smithzv> jaccarmac: agreed about that redundancy, but having your changes pushed somewhere where others can see it is useful.
+<wvxvw> But I'd also like your local branches be in the remote everyone can access, so that I could merge with someone else before that gets into master, if that's what we need to do.
+<jaccarmac> That's a good point. However, if you have permanant branches for each person them and master will be touching at multiple points.
+<jaccarmac> That complicates things, and feature branches can have fewer points of contact.
+<wvxvw> yup, but I don't think we'll create that much havok in just a few days :)
+<smithzv> wvxvw: right, perhaps it will be more like "smithzv is working on part blah, so the smithzv branch is the blah branch"
+<jaccarmac> All that said, I'm fine with anything.
+<wvxvw> besides, I'm getting used to deal with lots of havoc in git, so I probably won't find it problematic :)
+<wvxvw> the main point though is that everyone be able to push their change as soon as possible without breaking anyone else's work and without making anyone else wait.  Think of it as a lock-free queue :P
+<jaccarmac> Honestly that model is probably best for a time-constrained project.
+<jaccarmac> Rather than feature-constrained.
+<smithzv> okay, but how will merges be initiated?  We have to merge frequently to make progress on the project as a whole.
+<jaccarmac> Pull requests work generally, but may get clogged by the permanent branches.
+<jaccarmac> Not sure.
+<wvxvw> yeah, and I think that merge is the most annoying part in the whole story, so that's why I wanted to have some experience before this meeting.
+<smithzv> Requests to whom?  I don't what wvxvw or myself to have to take on the maintainer role...
+<jaccarmac> The solution, I think, is to merge master with your branch as often as you possibly can.
+<wvxvw> so that we all have seen ediff
+<jaccarmac> So when you haev a feature complete the merge into master is as painless as possible.
+<wvxvw> yeah, pull the master into your branch as often as you can, that's a good policy.
+<jaccarmac> As long as we never use force-push on master everything should be fine.
+<jaccarmac> And only rebase as far back as origin/master.
+<jaccarmac> Which is generally good policy anyway.
+<smithzv> okay, success here is going to be tightly bound to sectioning off the work.  If there are more than a handful of merge conflicts, it is going to be a nightmare... git will be more trouble than it is worth...
+<wvxvw> Though, still, to my knowledge, diffing and merging is annoying and you need to invest some effort into setting up the environment (I hate the default faces in ediff, I can't see anything due to bizarre color scheme)
+<smithzv> I changed those ediff faces long ago
+<jaccarmac> I think we need to stick to small functions/classes/macros and make sure to merge after modifying each one.
+<wvxvw> well, there are couple of other pitfalls, one learns by doing. Like, for example, it's best to close the file you are about to merge, because otherwise it comes out botched. Not sure why, but you typically learn it after it comes out botched :)
+<jaccarmac> Hmmm, haven't had that issue with recent magit.
+<smithzv> jaccarmac: I'm just pointing out that git isn't going to save us any organizational issues.  It never does.  We need to make sure that we stick to our own stuff and if we need to patch someone else's code, we need to be very open and active about those changes.
+<wvxvw> Or, remembering which panel contains the newer file--that's the one I always get wrong.
+<jaccarmac> smithzv, I actually have real Internet access this time, whcih means, hopefully, that I won't be the cause of gaps in communication.
+<smithzv> wvxvw: I also haven't had any issue like that with magit.  It is pretty solid in terms of keeping your files intact
+<wvxvw> Well, what I was hoping to do is, before the contest starts, is that we make sure that we can diff and merge, and this isn't a task that will send us cursing to search Google.
+<smithzv> jaccarmac: sleep is a bigger cause of lapses in communication
+<jaccarmac> True 
+<wvxvw> It's not that, it's some sort of a human error that is very likely to happen in that situation.  My last job, I merged probably hundreds of files, and it's something that comes out every once in a few dozens of files, not something that you run into every time.
+<smithzv> oh
+<jaccarmac> All right, so what do we want to try to break as practice?
+<wvxvw> but the most important thing here is that you can do it without googling for instructions.  Because once that happens, it'll never get done.  It's more like sport :)
+<smithzv> wvxvw: I agree regarding practice.  I have a pretty good amount of experience with git, but I (and most people) don't have experience using git in a hack-a-thon like environment.
+<wvxvw> well, I was thinking maybe some small project.  But knowing that you guys are busy, I didn't want to impose.
+<smithzv> I am meeting someone in about 20 minutes, so I can't work on it now.  That said, it would be better to do it at the same time so that we have the correct experience of others editing while we are.
+<jaccarmac> I'm good with w/e. I deal with a decent amount of merge conflicts at my job as well, and my experience is that either it's small diffs and really easy or huge diffs and hellacious.
+<wvxvw> nope, not now, but something that'd require to go through the whole cycle of git branching, commiting pulling and pushing
+<smithzv> Okay, do we want to work on endo?
+<smithzv> It is a big project, but we don't have to complete it.
+<smithzv> josh just sent an email
+<jaccarmac> Replied.
+<smithzv> thanks
+<jaccarmac> I was looking at the thread anyway.
+<jaccarmac> Endo seems reasonable.
+<wvxvw> Well, I'm ok with it, or, if you want to do something useful, I've been working on this Emacs-Sphinx integration, but doing it in Elisp is not such a good idea (in part because of poor database integration), just saying :P
+<jaccarmac> Useful things are good as well, of course!
+<smithzv> Since I am already on board with that project (or related ones) I would be down for that as well.  Doing something useful might be the wrong way to practice because you would care too much about the quality of what you put together.
+<wvxvw> ok, so the project is here: https://github.com/wvxvw/sphinx-mode
+<wvxvw> what it currently does is it indexes all info (as in GNU/Info) pages and lets you search them
+<wvxvw> it also has a beginning for Org documents indexing
+<smithzv> Okay, sounds good.  I have to go.  Talk to you later and say hi to Josh for me.
+<wvxvw> It has some Emacs Lisp interface and DB integration, but Emacs DB integration is... well, very limited, so it's better to do it in some other language.
+<wvxvw> yup, sure will, have a nice day!
+<smithzv> okay, I'll be here to look at the output afterwards, but I'm not here
+<wvxvw> More on the project: Sphinx is a full-text search program.  It integrates with MySQL (MariaDB) in order to replace the db's own full text search
+<wvxvw> It can search for things like number of words from a given list, words in some order, inexact matches etc.  All of this can be ranked, so that the search results appear more intelligent.
+<jaccarmac> OK. And instead of using Elisp for everything, you want CL middleware?
+<wvxvw> exactly, leave Elisp only to do the interface.
+<wvxvw> Indexing itself is slow, and some searches can be slow too, but Elisp connection to database happens through shell by running a program like mysql (client) which spends lots of time formatting the results, and the overall I/O is very slow
+<wvxvw> also, no multi-threading (that would help during indexing)
+<wvxvw> or initial import
+<jaccarmac> Is there an up-to-date CL interface to Sphinx, or do you still go through the DB engine?
+<wvxvw> to my knowledge there isn't, but that's a good starting point. I'm almost sure they have Python and PHP interfaces, so the project must have headers we could relatively easily adapt to CFFI.  So I'd look into SWIG for generating some outline code for it.
+<wvxvw> Also, this would enable us to add some stuff which is missing from Sphinx own API, in particular, the location of the match.
+<jaccarmac> All right. Are we gonna organize a date and time for all four to work on it simultaneously? In the meantime, I can get an environment set-up. You're using MariaDB and Info in addition to Sphinx, correct?
+<wvxvw> https://github.com/thijs/cl-sphinx-search/
+<wvxvw> but the last commit is from 6 years ago, so it's probably very far off
+<wvxvw> Yup, MariaDB (rather than Oracle's version of MySQL)
+<jaccarmac> https://github.com/archimag/cl-sphinx
+<jaccarmac> From 2011
+<wvxvw> hm... I'll need to look into these, but afaik, Sphinx is being actively developed in recent years, so I'd be very doubtful about either project.
+<jaccarmac> cl-sphinx looks like something completely different anyway.
+<wvxvw> Dates? I'd say I add you and Zach to the committers list, and we'll have a meeting next Sunday, until then it's via emails.  The project is in a stage, where it's still time to decide how to do it, so I'd not expect much code, more of a proof of concept code anyway.
+<wvxvw> Ah, it's probably integration with Python documentation generator, it's also called Sphinx.
+<jaccarmac> Sounds like a plan, then. I'll work on getting everything working on Windows.
+<wvxvw> good, very good :) Well, then that's it for today. I'll stay here in case Josh shows up.
+<jaccarmac> I'm going to save the log and stick it in Git as well for him.
+<jaccarmac> Minus passwords and math/timezone discussion.
