@@ -6,7 +6,8 @@
   :version "0.1"
   :author ("Oleg Sivokon <olegsivokon@gmail.com>"
            "Zach Kost-Smith <zachkostsmith@gmail.com>"
-           "Jacob MacDonald <jaccarmac@gmail.com>")
+           "Jacob MacDonald <jaccarmac@gmail.com>"
+	   "Joshua Kordani <joshua.kordani@gmail.com>")
   :license "MIT"
   :depends-on (:alexandria :iterate :split-sequence :optima :cl-containers)
   :serial t
