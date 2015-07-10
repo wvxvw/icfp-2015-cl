@@ -77,4 +77,5 @@
   | Zach  | zachkostsmith@gmail.com  | GMT-5 |
   | Jacob | jaccarmac@gmail.com      | GMT-7 |
   | Josh  | joshua.kordani@gmail.com | GMT-5 |
+  | Jack  | zhangguoan6@gmail.com    | GMT+8 |
 
