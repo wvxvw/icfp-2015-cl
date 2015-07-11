@@ -11,7 +11,7 @@
    this document with your contact information.
 
 ** Meeting next Sunday
-   <2015-07-05 Sun 20:00 GMT+0>
+   <2015-07-05 Sun 20:00 UTC+0>
 
    Please be awailable for a short meeting.  The purpose of this
    meeting is to make sure we use same or compatible setup.  We will
@@ -20,6 +20,10 @@
    https://freenode.net/faq.shtml#contents-userregistration. Contact
    me if you have problems registering, or if you will not be able to
    attend.
+
+** Meeting II
+   <2015-07-12 Sun 06:00 UTC+0>
+   Half an hour meeting. See if we can practice on Sphinx project.
 
 * Installation
   This section has instructions for setting up the project.
@@ -73,9 +77,22 @@
   /Note the repository is public!/
   /Don't put here anything you don't want to be known to the world!/
 
-  | Oleg  | olegsivokon@gmail.com    | GMT+2 |
-  | Zach  | zachkostsmith@gmail.com  | GMT-5 |
-  | Jacob | jaccarmac@gmail.com      | GMT-7 |
-  | Josh  | joshua.kordani@gmail.com | GMT-5 |
-  | Jack  | zhangguoan6@gmail.com    | GMT+8 |
+  | Oleg  | olegsivokon@gmail.com    | GMT+2 | wvxvw     |
+  | Zach  | zachkostsmith@gmail.com  | GMT-5 | smithzv   |
+  | Jacob | jaccarmac@gmail.com      | GMT-7 | jaccarmac |
+  | Josh  | joshua.kordani@gmail.com | GMT-5 | jkordani  |
+  | Jack  | zhangguoan6@gmail.com    | GMT+8 |           |
 
+  Waking hours:
+
+  + o :: Asleep.
+  + x :: Awake.
+
+  | Name  | 00:00-08:00 | 09:00-16:00 | 17:00-24:00 |
+  |-------+-------------+-------------+-------------|
+  | UTC   | oooooooo    | oxxxxxxx    | xxxxxooo    |
+  | Jack  | oxxxxxxx    | xxxxxooo    | oooooooo    |
+  | Josh  | xxoooooo    | ooooooxx    | xxxxxxxx    |
+  | Jacob | xxxxoooo    | oooooooo    | xxxxxxxx    |
+  | Zach  | xxxxoooo    | oooooooo    | xxxxxxxx    |
+  | Oleg  | ooooooox    | xxxxxxxx    | xxxooooo    |
