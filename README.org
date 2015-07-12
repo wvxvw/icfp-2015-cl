@@ -81,7 +81,7 @@
   | Zach  | zachkostsmith@gmail.com  | GMT-5 | smithzv    |
   | Jacob | jaccarmac@gmail.com      | GMT-7 | jaccarmac  |
   | Josh  | joshua.kordani@gmail.com | GMT-5 | jkordani   |
-  | Jack  | zhangguoan6@gmail.com    | GMT+8 | jack-zhang |
+  | Jack  | zhangguoan6@gmail.com    | GMT+8 | jack       |
 
   Waking hours:
 
