@@ -1,0 +1,256 @@
+<jack-zhang> Hello.
+<wvxvw> hi Jack, I'm just making coffee and I will be back
+<jack-zhang> Ha Ha
+<jack-zhang> wvxvw, I use this command git push --force to push my change it shows everything up-to-date , something wrong?
+<jack-zhang> wvxvw, sorry it seems right. I push it twice. Sorry
+<wvxvw> hi again
+<wvxvw> that's ok, you didn't break anything :)
+<wvxvw> well, you probably have configured your branch to push to remote master.
+<wvxvw> can you post here the output of git branch -a
+<jack-zhang> jack@Jack-Ubuntu:~/quicklisp/local-projects/icfp-2015-cl$ git branch -a
+<jack-zhang> * master
+<jack-zhang>   remotes/origin/HEAD -> origin/master
+<jack-zhang>   remotes/origin/jaccarmac
+<jack-zhang>   remotes/origin/jkordani
+<jack-zhang>   remotes/origin/master
+<jack-zhang>   remotes/origin/smithzv
+<jack-zhang>   remotes/origin/wvxvw
+<jaccarmac> Well, gentlemen, I'm lurking here.
+<wvxvw> oooook
+<wvxvw> hy jaccarmac
+<jack-zhang> Do I need to build a new branch?
+<jaccarmac> What's up with Guest13569 ?
+<wvxvw> a botched hi that is
+<wvxvw> I've no idea :S
+<jack-zhang> hi jaccarmac
+<wvxvw> I thought it was someone's bot
+<jack-zhang>  he always offline?
+<wvxvw> on the second thought, maybe its Freenode's way of keeping a channel alive after every participant left?
+<jack-zhang> Sounds reasonable
+* ChanServ 委任wvxvw 为频道管理员 (Ignore this line -- by Jack Zhang :D))
+* wvxvw 把 Guest13569 踢出了(Kicked) #icfp-2015-cl-meeting (Kicked by wvxvw)
+<wvxvw> ok, no more guests :)
+<wvxvw> Jack, so here's what I think happened:
+<wvxvw> after you cloned the repo you worked on the master branch and then committed directly to it
+<jack-zhang> Yes
+<wvxvw> instead, you needed to create a branch, let's say by doing git checkout -b jack
+<jack-zhang> OK
+<wvxvw> well, let's go through the process, it's really not that complicated
+<jack-zhang> Ok
+<wvxvw> Do you use Magit?
+<jack-zhang> Nope
+<jack-zhang> use git
+<wvxvw> Magit is an Emacs interface to git
+<wvxvw> anyhow
+<wvxvw> so, can you create a branch?
+<jack-zhang> There is something wrong when I use it, so now I just use git
+<wvxvw> the checkout command with -b option will create a branch
+<wvxvw> well, if you want to tell what's wrong, maybe I can help, but for now let's just do the branching thing, ok? :)
+<jack-zhang> * jack
+<jack-zhang>   master
+<jack-zhang>   remotes/origin/HEAD -> origin/master
+<jack-zhang>   remotes/origin/jaccarmac
+<jack-zhang>   remotes/origin/jkordani
+<jack-zhang>   remotes/origin/master
+<jack-zhang>   remotes/origin/smithzv
+<jack-zhang>   remotes/origin/wvxvw
+<jack-zhang> Right?
+<wvxvw> ok, that's right
+<jack-zhang> Ok
+<wvxvw> let's add some changes, modify the README file and add the name of your branch to the table, alright?
+<jack-zhang> I'm download Magit but it was slow
+<wvxvw> Yeah, staging used to be slow for some reason, but it seems like it's been fixed
+<wvxvw> after you've done editing the README, you'd need to commit that change, then push it to your branch on the remote
+<jaccarmac> Even fixed it on Windows, which was super nice.
+<wvxvw> oh, good to hear
+<jaccarmac> It took like fifteen seconds to stage a three line diff.
+<jack-zhang> I have commit and push it, change happen?
+<wvxvw> I was staging from shell and then doing the rest in Magit :)
+<wvxvw> well, you need to push it to your banch
+<wvxvw> since now your branch is probably set to track the remote master branch, unless you do anything about it, your change will go into remote master, but we don't want it just yet
+<wvxvw> so, you need to set your branch "upstream"
+<jack-zhang> git checkout jack?
+<wvxvw> git push -u jack:jack
+<wvxvw> I believe
+<wvxvw> or even just git push -u jack
+<wvxvw> this will tell Git that it needs to create a branch named "jack" on the machine you are pushing to and put the changes there
+<jack-zhang> git push origin jack to build a new branch
+<jack-zhang> but when I use git push -u jack:jack
+<jack-zhang> It show Please make sure you have the correct access rights
+<jack-zhang> and the repository exists.
+<wvxvw> well, yes, you probably also needed to specify the remote you are pushing to
+<jaccarmac> git push -u origin/jack
+<jaccarmac> unless you changed the name
+<jack-zhang> Ok I try it now
+<wvxvw> I think it worked already :)
+<wvxvw> the branch exists on Github
+<jaccarmac> sick
+<jack-zhang> :
+<wvxvw> :)
+<wvxvw> well, we are almost there already
+<jack-zhang> we need to install Sphinx?
+<jack-zhang> and maybe Eclipse?
+<jaccarmac> not eclipse
+<jaccarmac> ???
+<wvxvw> so, Jack, now that the branch is there, switch back to the master, pull the latest commit in master
+<wvxvw> before we deal with Sphinx, let's finish this branching thing quick, alright?
+<jack-zhang> Ok I'm trying
+<wvxvw> after you update the master, switch back to your branch, and merge master into it.
+<jack-zhang> Network is Slowly........ sorry
+<wvxvw> it's ok :)
+<jack-zhang> How about Sphinx?
+<wvxvw> well, in the mean time, yes, I was thinking about working on the indexing project
+<wvxvw> it has many components, and may possibly add more in the future
+<jack-zhang> Yeah
+<wvxvw> but for now, I was looking into adding CL bindings for Sphinx
+<wvxvw> though, it looks like the library itself has no C API, other languages work with it using TCP
+<wvxvw> but it probably even makes it easier
+<wvxvw> this also means you don't need to download the library headers
+<jaccarmac> I got Maria and Sphinx installed, but I didn't seed them with any data, so I have no idea if they actually work.
+<jack-zhang> Then?
+<wvxvw> jaccarmac, you could check out my project and index the info pages... though I'm not sure it'd work on Windows, are you using Cygwin?
+<wvxvw> Jack, merged? Then push your changes back to master
+<jaccarmac> I can, but I try to have as much native as I can.
+<wvxvw> git push origin jack:master
+<wvxvw> Well, it uses info to generate the table data... but if you don't have much info pages, then it won't do much
+<jack-zhang> Still trying
+<wvxvw> it also has some code to index Org documents, but it's half baked yet
+<wvxvw> Jack, still trying to push or to merge?
+<jack-zhang> push
+<wvxvw> ok
+<wvxvw> jaccarmac, however, if you just take my sphinx.conf and leave only the emacs_user_documents source
+<jack-zhang>  some code to index Org documents, what's that mean?
+<wvxvw> with emacs_user index and searchd settings
+<jack-zhang> Ok
+<wvxvw> you could add documents manually into documents table
+<wvxvw> which has this schema:
+<wvxvw> create table documents (id int not null auto_increment primary key,
+<wvxvw>            document varchar(256) not null unique);
+<wvxvw> OK, Jack, I'll explain it in more detail
+<jack-zhang> OK
+<wvxvw> Alright, it seems like we are done with Git for now. Moving on.
+<wvxvw> First the motivation for the project
+<wvxvw> To make it simple: more intelligent search.  Grep is OK, but it's limited to a very particular kind of queries. It also has ranking
+<wvxvw> There are some tools which do desktop search more intelligently, e-swish, for example, or Nepomuk.
+<wvxvw> I chose Sphinx because it is also used a lot in the industry, knowing to use it is just something you can put on your resume, if you are after that kind of thing
+<wvxvw> It is also actively developed and has lots of features
+<wvxvw> On the other hand... it's tightly related to PHP and Ruby world, which makes it smell not so good at times... but, let's not dwell on it :)
+<wvxvw> Anyhow, the idea is to have a search, which, in principle, works similar to Google.  I.e. it can rank the search results and can be more intelligent at processing the user input
+<wvxvw> MariaDB (a fork of MySQL) is a database. Sphinx is a full text search program that works with various databases, but it has the most complete set of API when it works with MySQL
+<wvxvw> Essentially, Sphinx works by creating an index and later looking the query up in that index.
+<wvxvw> It's probably something like inverse document frequency index (idf), but I didn't look under the cover.
+<wvxvw> it can work with different sources: databases contents, interpret database contents as file paths, or call a program to generate the indexed content
+<wvxvw> the later is called "pipes" in its documentation.
+<wvxvw> Now, the aim of the project: use MariaDB to store the interesting content, use Sphinx to search this content, and use Emacs to write queries and to display the search results.
+<jaccarmac> And you're using parsed Info pages as the interesting content?
+<wvxvw> yup
+<wvxvw> as of right now there are some problems with table organization and the import method
+<wvxvw> but the general idea works, at least in my setup :)
+<wvxvw> With info pages, there are two choices: either to use pipe to extract the textual information from the info pages and feed it to Sphinx, or to dump the contents into the table. I chose second because Sphinx needs me to create unique ids for each bit of content, and I don't know how to do it :)
+<wvxvw> It is possible to give up the unique ids, but in that case index cannot be built incrementally (it takes hours to build it)
+<jaccarmac> And right now this is all Emacs Lisp and uses HTTP transport?
+<wvxvw> worse! It uses mysql shell client :)
+<jaccarmac> Oh, nice.
+<wvxvw> but there's really no other way to connect to a database from ELisp
+<jaccarmac> So as of now you don't need to set up a training DB, just have info and MySQL on path?
+<jaccarmac> And Emacs generates your dataset?
+<wvxvw> yup
+<jack-zhang> use Emacs to write queries and to display the search results. 
+<wvxvw> I chose info because out of the box I had lots of contents (there are over 2K info pages on my system), but the aim is to search user's documents rather than documentation.
+<jack-zhang> Mean use emacs lisp?/
+<wvxvw> yup Jack, but Elisp code is minimal, most important and interesting work is meant to be in Common Lisp.
+<jack-zhang> Ok
+<wvxvw> I started it in Elisp because I hoped for it to be a project I can finish within a few days, but it grew larger and it soon ran into Elisp limitations.
+<wvxvw> So, I think we should be clear now on what the project is, do you want me to post the tasks I think are relevant to the project?
+<wvxvw> (it's a long list)
+<wvxvw> Because if you wanted to pick a specific one, I could be more specific too.
+<jack-zhang> But it works, isn't it?
+<wvxvw> only some part of it, and there is a lot to be improved / rewritten
+<wvxvw> I don't like the info table structure, but coming up with the right one is somewhat of a challenge
+<wvxvw> for instance, I'd like it to be hierarchical, i.e. to reflect the way info pages are structured
+<wvxvw> but info pages may have cyclical references, and these need to be identified at the time of bulk indexing
+<wvxvw> the way information is stored now: I have a table field, where the info nodes are represented similar to file paths: 'a' 'b' 'c'...
+<wvxvw> which I'd like to change to have only one "breadcrumb" at a time, with the reference to the parent record.
+<wvxvw> This also needs a better search strategy, since matches in children / parents needs to be accounted for
+<jaccarmac> Ah, yes hierarchies with circular references...
+<wvxvw> :)
+<wvxvw> Org files have internal structure, which can be used to improve search ranking
+<wvxvw> for instance, words matched in headlines can weight more than words in plain text / comments / source blocks
+<jack-zhang> Yeah
+<wvxvw> since Org elements can be nested, it would also be nice to have this reflected in ranking
+<jaccarmac> How do you specify the ranking algo?
+<jaccarmac> I thought Sphinx did that for you.
+<wvxvw> on the low level, this is the OPTION ranker = expr('%s') part of the query
+<wvxvw> well, it has some defaults, but the nice thing about it, is that you can modify it
+<wvxvw> http://sphinxsearch.com/docs/current.html#weighting
+<jaccarmac> k
+<wvxvw> more info on what are the building blocks
+<wvxvw> beside, there's one huge inconvenience. Sphinx doesn't provide position information.
+<wvxvw> I.e. when it matched, all you know about it is what document it was, not where in the document.
+<jaccarmac> sure
+<wvxvw> But it seems like it's possible to overcome this with extensions
+<wvxvw> But if not, we could add the code that would post-process the results to find the exact position
+<wvxvw> http://sphinxsearch.com/docs/current.html#api-funcgroup-additional-functionality
+<wvxvw> this is how they suggest we do it.
+<wvxvw> And this is basically it. Other tasks include working on SLIME integration and Emacs interface, but these are straight-forward
+<wvxvw> Ah, and some infrastructure code to run and restart Sphinx and/or the database from Lisp
+<wvxvw> So, if you are thinking about taking any part in this thing, just choose one and let me know :)
+<wvxvw> I'll have an exam tomorrow and another one on 16'th, but then I'm all yours :)
+<jaccarmac> Can do.
+<jaccarmac> Ironically, I'm in the middle of a DB project in school right now.
+<jaccarmac> To be honest, my brain is mush as far as programming goes ATM.
+<jaccarmac> I'll take some time playing with what's there and see what I can come up with.
+<wvxvw> hehe, well, this isn't supposed to be hard problem, just something you can work on for a few hours in the evening
+<wvxvw> and, sure, no pressure, everyone has their stuff to do
+<jaccarmac> All right, friends. Time for me to get some sleep.
+<jaccarmac> Catch you later.
+* jaccarmac 已退出(Quit: Leaving)
+<wvxvw> Yeah, sorry, it took longer than I expected, see you then!
+<jack-zhang> Good night
+<jack-zhang> WVXVW, I need to merge master to jack?
+<wvxvw> normally, that's what you'll do before pushing the change to master
+<jack-zhang> Ok
+<jack-zhang> just git merge master on jack branch?
+<wvxvw> yup
+<jack-zhang> and after then I work on my own branch
+<wvxvw> exactly
+<jack-zhang> when I push use this: git push origin jack:jack?
+<wvxvw> you actually need this only once to create the remote branch, afterwards just git push will do.
+<jack-zhang> Ok
+<jack-zhang> all done
+<jack-zhang> Thank you
+<wvxvw> great
+<wvxvw> not a problem
+<jack-zhang> And  we need to post this dialog?
+<wvxvw> well, if you think about taking on some task in Sphinx project, please let me know (it's also OK if you don't)
+<wvxvw> You can post it, if you want, else I'll do it :)
+<jack-zhang> But I can trust myself
+<jack-zhang> But I can  not trust myself
+<wvxvw> that's a philosophical question I'm not authorized to answer :P
+<jack-zhang> ha ha
+<jack-zhang> How about that you told me the task
+<wvxvw> what about it?
+<jack-zhang> and I try to make it
+<jack-zhang> about this project
+<jack-zhang> some part of it
+<wvxvw> well, then, how about you look into using SLIME to communicate between Emacs and Common Lisp code?
+<wvxvw> the added value would be that you'd also learn some stuff about how SLIME works internally
+<jack-zhang> Ok
+<wvxvw> just a sec, I had some useful info for this... and then I'm gone :)
+<jack-zhang> Ok
+<wvxvw> http://emacs.stackexchange.com/questions/1017/how-to-use-slime-as-a-proxy-between-common-lisp-program-and-emacs-lisp
+<wvxvw> I've been searching for this some time ago, and this is what the answer was
+<jack-zhang> Ok
+<jack-zhang> I will send you email if I have question after searching
+<wvxvw> sure thing!
+<jack-zhang> :)
+<wvxvw> Well, OK then, on my way! See you
+<jack-zhang> bye
+<wvxvw> oh, and I'll upload the log, so no worries there
+<jack-zhang> I will post the whole dialog 
+<jack-zhang> ...
+<jack-zhang> I am free right know So I just post it now, OK?
+<wvxvw> oh, ok, good, then go ahead
+<jack-zhang> Ok see you
+<wvxvw> bye!
+* wvxvw 已退出(Quit: see you)
