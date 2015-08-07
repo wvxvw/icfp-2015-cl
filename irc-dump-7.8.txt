@@ -1,0 +1,494 @@
+<@wvxvw> jack-zhang, sec
+<@wvxvw> look at `http-request' function  [20:50]
+<@wvxvw> basically, all you need is take the curl command in the specification
+         and translate it into drakma function. If you want to do a bit more,
+         assume that the info comes from a file in our repository, and read it
+         from there (the token).  [20:51]
+<@wvxvw> assume we use cl-json to print the json structure (you don't need to
+         generate it, just print), or you can assume we'll output it to a
+         file, whichever way you do it is fine.  [20:52]
+<smithzv> You missed him...  [20:54]
+<smithzv> I think we might implement that ourselves.  It would be nice to
+          start sniffing out power words and we might not want to wait 5-8
+          hours  [20:55]
+<@wvxvw> yeah, I see, but what if he decides to wake up early :P
+<@wvxvw> if we get to that earlier - nice, otherwise, hopefully, Jack'll do
+         it.  [20:56]
+<smithzv> They provide a curl example, I think it uses basic auth with an
+          empty username and the token as the password.  If you we generate a
+          test output, even a trivial one, we should slap it together just to
+          see if it works.  [21:01]
+<@wvxvw> yup
+<jaccarmac> Hello again. Prof. couldn't point me to anyone specific, but he
+            did bring up that Tetris is NP-C, which I hadn't considered. Makes
+            me guess we'll have to sacrifice a little correctness for speed.
+                                                                        [21:05]
+<jaccarmac> I also have an idea about the power words, but I'll bring that up
+            after I grab lunch real quick.
+<jaccarmac> brb
+<@wvxvw> yeah, that was to be expected, bon appetit.
+<smithzv> "Yes, rotating a 180 degree symmetrical unit by 180 degrees causes
+          an error."  [21:10]
+<smithzv> Ouch, didn't think of that
+<@wvxvw> heh  [21:11]
+<smithzv> Which means that we should probably do something like, fingerprint
+          each state with a hash, maybe, to make sure we don screw up?  [21:12]
+<@wvxvw> yes, sounds like a good idea.
+<@wvxvw> though this state would need to reset after the unit is locked.
+                                                                        [21:13]
+<@wvxvw> here's some data on the test games they gave:  [21:15]
+<@wvxvw> max width: 50 
+<@wvxvw> avg width: 17.291666 
+<@wvxvw> min width: 10 
+<@wvxvw> ------------- 
+<@wvxvw> max height: 50 
+<@wvxvw> avg height: 16.791666 
+<@wvxvw> min height: 7 
+<@wvxvw> --------------
+<@wvxvw>                  
+<@wvxvw> max length: 1000 
+<@wvxvw> avg length: 180.0 
+<@wvxvw> min length: 20 
+<@wvxvw> --------------
+<smithzv> I mean hash the entire board.  It doesn't matter if it is locked on
+          not, if the same cells are occupied then it is an error
+<@wvxvw> but you can repeat the entire state, as long as it's not the same
+         exact piece it's ok.
+<smithzv> oh, yeah, lets say that I get pieces such that I can fill the first
+          line, surely I am leaving the board in the initial state it was in.
+          Perhaps they include ls or ls_old or the score in that "previous
+          state"?  [21:18]
+<@wvxvw> this is a possibility too, but I'd rather just reset the state after
+         the piece is locked - seems like less data to store.  [21:19]
+<smithzv> "as long as it's not the same exact piece it's ok." Oh, I missed
+          that  [21:20]
+<smithzv> Okay, we are on the leader board now  [21:26]
+<@wvxvw> did you write a submission script?
+<smithzv> I just used curl  [21:27]
+<@wvxvw> ah :)
+<smithzv> I couldn't get drakma to work on the first try
+<smithzv> They said that their server is a bit finicky
+<smithzv> I passed in the weird code they sent out last night as a solution
+          for problem 0 with seed 0 tagged with "test-submission".  It says 85
+          points but it also says zero points on the second board, weird
+                                                                        [21:28]
+<@wvxvw> hm  [21:29]
+<@wvxvw> well, maybe they know this specific code and don't want to score
+         points for it?
+<smithzv> Is high score bad on the first leader board, I think it might be
+<jaccarmac> Which team are we?  [21:30]
+<smithzv> Chaitin's Omega Men  [21:31]
+<smithzv> I think we have zero points.  I probably just but in garbage and it
+          gave me zero points as expected
+<@wvxvw> ok, I have some odd statistics... average number of units per game is
+         about 2, which means there must be some map (probably even more than
+         one), where there's only one kind of unit  [21:35]
+<@wvxvw> (there are also maps with almost 20 kinds of units)  [21:36]
+<smithzv> Okay, I'm an idiot, I mistyped application, drakma works fine
+<@wvxvw> :)
+<jaccarmac> Anyway, my thought as far as words of power go: We're treating
+            them like sequences of state changes, which they are. However,
+            since we have them ahead of time, they represent states which are
+            close to one another, and they are likely to have spatial overlap,
+            we should be able to compile them ahead of time and create a kind
+            of super-move.
+<smithzv> Okay, I'll start packaging it up, I'll have to apologize to Jack
+          later for poaching his work  [21:37]
+<jangle> yes high score on overall leaderboard is bad
+<jangle> its a sum of our ranks on individual problems
+<jangle> high score on individual games is better, leading to a lower rank
+<smithzv> jangle: thanks, that makes sense
+<jangle> i'm back from lunch so i'm going to crank out my real work so I can
+         get through this.  [21:39]
+<smithzv> Okay, I'm putting these tags on it but they are not shown anywhere I
+          can see.  I see no history of submissions.  [21:40]
+<@wvxvw> problem 15 is one of the odd problems: only one unit, and it has 4
+         hexagons.
+<jangle> our overall score will continue to get worse as teams differentiate
+         themselves, right now lots of problems have us tied for 3rd, which
+         will keep our score low
+<jangle> er… 
+<jangle> maybe the tag only comes through if we do not error out  [21:41]
+<jangle> leaderboard might not be an api, we might have to reverse the web
+         interface for it  [21:42]
+<@wvxvw> pieces actually look quite a bit more weird than you might be led to
+         expect from regular tetris... I'm considering drawing these for the
+         reference  [21:46]
+<@wvxvw> i.e. there may be a lot of empty space between the filled hexagons.
+<jangle> for tags, it looks like if there is supposed to be one with your
+         submission, that it will show up in parens next to your team name
+                                                                        [21:47]
+<jangle> a graphic output of game states and pieces might be nice 
+<jangle> however, it looks like all tags you've ever made end up being
+         concatted to the overall leaderboard entry  [21:48]
+<jangle> so i see a test-submission tag in the overall leaderboard
+<jangle> i see a test-submission tag for problem 0 for us, not for problem 15
+                                                                        [21:49]
+<@wvxvw> problem 18 starts with roughtly 3/4 of the board filled :/  [21:51]
+<@wvxvw> that must be a tough one.
+<@wvxvw> smithzv, are you writing any printing functions yet?  [21:53]
+<smithzv> I'm guessing no  [21:54]
+<smithzv> I'm not sure what that is
+<smithzv> jangle: thanks for catching that, I thought it would be on our team
+          page
+<@wvxvw> I want to write a function that prints out the unit given it's
+         coordinates
+<@wvxvw> simple ASCII output
+<smithzv> I am going to push a simple submission skeleton  [21:55]
+<@wvxvw> ok, go ahead, please
+<smithzv> I put it on master.  You need a file called api-token in the root
+          icfp-cl-... dir  [21:57]
+<@wvxvw> ok
+<smithzv> Okay, wvxvw , you want something that prints out the pieces in
+          ascii, no problem.
+<@wvxvw> yup, I'm on it already.  [21:58]
+<smithzv> oh, okay, then I will go elsewhere
+<smithzv> I'm using cl-json, it seemed like the obvious choice given the name
+                                                                        [21:59]
+<@wvxvw> yeah, I do that too.
+<smithzv> Oh, I made a mistake.  If anybody is using that submit commit,
+          please pull again in a few seconds  [22:09]
+<@wvxvw> nah, not using it yet, working on printing  [22:18]
+*** Fare (~fare@2604:2000:1303:613b:5dfc:ebbe:67c0:ea42) has quit: Remote host
+    closed the connection  [22:37]
+<jangle> clarification coming re: memory usage  [22:43]
+<@wvxvw> yes?  [22:44]
+<jangle> its coming...  [22:45]
+<jangle> :-)
+<@wvxvw> ah...  [22:46]
+<jangle> aim for 45meg resident memory with 1gb available address space, and
+         we should expect to be able to run the code on commodity hardware
+         made within the last 5 years
+<jangle> whatever this all means.
+<smithzv> hmm....  [22:56]
+<smithzv> 45 MiB resident is trouble for SBCL
+<smithzv> We should continue to ignore this.  It will only come up during
+          final testing anyway  [22:58]
+<jangle> oh right…. i keep forgetting  [23:17]
+<jangle> i'm wrapping up my work as quick as I can
+<smithzv> wvxvw: can you push your ascii art code once it is working.  I'd
+          like to use it  [23:18]
+<@wvxvw> it's almost ready, one sec  [23:20]
+<@wvxvw> ok, I realized there are some huge units, 8 hexagons across. so the
+         code doesn't really treat it properly, but at least it doesn't error
+         now.  [23:29]
+<@wvxvw> ok, merged my change into master  [23:36]
+<@wvxvw> Oh, but I forgot to add it to the system.
+<@wvxvw> OK, hexagons should print better now, except for excess white space.
+                                                                        [23:47]
+<@wvxvw>   /\/\/\              [23:49]
+<@wvxvw>   | | | |           
+<@wvxvw>  /\/\/\/\           
+<@wvxvw>  | | | | |          
+<@wvxvw> /\/\/\/\/\          
+<@wvxvw> | | |.| | |         
+<@wvxvw> \/\/\/\/\/          
+<@wvxvw>  | | | | |          
+<@wvxvw> /\/\/\/\/\          
+<@wvxvw> | | | | | |         
+<@wvxvw> \/  \/  \/ 
+<@wvxvw> this is the largest one
+<@wvxvw> there are also units with holes :/
+<@wvxvw>   /\/\/\              [23:50]
+<@wvxvw>   | | | |           
+<@wvxvw>  /\/\/\/\           
+<@wvxvw>  | |   | |          
+<@wvxvw> /\/    \/\          
+<@wvxvw> | |     | |         
+<@wvxvw> \/\    /\/          
+<@wvxvw>  | |   | |          
+<@wvxvw>  \/\/\/\/           
+<@wvxvw>   | | | |           
+<@wvxvw>   \/\/\/            
+<@wvxvw>                     
+<@wvxvw>                     
+<@wvxvw>                  .
+<@wvxvw> (dot is the center of rotation)
+<smithzv> Whoa  [23:52]
+<smithzv> Those are going to take up space at the repl, I wanted to use them
+          in the print methods, don't think I can.  They are too big.  I guess
+          they always will be when using characters
+<@wvxvw> well, there are also quite large maps  [23:56]
+<@wvxvw> something like 50x50
+
+[Sat Aug  8 2015]
+<smithzv> Yes, there are, it is just a bummer.  I didn't think it through
+                                                                        [00:00]
+<smithzv> We can still use them to get an idea of what we are looking at
+<@wvxvw> another piece of info: most units are unique to their maps, very few
+         occur more than 3 times
+<smithzv> ok
+<@wvxvw> also it doesn't sound like we'll be able to make search "local" as in
+         looking into small pieces of the map.  [00:01]
+<smithzv> I kind of feel that we should make all members of the unit relative
+          to the pivot  [00:10]
+<@wvxvw> here's what I'm thinking about the map: can we maintain, say, the
+         "deepest well" parameter? This isn't a very smart heuristics, but
+         seems to me like it could be at least some sort of heuristic.  [00:11]
+<smithzv> It makes the calculations for rotations cleaner and it seems a
+          better option than anything else I can think of
+<smithzv> What is this parameter?
+<@wvxvw> yeah, that a good idea. I've had this nightmare with coordinate space
+         translations in Flash every time
+<@wvxvw> the lowest unoccupied hexagon  [00:12]
+<smithzv> oh, and we aim for it or something?
+<@wvxvw> so that you would start fitting at that point
+<@wvxvw> yes, like that
+<@wvxvw> this is a naive strategy when playing tetris (you don't score very
+         high), but it's less risky (as compared to leaving only the place for
+         the I-shaped unit)  [00:13]
+<@wvxvw> some other factors I can think of in scoring (when deciding where to
+         put a piece)  [00:15]
+<@wvxvw> difference between highest and lowest unoccupied hexagons  [00:16]
+<@wvxvw> also, we can think about something like fractal dimension
+<@wvxvw> i.e. how "curved" the border line is (say, its length relative to the
+         map's width)  [00:17]
+<@wvxvw> so that the algorithm would be tempted to put pieces with small
+         spaces between them
+<@wvxvw> /would/would not/
+<@wvxvw> oh, how did you find this: asdf:system-relative-pathname? :)  [00:23]
+<smithzv> I don't remember... Needed it recently, so fortunate  [00:24]
+<smithzv> These are things that guide the block to the rough area but then we
+          do a more rigorous search once we get close to the horizon, right?
+<@wvxvw> yeah, that's a useful find. I'll need to update my stuff to use it
+         too.
+<smithzv> I have some recollection of somebody saying you shouldn't use it,
+          but it sure seems to work well enough  [00:25]
+<@wvxvw> I would be happy if I knew how well you can approach it iteratively
+<smithzv> I'm going to make coffee
+<@wvxvw> kk
+<@wvxvw> what I'm thinking is: in most cases you only care about final
+         destination, and the intermediate moves are the consequence of your
+         choice of the final destination.  [00:29]
+<smithzv> What are the stats on the source length?
+<@wvxvw> But if the shapes are so "strange", it may be the case that you can't
+         fit the shape because something blocks the way
+<@wvxvw> max length: 1000   [00:30]
+<@wvxvw> avg length: 180.0 
+<@wvxvw> min length: 20 
+<smithzv> I like that kind of thinking, I'm just scared that it will difficult
+          to implement, we should try for it, it's early still
+<jangle> work is done, need to take a break.  right now i'm tracking these
+         items: submission system, powerword discovery from past submissions
+         (so storing results for dissemination among group), web based gui for
+         displaying game tiles, game playback?
+<jangle> system for storing past gamestates so that we don't error out, and
+         keeping track of our top rated submissions per problem for final
+         scoring  [00:31]
+<smithzv> what is the error out worry here?
+<jangle> we need to check to make sure we don't repeate a piece
+         position/orientation
+<smithzv> Oh, right  [00:32]
+<jangle> we could also attempt to discover powerwords by "fuzzing" the
+         problems,  [00:33]
+<jangle> instead of stricly make deliberate attempts to score high, we could
+         play the game to discover words
+<jangle> or do both of these things
+<jangle> oh, and a better dashboard for our submissions  [00:35]
+<smithzv> jangle: I would very much like to run solely for the purpose of
+          discovering words  [00:39]
+<smithzv> I think it is essential to doing well on this
+<smithzv> For instance, problem 1 has a 1x1 unit that we can maneuver pretty
+          easily to test things out, though the board is less clear.  [00:41]
+<@wvxvw> smithzv, do you have any code for the map/game?  [00:42]
+<smithzv> yes, I have it rendering in OpenGL, which is a pain.  I don't have
+          any logic written yet  [00:43]
+<smithzv> A pain because it isn't web based
+<@wvxvw> well, maybe we could do it using SVG, it doesn't sound very hard, I
+         also think I have hunchentoow with some other game set up
+         already... maybe since we wanted to work on that game of life problem
+                                                                        [00:44]
+<@wvxvw> or Flash... :P  [00:45]
+<smithzv> That is fine.  I will put the renderer out there.  I wanted to get
+          to the point where you could play the game, then we could at least
+          stick a computer in the persons place.
+<@wvxvw> Can you push what you have to your branch? I'd like to see.  [00:46]
+<smithzv> ok  [00:47]
+<smithzv> wvxvw: how can I share some extra (git tracked) libraries via our
+          git setup?  Can I just copy the repos into a sub-directory?  [00:55]
+<@wvxvw> are you planning on changing them?
+<smithzv> Not for this contest, no
+<@wvxvw> you can add them as sub-modules  [00:56]
+<smithzv> So, how do I do that?
+<@wvxvw> oh, basically, you just add a directory under the project root
+         directory and then
+<@wvxvw> git submodule add repo-url  [00:57]
+<@wvxvw> into that directory
+<@wvxvw> actually, no, don't create the submodule directory, git sumbodule
+         will create it.  [00:58]
+<smithzv> okay, I'll try that  [00:59]
+<@wvxvw> then we'll need to remember to also pull the submodules, once
+         updating - this is a little more complicated than just pulling, but
+         hopefully will not be much of a pain
+<smithzv> Okay, I think I got all the submodules added.  I'll push to my
+          branch so it will only screw it up (if it does screw things up)
+                                                                        [01:13]
+<@wvxvw> ok  [01:14]
+<smithzv> Okay, it is pushed.  I should have rebased your changes.  I'll merge
+          them in.  [01:16]
+<@wvxvw> sure
+<@wvxvw> few more minutes I'll check that out. I'm trying to add a document
+         with units in cateogries and some notes.  [01:17]
+<smithzv> I'll walk you through it when you are ready.  It is pretty hacky
+          right now  [01:19]
+<@wvxvw> 5 more minutes
+<jangle> getting dinner back in a bit  [01:28]
+<@wvxvw> smithzv you added repository from a local path
+<@wvxvw> jangle, bon appetit  [01:29]
+<smithzv> yes, some of these haven't been published
+<@wvxvw> smithzv, did you mean to do that (i.e the repository isn't online)
+<smithzv> I'm guessing that is a problem
+<@wvxvw> ah... well, that won't work, unless I put them on the same path on my
+         computer :)
+<@wvxvw> yeah :)  [01:30]
+<@wvxvw> how do you reference those? Are they loadable via Quicklisp?  [01:31]
+<smithzv> okay, well it will take way to long to remove all of the
+          dependencies, sorry...
+<@wvxvw> if you don't want to uploade them anywhere, you could just share them
+         via mail
+<@wvxvw> you could just tar/gzip them, are they so big / need something
+         installed on my computer?  [01:32]
+<smithzv> okay  [01:33]
+<@wvxvw> but do you intend on submitting them with the program, or are these
+         purely for testing?
+<smithzv> I will tgz them.  People only need to download to look at this.
+          This is all temporary so I don't want to force people to go out of
+          there way for these
+<smithzv> testing, visual debugging  [01:34]
+<@wvxvw> ok
+<smithzv> I guess then you simply replace those submodule dirs with the
+          directories?
+<@wvxvw> will also need to edit some configuration files, but I can live with
+         that.  [01:35]
+<@wvxvw> Actually, it's probably better to not to add them as submodules,
+         it'll be hard for others
+<smithzv> wait, in my git repo I see the actual contents of the repos
+<@wvxvw> did you make any more changes at the same time you added submodules?
+         Maybe if you didn't it's better to revert
+<@wvxvw> yeah  [01:36]
+<smithzv> yes, I added the code that uses them
+<smithzv> If you have the code, then just load them with ASDF/QL
+<@wvxvw> this is what it does. It's not like a symlink. It tells git where to
+         check the modules from (but git will pull them automatically / will
+         keep their history separate)
+<@wvxvw> Still, it'd be better to revert the submodules commit.  [01:37]
+<smithzv> so, when I pushed I didn't push the code up, only a reference to the
+          origin?
+<@wvxvw> yes
+<smithzv> Okay, I will do that before people might pull it
+<@wvxvw> yup
+<smithzv> Should be gone now.  Make sure you delete it  [01:40]
+<smithzv> Do we still want to try to get this to you, or do we want to give
+          up?
+<@wvxvw> try to get it to me (send a tarball)  [01:41]
+<smithzv> ok
+<smithzv> Okay, I sent an email.  This doesn't contain a containing dir.
+          Extract in in the repo dir and it should work, I think  [01:48]
+<@wvxvw> ok, will do.
+<@wvxvw> local-packages, or actually the project directory?  [01:49]
+<smithzv> either should work
+<smithzv> probably local-projects is better
+<@wvxvw> ok
+<smithzv> Also, I pushed the changes back to my branch on the server.  It is
+          called origin/smithzv again, so don't let your git get confused
+                                                                        [01:50]
+<@wvxvw> ok
+<jaccarmac> Hello again, guys. Back in lurk mode. I have some work work that
+            needs to be done tomorrow at the absolute latest, and it looks
+            like our visualizer won't work for me on Windows anyway, so I'll
+            keep watching.  [01:58]
+<jaccarmac> Let me know if you need anything.
+<smithzv> We'll sort something out, like I said. temporary.  This is a lot of
+          work for something temporary... :/
+<smithzv> I'm taking the dog for a walk, be back in 10
+<@wvxvw> ok, I'm trying to figure out why QL won't load :index-mapped-arrays
+                                                                        [02:04]
+<smithzv> back  [02:12]
+<smithzv> It was included, correct?
+<smithzv> Anything I can do to help?  [02:13]
+<@wvxvw> yeah, but I need to sort out symlinks and such
+<@wvxvw> I was able to run init-game, but I can't find the window it opened :)
+<smithzv> It doesn't open a window
+<@wvxvw> ah... how do I see what it does?
+<smithzv> You should run (envisage:envisage) to open the window
+<@wvxvw> ooooh, ok
+<smithzv> In just adds things to the render list that the other scans  [02:14]
+<@wvxvw> ok, I see now
+<smithzv> Did it render a game board?
+<@wvxvw> it shows a grid of black squares and some gray circles and a green
+         pentagon
+<@wvxvw> if I drag the map, it rotates around the green pentagon  [02:15]
+<smithzv> The gray circles are the empty spaces, the green is supposed to be a
+          pivot
+<@wvxvw> oh
+<smithzv> But it is in the wrong place
+<smithzv> if there was anything on the map, it would be red
+<smithzv> load problem_1
+<smithzv> If you press '1' it will lock it so it won't rotate and you won't
+          the 3rd dimensional stuff that we aren't using  [02:16]
+<@wvxvw> it looks roughly the same
+<@wvxvw> that worked  [02:17]
+<smithzv> press f
+<smithzv> to zoom out, r to zoom in
+<@wvxvw> ok, it moves away from the "floor"
+<smithzv> wasd pans  [02:18]
+<@wvxvw> ok
+<smithzv> I see https://imgur.com/XyNcPA6  [02:21]
+<@wvxvw> for me it's rotated 90 degrees :)  [02:22]
+<@wvxvw> oh, wait, I think I rotated it, nevermind
+<smithzv> Yeah, press c to reset the view if you like
+<@wvxvw> and the green pentagon is in a different place
+<smithzv> Yep, I'm trying to fix it as we speak  [02:23]
+<@wvxvw> aha
+<smithzv> That is supposed to be the pivot.  It is supposed to go at the top.
+          I'm not drawing the active unit so it is a bit confusing right now
+<smithzv> Sorry 'C' to reset the view  [02:24]
+<smithzv> 'c' just recenters  [02:25]
+<@wvxvw> aha, ok
+<smithzv> Some of the json files don't parse the way I think they should.  I
+          get out of bounds errors...  [02:27]
+<@wvxvw> hm... can you give names?
+<smithzv> problem 10 for instance  [02:28]
+<smithzv> Haven't looked at it
+<smithzv> Map 14 is a pentagram
+<@wvxvw> bah  [02:29]
+<smithzv> I'm starting to wonder if I have the indexes transposed...
+<@wvxvw> yeah, that would explain the out of bounds
+<smithzv> and a lot of the maps look sideways
+<@wvxvw> #10 is not a square (10x7)
+<smithzv> yeah, that was it.  I need to swap the indexes on line 56 of
+          game.lisp  [02:31]
+<smithzv> works now
+<@wvxvw> I've been thinking... I'll probably take a nap soon (it's 2:30 here),
+         but I want to have a program for tomorrow  [02:32]
+<@wvxvw> Do you think you'll get to writing positioning of the piece on the
+         board?
+<smithzv> yes, pretty soon  [02:33]
+<smithzv> I think I have the pivot drawn in the right place now and that
+          defines the other positions
+<@wvxvw> I mean the actual calculation, not the visual part, right?
+<smithzv> I actually don't want to write positions until it is locked
+<smithzv> Even then, I am still a bit purposefully nebulous regarding the
+          implementation there.  [02:34]
+<smithzv> I want to keep the design fluid
+<@wvxvw> hmmm... how'd you lock without positioning?
+<smithzv> read hackish and easy to tear apart if it doesn't work
+<smithzv> I'm just saying that I want to keep the active unit separate from
+          the board which is static.  When it locks, I guess it will get
+          written to the board  [02:35]
+<@wvxvw> ah. ok. I meant something else: what I thought I'd work on: take the
+         board, the unit (at some coordinate) and check if it a valid
+         position. Not much more.  [02:36]
+<@wvxvw> suppose it fits: calculate some kind of score for how "well" it fits.
+                                                                        [02:37]
+<smithzv> oh, I see.
+<smithzv> I don't think I will get to that in the forseeable night ahead, but
+          perhaps when you wake up?  [02:38]
+<@wvxvw> yes, then I'll start working on it when I'm up.
+<smithzv> I have been aiming for a good framework so that tomorrow and the
+          next day go enjoyably.
+<@wvxvw> I also promised Jack I'll save the conversation for him.
+<smithzv> Okay, you should do it now.  We should get him a bnc/znc instance
+                                                                        [02:39]
+<@wvxvw> well, so far it looks like we still have time for that :)
+<@wvxvw> that's the first time I hear about bnc/znc :)  [02:40]
