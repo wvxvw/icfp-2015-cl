@@ -14,7 +14,7 @@
   | min length     |        20 |
   | std length     | 163.04715 |
 
-  Untis stats
+  Units stats
 
   | distinct units      |                                      |        91 |
   | most popular unit   | (:MEMBERS (0 0) (:PIVOT 0 0)         |        25 |
