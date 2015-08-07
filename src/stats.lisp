@@ -31,7 +31,9 @@
 (defun collect-info ()
   (let ((aggregate (make-aggregate)))
     (iter
-      (for file :in (directory #p"./problems/*.json"))
+      (for file :in (directory (asdf:system-relative-pathname
+                                (asdf:find-system :icfp-2015-cl)
+                                #p"./problems/*.json")))
       (parse-file file aggregate))
     (let ((max-width (reduce 'max (aggregate-width aggregate)))
           (avg-width (avg (aggregate-width aggregate)))
