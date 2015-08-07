@@ -21,118 +21,6 @@
   | least popular unit  | (:MEMBERS (0 0) (0 2) (:PIVOT (0 1)) |         1 |
   | avg number of units |                                      | 2.2527473 |
 
-** (:MEMBERS (0 0) (:PIVOT 0 0)
-   #+begin_example
-     /\                  
-     |.|                 
-     \/                  
-   #+end_example
-   occurs: 25 times
-
-** (:MEMBERS (0 0) (2 0) (:PIVOT 1 0)
-   #+begin_example
-     /\  /\              
-     | |.| |             
-     \/  \/              
-   #+end_example                    
-   occurs: 5 times
-
-** (:MEMBERS (0 0) (0 2) (:PIVOT 0 1)
-   #+begin_example
-     /\                  
-     | |                 
-     \/                  
-       .                 
-     /\                  
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 0) (0 1) (2 2) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-      /\ \/              
-      | |.               
-      \/ /\              
-         | |             
-         \/              
-   #+end_example                    
-   occurs: 2 times
-
-** (:MEMBERS (0 0) (1 1) (0 2) (:PIVOT 0 1)
-   #+begin_example
-     /\                  
-     | |                 
-     \/ /\               
-       .| |              
-     /\ \/               
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 0) (:PIVOT 0 0)
-   #+begin_example
-     /\/\                
-     |.| |               
-     \/\/                
-   #+end_example                    
-   occurs: 4 times
-
-** (:MEMBERS (0 0) (1 0) (:PIVOT 1 0)
-   #+begin_example
-     /\/\                
-     | |.|               
-     \/\/                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (0 1) (:PIVOT 0 0)
-   #+begin_example
-     /\                  
-     |.|                 
-     \/\                 
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (0 1) (:PIVOT 0 1)
-   #+begin_example
-     /\                  
-     | |                 
-     \/\                 
-      |.|                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 0) (2 0) (:PIVOT 0 0)
-   #+begin_example
-     /\/\/\              
-     |.| | |             
-     \/\/\/              
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 0) (2 0) (:PIVOT 1 0)
-   #+begin_example
-     /\/\/\              
-     | |.| |             
-     \/\/\/              
-   #+end_example                    
-   occurs: 7 times
-
-** (:MEMBERS (0 0) (1 0) (2 0) (:PIVOT 2 0)
-   #+begin_example
-     /\/\/\              
-     | | |.|             
-     \/\/\/              
-   #+end_example                    
-   occurs: 1 times
-
 ** (:MEMBERS (0 0) (0 1) (0 2) (:PIVOT 0 0)
    #+begin_example
      /\                  
@@ -165,6 +53,465 @@
       | |                
      /\/                 
      |.|                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (0 1) (1 1) (0 2) (:PIVOT 0 1)
+   #+begin_example
+     /\                  
+     | |                 
+     \/\/\               
+      |.| |              
+     /\/\/               
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (0 0) (0 1) (2 2) (1 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+     /\                  
+     | |                 
+     \/\/\               
+      | |.|              
+     /\/\/\              
+     | | | |             
+     \/  \/              
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (0 1) (:PIVOT 0 0)
+   #+begin_example
+     /\                  
+     |.|                 
+     \/\                 
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (0 1) (:PIVOT 0 1)
+   #+begin_example
+     /\                  
+     | |                 
+     \/\                 
+      |.|                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (0 2) (:PIVOT 0 1)
+   #+begin_example
+     /\                  
+     | |                 
+     \/                  
+       .                 
+     /\                  
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (0 2) (:PIVOT 0 6)
+   #+begin_example
+     /\                  
+     | |                 
+     \/                  
+     /\                  
+     | |                 
+     \/                  
+      .                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 0) (0 1) (0 2) (:PIVOT 0 1)
+   #+begin_example
+     /\/\                
+     | | |               
+     \/\/                
+      |.|                
+     /\/                 
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (0 0) (1 0) (0 1) (:PIVOT 0 0)
+   #+begin_example
+     /\/\                
+     |.| |               
+     \/\/                
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 2 times
+
+** (:MEMBERS (0 0) (1 0) (1 1) (0 1) (0 2) (:PIVOT 0 1)
+   #+begin_example
+     /\/\                
+     | | |               
+     \/\/\               
+      |.| |              
+     /\/\/               
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 0) (1 1) (1 2) (0 3) (:PIVOT 0 1)
+   #+begin_example
+     /\/\                
+     | | |               
+     \/\/\               
+       .| |              
+       /\/               
+       | |               
+      /\/                
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 0) (1 1) (:PIVOT 1 0)
+   #+begin_example
+     /\/\                
+     | |.|               
+     \/\/\               
+        | |              
+        \/               
+   #+end_example                    
+   occurs: 2 times
+
+** (:MEMBERS (0 0) (1 0) (2 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+     /\/\/\              
+     | | | |             
+     \/\/\/              
+      | |.               
+     /\/                 
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 0) (2 0) (3 0) (:PIVOT 1 0)
+   #+begin_examplee
+     /\/\/\/\            
+     | |.| | |           
+     \/\/\/\/            
+   #+end_example                    
+   occurs: 2 times
+** (:MEMBERS (0 0) (1 0) (2 0) (:PIVOT 0 0)
+   #+begin_example
+     /\/\/\              
+     |.| | |             
+     \/\/\/              
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 0) (2 0) (:PIVOT 1 0)
+   #+begin_example
+     /\/\/\              
+     | |.| |             
+     \/\/\/              
+   #+end_example                    
+   occurs: 7 times
+
+** (:MEMBERS (0 0) (1 0) (2 0) (:PIVOT 2 0)
+   #+begin_example
+     /\/\/\              
+     | | |.|             
+     \/\/\/              
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 0) (:PIVOT 0 0)
+   #+begin_example
+     /\/\                
+     |.| |               
+     \/\/                
+   #+end_example                    
+   occurs: 4 times
+
+** (:MEMBERS (0 0) (1 0) (:PIVOT 1 0)
+   #+begin_example
+     /\/\                
+     | |.|               
+     \/\/                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 1) (0 2) (:PIVOT 0 1)
+   #+begin_example
+     /\                  
+     | |                 
+     \/ /\               
+       .| |              
+     /\ \/               
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (1 1) (0 2) (:PIVOT 0 6)
+   #+begin_example
+     /\                  
+     | |                 
+     \/ /\               
+        | |              
+     /\ \/               
+     | |                 
+     \/                  
+      .                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (2 0) (0 2) (2 2) (:PIVOT 1 1)
+   #+begin_example
+     /\  /\              
+     | | | |             
+     \/  \/              
+         .               
+     /\  /\              
+     | | | |             
+     \/  \/              
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (2 0) (:PIVOT 1 0)
+   #+begin_example
+     /\  /\              
+     | |.| |             
+     \/  \/              
+   #+end_example                    
+   occurs: 5 times
+
+** (:MEMBERS (0 0) (2 0) (:PIVOT 1 5)
+   #+begin_example
+     /\  /\              
+     | | | |             
+     \/  \/              
+         .               
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 0) (:PIVOT 0 0)
+   #+begin_example
+     /\                  
+     |.|                 
+     \/                  
+   #+end_example
+   occurs: 25 times
+
+** (:MEMBERS (0 0) (:PIVOT 2 0)
+   #+begin_example
+     /\                  
+     | |  .              
+     \/                  
+   #+end_example                    
+   occurs: 2 times
+
+** (:MEMBERS (0 0) (:PIVOT 3 0)
+   #+begin_example
+     /\                  
+     | |    .            
+     \/                  
+   #+end_example                    
+   occurs: 10 times
+
+** (:MEMBERS (0 0) (:PIVOT 4 0)
+   #+begin_example
+     /\                  
+     | |      .          
+     \/                  
+   #+end_example                    
+   occurs: 8 times
+
+** (:MEMBERS (0 1) (0 0) (1 1) (2 0) (:PIVOT 0 1)
+   #+begin_example
+     /\  /\              
+     | | | |             
+     \/\/\/              
+      |.| |              
+      \/\/               
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 1) (1 1) (2 1) (2 0) (1 2) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+      /\/\/\             
+      | |.| |            
+      \/\/\/             
+       | |               
+       \/                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 1) (1 1) (3 0) (2 0) (1 2) (:PIVOT 1 1)
+   #+begin_example
+         /\/\            
+         | | |           
+      /\/\/\/            
+      | |.|              
+      \/\/               
+       | |               
+       \/                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 1) (1 1) (3 0) (2 0) (:PIVOT 1 0)
+   #+begin_example
+         /\/\            
+        .| | |           
+      /\/\/\/            
+      | | |              
+      \/\/               
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (0 1) (1 1) (3 1) (3 0) (2 0) (:PIVOT 1 0)
+   #+begin_example
+         /\/\            
+        .| | |           
+      /\/\/\/\           
+      | | | | |          
+      \/\/  \/           
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 2) (1 2) (3 0) (2 0) (1 1) (:PIVOT 1 1)
+   #+begin_example
+         /\/\            
+         | | |           
+        /\/\/            
+        |.|              
+     /\/\/               
+     | | |               
+     \/\/                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 3) (0 2) (0 0) (1 0) (0 1) (:PIVOT 0 1)
+   #+begin_example
+     /\/\                
+     | | |               
+     \/\/                
+      |.|                
+     /\/                 
+     | |                 
+     \/\                 
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 3) (0 2) (1 1) (1 0) (0 1) (:PIVOT 0 1)
+   #+begin_example
+       /\                
+       | |               
+      /\/\               
+      |.| |              
+     /\/\/               
+     | |                 
+     \/\                 
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (0 3) (0 2) (2 0) (1 0) (0 1) (:PIVOT 1 1)
+   #+begin_example
+       /\/\              
+       | | |             
+      /\/\/              
+      | |.               
+     /\/                 
+     | |                 
+     \/\                 
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 0) (0 0) (1 1) (2 1) (:PIVOT 1 0)
+   #+begin_example
+     /\/\                
+     | |.|               
+     \/\/\/\             
+        | | |            
+        \/\/             
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 0) (0 0) (2 0) (1 1) (:PIVOT 1 0)
+   #+begin_example
+     /\/\/\              
+     | |.| |             
+     \/\/\/              
+        | |              
+        \/               
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 0) (0 0) (2 0) (2 1) (:PIVOT 1 0)
+   #+begin_example
+     /\/\/\              
+     | |.| |             
+     \/\/\/\             
+          | |            
+          \/             
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 0) (0 0) (2 0) (3 0) (:PIVOT 1 0)
+   #+begin_example
+     /\/\/\/\            
+     | |.| | |           
+     \/\/\/\/            
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 0) (0 1) (0 2) (:PIVOT 0 1)
+   #+begin_example
+       /\                
+       | |               
+      /\/                
+      |.|                
+     /\/                 
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (1 0) (0 1) (1 1) (1 2) (0 3) (:PIVOT 0 1)
+   #+begin_example
+       /\                
+       | |               
+      /\/\               
+      |.| |              
+      \/\/               
+       | |               
+      /\/                
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 0) (0 1) (1 2) (0 3) (0 4) (:PIVOT 0 2)
+   #+begin_example
+       /\                
+       | |               
+      /\/                
+      | |                
+      \/\                
+      .| |               
+      /\/                
+      | |                
+     /\/                 
+     | |                 
      \/                  
    #+end_example                    
    occurs: 1 times
@@ -205,127 +552,49 @@
    #+end_example                    
    occurs: 1 times
 
-** (:MEMBERS (2 0) (3 0) (:PIVOT 0 0)
+** (:MEMBERS (1 0) (1 1) (1 2) (0 3) (0 4) (:PIVOT 0 2)
    #+begin_example
-         /\/\            
-      .  | | |           
-         \/\/            
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (:PIVOT 2 0)
-   #+begin_example
-     /\                  
-     | |  .              
+       /\                
+       | |               
+       \/\               
+        | |              
+       /\/               
+      .| |               
+      /\/                
+      | |                
+     /\/                 
+     | |                 
      \/                  
    #+end_example                    
-   occurs: 2 times
-
-** (:MEMBERS (1 0) (2 0) (0 1) (2 1) (1 2) (2 2) (:PIVOT 1 1)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/\             
-      | |.| |            
-      \/\/\/             
-       | | |             
-       \/\/              
-   #+end_example                    
    occurs: 1 times
 
-** (:MEMBERS (0 0) (:PIVOT 4 0)
+** (:MEMBERS (1 0) (1 1) (1 2) (0 3) (:PIVOT 0 1)
    #+begin_example
-     /\                  
-     | |      .          
-     \/                  
-   #+end_example                    
-   occurs: 8 times
-
-** (:MEMBERS (1 0) (2 0) (0 1) (2 1) (1 2) (2 2) (:PIVOT 3 5)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/\             
-      | | | |            
-      \/\/\/             
-       | | |             
-       \/\/              
-             .           
-   #+end_example                    
-   occurs: 2 times
-
-** (:MEMBERS (1 0) (2 0) (3 0) (0 1) (3 1) (0 2) (4 2) (0 3) (3 3) (1 4) (2 4) (3 4) (:PIVOT 8 6)
-   #+begin_example
-       /\/\/\            
-       | | | |           
-      /\/\/\/\           
-      | |   | |          
-     /\/    \/\          
-     | |     | |         
-     \/\    /\/          
-      | |   | |          
-      \/\/\/\/           
-       | | | |           
-       \/\/\/            
-                      .  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (2 0) (3 0) (0 1) (1 1) (2 1) (3 1) (0 2) (2 2) (4 2) (0 3) (1 3) (2 3) (3 3) (0 4) (2 4) (4 4) (:PIVOT 2 2)
-   #+begin_example
-       /\/\/\            
-       | | | |           
-      /\/\/\/\           
-      | | | | |          
-     /\/\/\/\/\          
-     | | |.| | |         
-     \/\/\/\/\/          
-      | | | | |          
-     /\/\/\/\/\          
-     | | | | | |         
-     \/  \/  \/          
-   #+end_example                    
-   occurs: 2 times
-
-** (:MEMBERS (0 0) (2 0) (0 2) (2 2) (:PIVOT 1 1)
-   #+begin_example
-     /\  /\              
-     | | | |             
-     \/  \/              
-         .               
-     /\  /\              
-     | | | |             
-     \/  \/              
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 0) (0 1) (:PIVOT 0 0)
-   #+begin_example
-     /\/\                
-     |.| |               
-     \/\/                
+       /\                
+       | |               
+       \/\               
+       .| |              
+       /\/               
+       | |               
+      /\/                
       | |                
       \/                 
    #+end_example                    
-   occurs: 2 times
+   occurs: 3 times
 
-** (:MEMBERS (0 0) (1 0) (1 1) (:PIVOT 1 0)
+** (:MEMBERS (1 0) (1 1) (2 1) (1 2) (0 3) (:PIVOT 1 1)
    #+begin_example
-     /\/\                
-     | |.|               
-     \/\/\               
-        | |              
-        \/               
+       /\                
+       | |               
+       \/\/\             
+        |.| |            
+       /\/\/             
+       | |               
+      /\/                
+      | |                
+      \/                 
    #+end_example                    
-   occurs: 2 times
-
-** (:MEMBERS (0 0) (:PIVOT 3 0)
-   #+begin_example
-     /\                  
-     | |    .            
-     \/                  
-   #+end_example                    
-   occurs: 10 times
+   occurs: 1 times
 
 ** (:MEMBERS (1 0) (1 1) (2 2) (1 3) (2 3) (1 4) (3 4) (0 5) (3 5) (:PIVOT 2 2)
    #+begin_example
@@ -345,49 +614,30 @@
    #+end_example                    
    occurs: 5 times
 
-** (:MEMBERS (2 0) (1 1) (1 2) (0 3) (0 4) (:PIVOT 1 2)
+** (:MEMBERS (1 0) (2 0) (0 1) (2 1) (1 2) (2 2) (:PIVOT 1 1)
    #+begin_example
-         /\              
-         | |             
-        /\/              
-        | |              
-       /\/               
-       |.|               
-      /\/                
-      | |                
-     /\/                 
-     | |                 
-     \/                  
+       /\/\              
+       | | |             
+      /\/\/\             
+      | |.| |            
+      \/\/\/             
+       | | |             
+       \/\/              
    #+end_example                    
    occurs: 1 times
 
-** (:MEMBERS (3 0) (2 0) (1 1) (1 2) (0 3) (:PIVOT 1 1)
+** (:MEMBERS (1 0) (2 0) (0 1) (2 1) (1 2) (2 2) (:PIVOT 3 5)
    #+begin_example
-         /\/\            
-         | | |           
-        /\/\/            
-        |.|              
-       /\/               
-       | |               
-      /\/                
-      | |                
-      \/                 
+       /\/\              
+       | | |             
+      /\/\/\             
+      | | | |            
+      \/\/\/             
+       | | |             
+       \/\/              
+             .           
    #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 1) (2 0) (1 1) (1 2) (0 3) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-        /\/\             
-        |.| |            
-       /\/\/             
-       | |               
-      /\/                
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
+   occurs: 2 times
 
 ** (:MEMBERS (1 0) (2 0) (1 1) (1 2) (0 3) (:PIVOT 1 1)
    #+begin_example
@@ -403,654 +653,36 @@
    #+end_example                    
    occurs: 1 times
 
-** (:MEMBERS (1 0) (1 1) (1 2) (0 3) (0 4) (:PIVOT 0 2)
-   #+begin_example
-       /\                
-       | |               
-       \/\               
-        | |              
-       /\/               
-      .| |               
-      /\/                
-      | |                
-     /\/                 
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 2) (1 1) (2 0) (1 2) (0 3) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-        /\/              
-        |.|              
-       /\/\              
-       | | |             
-      /\/\/              
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (3 0) (2 1) (1 1) (1 2) (0 3) (:PIVOT 1 1)
-   #+begin_example
-           /\            
-           | |           
-        /\/\/            
-        |.| |            
-       /\/\/             
-       | |               
-      /\/                
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (3 0) (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
+** (:MEMBERS (1 0) (2 0) (3 0) (0 1) (1 1) (2 1) (3 1) (0 2) (2 2) (4 2) (0 3) (1 3) (2 3) (3 3) (0 4) (2 4) (4 4) (:PIVOT 2 2)
    #+begin_example
        /\/\/\            
        | | | |           
-      /\/\/\/            
-      | |.               
-     /\/                 
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 1) (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/\             
-      | |.| |            
-     /\/  \/             
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 1) (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/              
-      | |.|              
-     /\/\/               
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 0) (2 0) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-     /\/\/\              
-     | | | |             
-     \/\/\/              
-      | |.               
-     /\/                 
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (1 1) (2 1) (1 2) (0 3) (:PIVOT 1 1)
-   #+begin_example
-       /\                
-       | |               
-       \/\/\             
-        |.| |            
-       /\/\/             
-       | |               
-      /\/                
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 2) (0 1) (2 0) (1 0) (0 2) (:PIVOT 1 1)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/              
-      | |.               
-     /\/\                
-     | | |               
-     \/\/                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 1) (1 1) (3 0) (2 0) (1 2) (:PIVOT 1 1)
-   #+begin_example
-         /\/\            
-         | | |           
-      /\/\/\/            
-      | |.|              
-      \/\/               
-       | |               
-       \/                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 3) (0 2) (2 0) (1 0) (0 1) (:PIVOT 1 1)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/              
-      | |.               
-     /\/                 
-     | |                 
-     \/\                 
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 2) (1 2) (3 0) (2 0) (1 1) (:PIVOT 1 1)
-   #+begin_example
-         /\/\            
-         | | |           
-        /\/\/            
-        |.|              
-     /\/\/               
-     | | |               
-     \/\/                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 1) (1 1) (1 0) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-       /\                
-       | |               
-      /\/\/\             
-      | |.| |            
-     /\/\/\/             
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 2) (1 1) (1 0) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-       /\                
-       | |               
-      /\/\               
-      | |.|              
-     /\/\/\              
-     | | | |             
-     \/  \/              
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 2) (1 1) (1 0) (0 1) (0 2) (:PIVOT 0 1)
-   #+begin_example
-       /\                
-       | |               
-      /\/\               
-      |.| |              
-     /\/\/               
-     | | |               
-     \/\/                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 0) (1 1) (0 1) (0 2) (:PIVOT 0 1)
-   #+begin_example
-     /\/\                
-     | | |               
-     \/\/\               
-      |.| |              
-     /\/\/               
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 1) (1 1) (2 1) (2 0) (1 2) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-      /\/\/\             
-      | |.| |            
-      \/\/\/             
-       | |               
-       \/                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 3) (0 2) (1 1) (1 0) (0 1) (:PIVOT 0 1)
-   #+begin_example
-       /\                
-       | |               
-      /\/\               
-      |.| |              
-     /\/\/               
-     | |                 
-     \/\                 
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (0 1) (1 1) (1 2) (0 3) (:PIVOT 0 1)
-   #+begin_example
-       /\                
-       | |               
-      /\/\               
-      |.| |              
-      \/\/               
-       | |               
-      /\/                
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 3) (0 2) (0 0) (1 0) (0 1) (:PIVOT 0 1)
-   #+begin_example
-     /\/\                
-     | | |               
-     \/\/                
-      |.|                
-     /\/                 
-     | |                 
-     \/\                 
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (0 1) (1 2) (0 3) (0 4) (:PIVOT 0 2)
-   #+begin_example
-       /\                
-       | |               
-      /\/                
-      | |                
-      \/\                
-      .| |               
-      /\/                
-      | |                
-     /\/                 
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 0) (1 1) (1 2) (0 3) (:PIVOT 0 1)
-   #+begin_example
-     /\/\                
-     | | |               
-     \/\/\               
-       .| |              
-       /\/               
-       | |               
-      /\/                
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 4) (0 3) (1 0) (1 1) (1 2) (:PIVOT 0 2)
-   #+begin_example
-       /\                
-       | |               
-       \/\               
-        | |              
-       /\/               
-      .| |               
-      /\/                
-      | |                
-      \/\                
-       | |               
-       \/                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (3 0) (2 0) (1 1) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-         /\/\            
-         | | |           
-      /\/\/\/            
-      | |.|              
-     /\/\/               
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 0) (2 1) (2 2) (1 2) (0 3) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-         \/\             
-         .| |            
-       /\/\/             
-       | | |             
-      /\/\/              
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 2) (1 1) (2 0) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-      /\/\/              
-      | |.|              
-     /\/\/\              
-     | | | |             
-     \/  \/              
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 2) (2 1) (2 0) (1 0) (0 1) (:PIVOT 1 1)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/\             
-      | |.| |            
-      \/ /\/             
-         | |             
-         \/              
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (0 1) (2 2) (1 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-     /\                  
-     | |                 
-     \/\/\               
-      | |.|              
-     /\/\/\              
-     | | | |             
-     \/  \/              
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 1) (1 1) (3 1) (3 0) (2 0) (:PIVOT 1 0)
-   #+begin_example
-         /\/\            
-        .| | |           
       /\/\/\/\           
       | | | | |          
-      \/\/  \/           
+     /\/\/\/\/\          
+     | | |.| | |         
+     \/\/\/\/\/          
+      | | | | |          
+     /\/\/\/\/\          
+     | | | | | |         
+     \/  \/  \/          
    #+end_example                    
-   occurs: 1 times
+   occurs: 2 times
 
-** (:MEMBERS (0 0) (2 0) (:PIVOT 1 5)
+** (:MEMBERS (1 0) (2 0) (3 0) (0 1) (3 1) (0 2) (4 2) (0 3) (3 3) (1 4) (2 4) (3 4) (:PIVOT 8 6)
    #+begin_example
-     /\  /\              
-     | | | |             
-     \/  \/              
-         .               
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (0 2) (:PIVOT 0 6)
-   #+begin_example
-     /\                  
-     | |                 
-     \/                  
-     /\                  
-     | |                 
-     \/                  
-      .                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (2 0) (0 1) (2 2) (:PIVOT 1 6)
-   #+begin_example
-         /\              
-         | |             
-      /\ \/              
-      | |                
-      \/ /\              
-         | |             
-         \/              
-        .                
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 0) (1 1) (0 2) (:PIVOT 0 6)
-   #+begin_example
-     /\                  
-     | |                 
-     \/ /\               
-        | |              
-     /\ \/               
-     | |                 
-     \/                  
-      .                  
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (0 1) (0 2) (:PIVOT 0 1)
-   #+begin_example
-       /\                
-       | |               
-      /\/                
-      |.|                
-     /\/                 
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (2 0) (1 0) (0 1) (:PIVOT 1 0)
-   #+begin_example
-       /\/\              
-       |.| |             
-      /\/\/              
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (1 1) (1 0) (0 1) (:PIVOT 0 0)
-   #+begin_example
-       /\                
-      .| |               
-      /\/\               
-      | | |              
-      \/\/               
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (2 0) (1 1) (1 2) (0 3) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-        /\/              
-        |.|              
-       /\/               
-       | |               
-      /\/                
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-       /\/\              
-       | | |             
-      /\/\/              
-      | |.               
-     /\/                 
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (1 1) (1 0) (0 1) (0 2) (:PIVOT 0 1)
-   #+begin_example
-       /\                
-       | |               
-      /\/\               
-      |.| |              
-     /\/\/               
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (0 0) (1 0) (0 1) (0 2) (:PIVOT 0 1)
-   #+begin_example
-     /\/\                
-     | | |               
-     \/\/                
-      |.|                
-     /\/                 
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (1 0) (1 1) (1 2) (0 3) (:PIVOT 0 1)
-   #+begin_example
-       /\                
-       | |               
-       \/\               
-       .| |              
-       /\/               
-       | |               
-      /\/                
-      | |                
-      \/                 
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (2 0) (1 1) (0 1) (0 2) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-      /\/\/              
-      | |.|              
-     /\/\/               
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (2 1) (2 0) (1 0) (0 1) (:PIVOT 1 0)
-   #+begin_example
-       /\/\              
-       |.| |             
-      /\/\/\             
-      | | | |            
-      \/  \/             
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (1 1) (2 0) (1 0) (0 1) (:PIVOT 1 0)
-   #+begin_example
-       /\/\              
-       |.| |             
-      /\/\/              
-      | | |              
-      \/\/               
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (0 0) (0 1) (1 1) (0 2) (:PIVOT 0 1)
-   #+begin_example
-     /\                  
-     | |                 
-     \/\/\               
-      |.| |              
-     /\/\/               
-     | |                 
-     \/                  
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (0 1) (1 1) (3 0) (2 0) (:PIVOT 1 0)
-   #+begin_example
-         /\/\            
-        .| | |           
-      /\/\/\/            
-      | | |              
-      \/\/               
-   #+end_example                    
-   occurs: 3 times
-
-** (:MEMBERS (1 0) (0 0) (2 0) (3 0) (:PIVOT 1 0)
-   #+begin_example
-     /\/\/\/\            
-     | |.| | |           
-     \/\/\/\/            
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 1) (0 1) (2 1) (3 0) (:PIVOT 1 1)
-   #+begin_example
-           /\            
-           | |           
-      /\/\/\/            
-      | |.| |            
-      \/\/\/             
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (0 0) (2 0) (2 1) (:PIVOT 1 0)
-   #+begin_example
-     /\/\/\              
-     | |.| |             
-     \/\/\/\             
-          | |            
-          \/             
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 1) (0 1) (2 1) (2 0) (:PIVOT 1 1)
-   #+begin_example
-         /\              
-         | |             
-      /\/\/\             
-      | |.| |            
-      \/\/\/             
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (0 0) (2 0) (1 1) (:PIVOT 1 0)
-   #+begin_example
-     /\/\/\              
-     | |.| |             
-     \/\/\/              
-        | |              
-        \/               
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (0 1) (0 0) (1 1) (2 0) (:PIVOT 0 1)
-   #+begin_example
-     /\  /\              
-     | | | |             
-     \/\/\/              
-      |.| |              
-      \/\/               
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 1) (0 1) (2 0) (3 0) (:PIVOT 1 1)
-   #+begin_example
-         /\/\            
-         | | |           
-      /\/\/\/            
-      | |.|              
-      \/\/               
-   #+end_example                    
-   occurs: 1 times
-
-** (:MEMBERS (1 0) (0 0) (1 1) (2 1) (:PIVOT 1 0)
-   #+begin_example
-     /\/\                
-     | |.|               
-     \/\/\/\             
-        | | |            
-        \/\/             
+       /\/\/\            
+       | | | |           
+      /\/\/\/\           
+      | |   | |          
+     /\/    \/\          
+     | |     | |         
+     \/\    /\/          
+      | |   | |          
+      \/\/\/\/           
+       | | | |           
+       \/\/\/            
+                      .  
    #+end_example                    
    occurs: 1 times
 
@@ -1076,10 +708,378 @@
    #+end_example                    
    occurs: 1 times
 
-** (:MEMBERS (0 0) (1 0) (2 0) (3 0) (:PIVOT 1 0)
-   #+begin_examplee
-     /\/\/\/\            
-     | |.| | |           
-     \/\/\/\/            
+** (:MEMBERS (1 1) (0 1) (2 0) (3 0) (:PIVOT 1 1)
+   #+begin_example
+         /\/\            
+         | | |           
+      /\/\/\/            
+      | |.|              
+      \/\/               
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 1) (0 1) (2 1) (2 0) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+      /\/\/\             
+      | |.| |            
+      \/\/\/             
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 1) (0 1) (2 1) (3 0) (:PIVOT 1 1)
+   #+begin_example
+           /\            
+           | |           
+      /\/\/\/            
+      | |.| |            
+      \/\/\/             
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 1) (1 0) (0 1) (0 2) (:PIVOT 0 1)
+   #+begin_example
+       /\                
+       | |               
+      /\/\               
+      |.| |              
+     /\/\/               
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (1 1) (1 0) (0 1) (:PIVOT 0 0)
+   #+begin_example
+       /\                
+      .| |               
+      /\/\               
+      | | |              
+      \/\/               
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (1 1) (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+       /\/\              
+       | | |             
+      /\/\/              
+      | |.|              
+     /\/\/               
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 1) (2 0) (1 0) (0 1) (:PIVOT 1 0)
+   #+begin_example
+       /\/\              
+       |.| |             
+      /\/\/              
+      | | |              
+      \/\/               
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (1 2) (0 1) (2 0) (1 0) (0 2) (:PIVOT 1 1)
+   #+begin_example
+       /\/\              
+       | | |             
+      /\/\/              
+      | |.               
+     /\/\                
+     | | |               
+     \/\/                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 2) (1 1) (1 0) (0 1) (0 2) (:PIVOT 0 1)
+   #+begin_example
+       /\                
+       | |               
+      /\/\               
+      |.| |              
+     /\/\/               
+     | | |               
+     \/\/                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (1 4) (0 3) (1 0) (1 1) (1 2) (:PIVOT 0 2)
+   #+begin_example
+       /\                
+       | |               
+       \/\               
+        | |              
+       /\/               
+      .| |               
+      /\/                
+      | |                
+      \/\                
+       | |               
+       \/                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 0) (0 1) (2 2) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+      /\ \/              
+      | |.               
+      \/ /\              
+         | |             
+         \/              
    #+end_example                    
    occurs: 2 times
+
+** (:MEMBERS (2 0) (0 1) (2 2) (:PIVOT 1 6)
+   #+begin_example
+         /\              
+         | |             
+      /\ \/              
+      | |                
+      \/ /\              
+         | |             
+         \/              
+        .                
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+       /\/\              
+       | | |             
+      /\/\/              
+      | |.               
+     /\/                 
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (2 0) (1 0) (0 1) (:PIVOT 1 0)
+   #+begin_example
+       /\/\              
+       |.| |             
+      /\/\/              
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (2 0) (1 1) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+      /\/\/              
+      | |.|              
+     /\/\/               
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (2 0) (1 1) (1 2) (0 3) (0 4) (:PIVOT 1 2)
+   #+begin_example
+         /\              
+         | |             
+        /\/              
+        | |              
+       /\/               
+       |.|               
+      /\/                
+      | |                
+     /\/                 
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 0) (1 1) (1 2) (0 3) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+        /\/              
+        |.|              
+       /\/               
+       | |               
+      /\/                
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (2 0) (2 1) (2 2) (1 2) (0 3) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+         \/\             
+         .| |            
+       /\/\/             
+       | | |             
+      /\/\/              
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 0) (3 0) (:PIVOT 0 0)
+   #+begin_example
+         /\/\            
+      .  | | |           
+         \/\/            
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 1) (1 1) (1 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+       /\                
+       | |               
+      /\/\/\             
+      | |.| |            
+     /\/\/\/             
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 1) (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+       /\/\              
+       | | |             
+      /\/\/\             
+      | |.| |            
+     /\/  \/             
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 1) (2 0) (1 0) (0 1) (:PIVOT 1 0)
+   #+begin_example
+       /\/\              
+       |.| |             
+      /\/\/\             
+      | | | |            
+      \/  \/             
+   #+end_example                    
+   occurs: 3 times
+
+** (:MEMBERS (2 1) (2 0) (1 1) (1 2) (0 3) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+        /\/\             
+        |.| |            
+       /\/\/             
+       | |               
+      /\/                
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 2) (1 1) (1 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+       /\                
+       | |               
+      /\/\               
+      | |.|              
+     /\/\/\              
+     | | | |             
+     \/  \/              
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 2) (1 1) (2 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+      /\/\/              
+      | |.|              
+     /\/\/\              
+     | | | |             
+     \/  \/              
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 2) (1 1) (2 0) (1 2) (0 3) (:PIVOT 1 1)
+   #+begin_example
+         /\              
+         | |             
+        /\/              
+        |.|              
+       /\/\              
+       | | |             
+      /\/\/              
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (2 2) (2 1) (2 0) (1 0) (0 1) (:PIVOT 1 1)
+   #+begin_example
+       /\/\              
+       | | |             
+      /\/\/\             
+      | |.| |            
+      \/ /\/             
+         | |             
+         \/              
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (3 0) (2 0) (1 0) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+       /\/\/\            
+       | | | |           
+      /\/\/\/            
+      | |.               
+     /\/                 
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (3 0) (2 0) (1 1) (0 1) (0 2) (:PIVOT 1 1)
+   #+begin_example
+         /\/\            
+         | | |           
+      /\/\/\/            
+      | |.|              
+     /\/\/               
+     | |                 
+     \/                  
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (3 0) (2 0) (1 1) (1 2) (0 3) (:PIVOT 1 1)
+   #+begin_example
+         /\/\            
+         | | |           
+        /\/\/            
+        |.|              
+       /\/               
+       | |               
+      /\/                
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
+** (:MEMBERS (3 0) (2 1) (1 1) (1 2) (0 3) (:PIVOT 1 1)
+   #+begin_example
+           /\            
+           | |           
+        /\/\/            
+        |.| |            
+       /\/\/             
+       | |               
+      /\/                
+      | |                
+      \/                 
+   #+end_example                    
+   occurs: 1 times
+
