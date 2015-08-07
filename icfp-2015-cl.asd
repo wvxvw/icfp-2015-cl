@@ -11,5 +11,9 @@
   :serial t
   :components
   ((:file "package")
-   (:file "main"))
+   (:file "main")
+   (:module "src"
+            :serial t
+            :components
+            ((:file "lcg"))))
   :description "ICFP 2015")
