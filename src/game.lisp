@@ -53,7 +53,7 @@
                                     (cdr (assoc :width data)))
                               :initial-element 0))
     (iter (for cell :in (cdr (assoc :filled data)))
-      (setf (aref *board* (cdr (assoc :x cell)) (cdr (assoc :y cell)))
+      (setf (aref *board* (cdr (assoc :y cell)) (cdr (assoc :x cell)))
             1))
     (setf *unit-array*
           (iter (for unit :in (cdr (assoc :units data)))
