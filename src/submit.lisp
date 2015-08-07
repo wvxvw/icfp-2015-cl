@@ -1,4 +1,6 @@
 
+(in-package :icfp-2015-cl)
+
 (defparameter *submission-url*
   "https://davar.icfpcontest.org/teams/168/solutions")
 
