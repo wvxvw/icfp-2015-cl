@@ -17,5 +17,6 @@
             :serial t
             :components
             ((:file "lcg")
-             (:file "submit"))))
+             (:file "submit")
+             (:file "stats"))))
   :description "ICFP 2015")
