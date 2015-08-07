@@ -93,6 +93,6 @@
   | UTC   | oooooooo    | oxxxxxxx    | xxxxxooo    |
   | Jack  | xxxxxxxx    | xxxxxxxx    | oooooooo    |
   | Josh  | xxoooooo    | ooooooxx    | xxxxxxxx    |
-  | Jacob | xxxxoooo    | oooooooo    | xxxxxxxx    |
+  | Jacob | xxxxxxoo    | oooooxxx    | xxxxxxxx    |
   | Zach  | xxxxoooo    | oooooooo    | xxxxxxxx    |
   | Oleg  | ooooooox    | xxxxxxxx    | xxxooooo    |
