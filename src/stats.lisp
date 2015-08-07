@@ -28,6 +28,15 @@
 (defun avg (data)
   (/ (reduce '+ data) (length data)))
 
+(defun std (data &optional e)
+  (let ((e (or e (avg data))))
+    (sqrt
+     (/ 
+      (iter
+        (for datum :in data)
+        (summing (expt (- datum e) 2)))
+      (length data)))))
+
 (defun collect-info ()
   (let ((aggregate (make-aggregate)))
     (iter
@@ -35,30 +44,36 @@
                                 (asdf:find-system :icfp-2015-cl)
                                 #p"./problems/*.json")))
       (parse-file file aggregate))
-    (let ((max-width (reduce 'max (aggregate-width aggregate)))
-          (avg-width (avg (aggregate-width aggregate)))
-          (min-width (reduce 'min (aggregate-width aggregate)))
-          (max-height (reduce 'max (aggregate-height aggregate)))
-          (avg-height (avg (aggregate-height aggregate)))
-          (min-height (reduce 'min (aggregate-height aggregate)))
-          (max-length (reduce 'max (aggregate-source-length aggregate)))
-          (avg-length (avg (aggregate-source-length aggregate)))
-          (min-length (reduce 'min (aggregate-source-length aggregate))))
+    (let* ((max-width (reduce 'max (aggregate-width aggregate)))
+           (avg-width (avg (aggregate-width aggregate)))
+           (min-width (reduce 'min (aggregate-width aggregate)))
+           (std-width (std (aggregate-width aggregate) avg-width))
+           (max-height (reduce 'max (aggregate-height aggregate)))
+           (avg-height (avg (aggregate-height aggregate)))
+           (min-height (reduce 'min (aggregate-height aggregate)))
+           (std-height (std (aggregate-width aggregate) avg-height))
+           (max-length (reduce 'max (aggregate-source-length aggregate)))
+           (avg-length (avg (aggregate-source-length aggregate)))
+           (min-length (reduce 'min (aggregate-source-length aggregate)))
+           (std-length (std (aggregate-width aggregate) avg-length)))
       (format t "~&max width: ~d ~
                  ~&avg width: ~f ~
                  ~&min width: ~d ~
+                 ~&std width: ~f ~
                  ~&------------- ~
                  ~&max height: ~d ~
                  ~&avg height: ~f ~
                  ~&min height: ~d ~
+                 ~&std height: ~f ~
                  ~&-------------- ~
                  ~&max length: ~d ~
                  ~&avg length: ~f ~
                  ~&min length: ~d ~
+                 ~&std length: ~f ~
                  ~&--------------"
-              max-width avg-width min-width 
-              max-height avg-height min-height
-              max-length avg-length min-length)
+              max-width avg-width min-width std-width
+              max-height avg-height min-height std-height
+              max-length avg-length min-length std-length)
       (iter
         (with max-value := 0)
         (with max-key := nil)
