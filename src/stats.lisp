@@ -94,23 +94,8 @@
       (let ((x (cdr (assoc :x element)))
             (y (cdr (assoc :y element)))
             (offset-x 0) (offset-y 0))
-        (cond
-          ((and (= x 0) (= y 1))
-           (setf offset-x 0 offset-y 2))
-          ((and (= x 0) (= y 2))
-           (setf offset-x 0 offset-y 4))
-          ((and (= x 1) (= y 0))
-           (setf offset-x 2 offset-y 0))
-          ((and (= x 1) (= y 1))
-           (setf offset-x 2 offset-y 2))
-          ((and (= x 1) (= y 2))
-           (setf offset-x 2 offset-y 4))
-          ((and (= x 2) (= y 0))
-           (setf offset-x 4 offset-y 0))
-          ((and (= x 2) (= y 1))
-           (setf offset-x 4 offset-y 2))
-          ((and (= x 2) (= y 2))
-           (setf offset-x 4 offset-y 4)))
+        (setf offset-x (* 2 x)
+              offset-y (* 2 y))
         (when (oddp y) (incf offset-x))
         (setf (aref piece offset-y       offset-x)       #\/
               (aref piece offset-y       (+ 1 offset-x)) #\\
@@ -123,9 +108,9 @@
       (when (oddp (/ py 2)) (incf px))
     (setf (aref piece (1+ py) (1+ px)) #\.))
     (iter
-      (for i :below 7)
+      (for i :below (array-dimension piece 0))
       (iter
-        (for j :below 6)
+        (for j :below (array-dimension piece 1))
         (format stream "~c" (aref piece i j)))
       (terpri stream))))
         
