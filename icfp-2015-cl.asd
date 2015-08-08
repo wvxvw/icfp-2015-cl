@@ -6,7 +6,8 @@
 	   "Joshua Kordani <joshua.kordani@gmail.com>")
   :license "MIT"
   :depends-on ("alexandria" "iterate" "split-sequence" "optima"
-                            "cl-containers" "drakma" "cl-json")
+                            "cl-containers" "drakma" "cl-json"
+                            "cl-svg")
   :build-operation program-op
   :entry-point "icfp-2015-cl::entry-point"
   :serial t
@@ -18,5 +19,6 @@
             :components
             ((:file "lcg")
              (:file "submit")
-             (:file "stats"))))
+             (:file "stats")
+             (:file "render-svg"))))
   :description "ICFP 2015")
