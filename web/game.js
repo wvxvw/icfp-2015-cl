@@ -1,8 +1,8 @@
 $(function ($) {
-    $('body').keyup(function (event) {
-        console.log('keyup');
-        $.post('/move.svg', { move: event.key }, function () {
-            alert('success');
+    var body = $('body');
+    body.keyup(function (event) {
+        $.post('/move.svg', { move: event.key }, function (data) {
+            body.append(data);
         }).fail(function () {
             alert('error');
         });
