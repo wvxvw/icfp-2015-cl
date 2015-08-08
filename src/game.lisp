@@ -44,18 +44,22 @@
 (defvar *unit-command-list* nil
   "This list holds the history of how the current unit got to where it is.")
 
+(defun init-board (json-data)
+  (let ((board (make-array (list (cdr (assoc :height json-data))
+                                 (cdr (assoc :width json-data)))
+                           :initial-element 0)))
+    (iter (for cell :in (cdr (assoc :filled json-data)))
+      (setf (aref board (cdr (assoc :y cell)) (cdr (assoc :x cell)))
+            1))
+    board))
+
 (defun init-game (file-or-data)
   (let ((data (if (or (pathnamep file-or-data)
                       (stringp file-or-data))
                   (with-open-file (in file-or-data)
                     (cl-json:decode-json in))
                   file-or-data)))
-    (setf *board* (make-array (list (cdr (assoc :height data))
-                                    (cdr (assoc :width data)))
-                              :initial-element 0))
-    (iter (for cell :in (cdr (assoc :filled data)))
-      (setf (aref *board* (cdr (assoc :y cell)) (cdr (assoc :x cell)))
-            1))
+    (setf *board* (init-board data))
     (setf *unit-array*
           (iter (for unit :in (cdr (assoc :units data)))
             (collecting
