@@ -125,7 +125,7 @@
                   (< mem-y 0) (>= mem-y (first dim))
                   (= 1 (aref board mem-y mem-x)))
               (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
-              (collect (v+ pos (list mem-x mem-y)))))))))
+              (collect (list mem-x mem-y))))))))
 
 ;; This code applies a rotation.  You can derive this by algebra.  The tricky
 ;; part here is that shift of the indexes between the style that the spec uses
