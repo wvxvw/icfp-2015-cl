@@ -64,14 +64,13 @@
   (coerce 
    (iter
      (for i :below (array-dimension board 1))
-     (collect (list i
-                    (iter
-                      (with row := 0)
-                      (for j :below (array-dimension board 0))
-                      (for bit := (aref board j i))
-                      (setf row (ash row 1)
-                            row (logior row bit))
-                      (finally (return row))))))
+     (collect (iter
+                (with row := 0)
+                (for j :below (array-dimension board 0))
+                (for bit := (aref board j i))
+                (setf row (ash row 1)
+                      row (logior row bit))
+                (finally (return row)))))
    'vector))
 
 (defun translate-unit (unit &key (format 'vector))
@@ -101,40 +100,46 @@
 (defun unit-to-binary (unit)
   (board-to-binary (translate-unit unit)))
 
+(defun fit (hole peg hole-size peg-size)
+  (assert (<= peg-size hole-size))
+  (format t "~&fit: ~b, ~b" hole peg)
+  (iter
+    (for i :below (- hole-size peg-size))
+    (when (= (logandc1 hole peg) peg)
+      (collect i))
+    (setf peg (ash peg 1))))
+
 (defun find-match (board unit)
-  (let ((width (array-dimension board 1))
-        (height (array-dimension board 0))
-        (binary-board (board-to-binary board))
-        (binary-unit (unit-to-binary unit)))
+  (let* ((width (array-dimension board 1))
+         (height (array-dimension board 0))
+         (binary-board (board-to-binary board))
+         (translated (translate-unit unit))
+         (binary-unit (board-to-binary translated)))
     (iter
-      (with i := (1- (length binary-board)))
-      (with j := (1- (length binary-unit)))
-      (with back-row := i)
-      (with back-col := 0)
-      (while (>= i 0))
-      (let ((match 
-                (iter
-                  (with tester := j)
-                  (with row := (aref binary-board i))
-                  (for k :from back-col)
-                  (while (< tester (expt 2 width)))
-                  (when (logandc1 row tester)
-                    (return k))
-                  (setf tester (ash j (incf k)))
-                  (finally (return -1)))))
-        (if (> 0 match)
-            (if (= 0 j)
-                (return (cons i match))
-                (progn
-                  (decf i)
-                  (decf j)
-                  (setf back-col match)))
-            (if (< back-col (1- width))
-                (progn
-                  (incf back-col)
-                  (setf i back-row))
-                (setf back-col 0
-                      i (1- back-row))))))))
+      (with board-tip := (1- height))
+      (with unit-tip := (1- (length binary-unit)))
+      (with unit-width := (1- (array-dimension translated 1)))
+      (with current-board-row := (aref binary-board board-tip))
+      (with current-unit-row := (aref binary-unit unit-tip))
+      (with positions := (fit current-board-row current-unit-row width unit-width))
+      (with offset := 0)
+      (while (>= unit-tip 0))
+      (if positions
+          (progn
+            (setf offset (car positions)
+                  positions (cdr positions))
+            (iter
+              (for rows :from board-tip :downto 0)
+              (for unit-rows :from unit-tip :downto 0)
+              (for current-board-row := (aref binary-board rows))
+              (for current-unit-row := (aref binary-unit unit-rows))
+              (unless (= (logandc1 current-board-row current-unit-row) current-unit-row)
+                (return))
+              (finally (return-from find-match (cons board-tip offset)))))
+          (progn
+            (decf board-tip)
+            (setf unit-tip (1- (length binary-unit))
+                  positions (fit current-board-row current-unit-row width unit-width)))))))
 
 ;; testing
 
@@ -145,8 +150,7 @@
 
 (defun test-find-match (file)
   (init-game file)
-  (multiple-value-bind (match-board match-unit)
+  (destructuring-bind (border-tip . offset)
       (find-match *board* *unit*)
-    (format t "~&~s~&~{~{~d:~b~}~^~&~}~&~s"
-            *board* (coerce match-board 'list) match-unit)
+    (format t "~&~s~&y: ~d, x: ~d" *board* border-tip offset)
     (values)))
