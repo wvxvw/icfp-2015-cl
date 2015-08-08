@@ -120,8 +120,12 @@
                    (setf pos (v+ '(-1 1) pos))
                    (setf pos (v+ '(0 1) pos))))))
       (iter (for mem :in (members unit))
-        (destructuring-bind (mem-x mem-y) (apply-rotation mem rot pos)
-          (collect (v+ pos (list mem-x mem-y))))))))
+        (destructuring-bind (mem-x mem-y) (v+ pos (apply-rotation mem rot pos))
+          (if (or (< mem-x 0) (>= mem-x (second dim))
+                  (< mem-y 0) (>= mem-y (first dim))
+                  (= 1 (aref board mem-y mem-x)))
+              (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
+              (collect (v+ pos (list mem-x mem-y)))))))))
 
 (defun apply-rotation (member rot pos)
   (destructuring-bind (mem-x mem-y) member
