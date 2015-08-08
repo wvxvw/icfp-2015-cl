@@ -35,6 +35,9 @@
 (defun board-dimensions (board)
   (array-dimensions board))
 
+(defun board-dimension (board i)
+  (array-dimension board (mod (+ i 1) 2)))
+
 (defun bref (board x y)
   (aref board y
         (mod (+ x (shift y)) (array-dimension board 1))))

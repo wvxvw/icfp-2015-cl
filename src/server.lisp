@@ -4,8 +4,8 @@
 
 (defun game-to-svg (&key (board *board*) (unit *unit*))
   (if (and board unit)
-      (let* ((width (array-dimension board 1))
-             (height (array-dimension board 0))
+      (let* ((width (board-dimension board 0))
+             (height (board-dimension board 1))
              (tunit (if (listp unit)
                         unit
                         (translate-unit unit :format 'list)))
@@ -27,7 +27,7 @@
                               ((some (alexandria:curry #'equal (list col row))
                                      tunit)
                                "red")
-                              ((= 1 (aref board row col))
+                              ((= 1 (bref board col row))
                                "yellow")
                               (t "none")))))
         svg)
