@@ -39,8 +39,6 @@
 (tbnl:define-easy-handler (move :uri "/move.svg"
                                 :default-request-type :post)
     (direction)
-  (tbnl:log-message* :error "~&direction: ~s" direction)
-  (tbnl:log-message* :error "~&params: ~s" (tbnl:post-parameters*))
   (issue-command (intern (string-upcase direction) (find-package "KEYWORD")))
   (with-output-to-string (stream)
     (destructuring-bind (pivot members)
@@ -51,14 +49,14 @@
 (tbnl:define-easy-handler (play :uri "/play.svg"
                                 :default-request-type :post)
     (game)
-  ;; sorry, I'm too lazy to set up logging.
-  (tbnl:log-message* :error "~&game: ~s" game)
-  (tbnl:log-message* :error "~&params: ~s" (tbnl:post-parameters*))
   (init-game (asdf:system-relative-pathname
               (asdf:find-system :icfp-2015-cl)
               (format nil "./problems/~a" game)))
-    (with-output-to-string (stream)
-      (output-svg (game-to-svg) stream)))
+  (with-output-to-string (stream)
+    (destructuring-bind (pivot members)
+        (position-unit *board* *unit* *unit-command-list*)
+      (output-svg (game-to-svg :unit members)
+                  stream))))
 
 (defun start-server (&key (port 8888))
   (setf *server*
