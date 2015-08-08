@@ -41,7 +41,7 @@
     (direction)
   (tbnl:log-message* :error "~&direction: ~s" direction)
   (tbnl:log-message* :error "~&params: ~s" (tbnl:post-parameters*))
-  (issue-command (intern direction (find-package "KEYWORD")))
+  (issue-command (intern (string-upcase direction) (find-package "KEYWORD")))
   (with-output-to-string (stream)
     (output-svg (game-to-svg :unit
                              (position-unit *board* *unit* *unit-command-list*))

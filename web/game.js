@@ -1,6 +1,6 @@
 $(function ($) {
     var body = $('body'), play = $('#play'), container = $('#container'),
-        keys = { '65': 'e', '70': 'w', '83': 'se', '68': 'sw', '37': 'cw', '39': 'ccw' };
+        keys = { '65': 'w', '70': 'e', '83': 'sw', '68': 'se', '37': 'cw', '39': 'ccw' };
     function loadBoard(data) {
         container.empty();
         container.append(data);
