@@ -6,9 +6,9 @@
            "Jacob MacDonald <jaccarmac@gmail.com>"
            "Joshua Kordani <joshua.kordani@gmail.com>")
   :license "MIT"
-  :depends-on ("alexandria" "iterate" "split-sequence" "optima"
-                            "cl-containers" "drakma" "cl-json"
-                            "cl-svg" "cl-ppcre")
+  :depends-on ("alexandria" "iterate" "split-sequence"
+                            "drakma" "cl-json" "cl-svg"
+                            "cl-ppcre" "hunchentoot")
   :build-operation program-op
   :entry-point "icfp-2015-cl::entry-point"
   :serial t
@@ -24,5 +24,6 @@
              (:file "render-svg")
              (:file "rankings")
              (:file "game")
-             (:file "scoring"))))
+             (:file "scoring")
+             (:file "server"))))
   :description "ICFP 2015")
