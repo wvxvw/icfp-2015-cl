@@ -61,6 +61,28 @@
     (list filled (count-outer-ribs board)
           (count-adjacent-ribs board))))
 
+(defun ranges (board row)
+  (iter
+    (with width := (array-dimension board 1))
+    (with started := nil)
+    (for col :below width)
+    (for cell := (aref board row col))
+    (cond
+      ((and (null started) (= 0 cell))
+       (setf started col))
+      ((and started (= cell 1))
+       (collect (list started (1- col)) :into result)
+       (setf started nil)))
+    (finally (when started
+               (return (append result
+                               (list (list started (1- col)))))))))
+
+(defun board-tunnel (board)
+  (iter
+    (with height := (array-dimension board 0))
+    (for row :below height)
+    (collect (ranges board row))))
+
 (defun board-to-binary (board)
   (coerce 
    (iter
@@ -155,3 +177,11 @@
       (find-match *board* *unit*)
     (format t "~&~s~&y: ~d, x: ~d" *board* border-tip offset)
     (values)))
+
+(defun test-ranges (file row)
+  (init-game file)
+  (ranges *board* row))
+
+(defun test-tunnel (file)
+  (init-game file)
+  (board-tunnel *board*))
