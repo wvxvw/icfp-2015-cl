@@ -9,6 +9,11 @@
              :width (+ (/ *hex-width* 2) (* *hex-width* width))
              :height (* *hex-height* height))
       ((make-pathname :type "svg" :defaults (pathname name)) :if-exists :supersede)
+    (svg:draw scene
+        (:rect :x 0 :y 0
+               :width (* *hex-width* (+ 1 width))
+               :height (* *hex-height* (+ 1 height))
+               :style "fill:rgb(255,255,255)"))
     (mapcar #'(lambda (col)
                 (mapcar #'(lambda (row) (draw-hex scene col row))
                         (alexandria:iota height)))
