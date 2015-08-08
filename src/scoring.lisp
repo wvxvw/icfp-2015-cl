@@ -60,9 +60,39 @@
     (list filled (count-outer-ribs board)
           (count-adjacent-ribs board))))
 
+(defun board-to-binary (board)
+  (coerce 
+   (iter
+     (for i :below (array-dimension board 1))
+     (collect (cons i
+                    (iter
+                      (with row := 0)
+                      (for j :below (array-dimension board 0))
+                      (for bit := (aref board j i))
+                      (setf row (ash row -1)
+                            row (logior row bit))))))
+   'vector))
+
+(defun unit-to-binary (unit)
+  unit)
+
+(defun find-match (board unit)
+  (let ((binary-board (board-to-binary board))
+        (binary-unit (unit-to-binary unit)))
+    (values binary-board binary-unit)))
+
+;; testing
+
 (defun test-scoring (file)
   (with-open-file (stream file)
     (let* ((data (cl-json:decode-json stream))
            (board (init-board data))
            (score (board-score board)))
       (values board score))))
+
+(defun test-find-match (file)
+  (with-open-file (stream file)
+    (let* ((data (cl-json:decode-json stream))
+           (board (init-board data))
+           (match (find-match board nil)))
+      (values board match))))
