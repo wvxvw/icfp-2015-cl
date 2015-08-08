@@ -196,7 +196,7 @@
    occurs: 1 times
 
 ** (:MEMBERS (0 0) (1 0) (2 0) (3 0) (:PIVOT 1 0)
-   #+begin_examplee
+   #+begin_example
      /\/\/\/\            
      | |.| | |           
      \/\/\/\/            
