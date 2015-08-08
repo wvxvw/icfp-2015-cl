@@ -93,9 +93,39 @@
       (board-to-binary translated))))
 
 (defun find-match (board unit)
-  (let ((binary-board (board-to-binary board))
+  (let ((width (array-dimension board 1))
+        (height (array-dimension board 0))
+        (binary-board (board-to-binary board))
         (binary-unit (unit-to-binary unit)))
-    (values binary-board binary-unit)))
+    (iter
+      (with i := (1- (length binary-board)))
+      (with j := (1- (length binary-unit)))
+      (with back-row := i)
+      (with back-col := 0)
+      (while (>= i 0))
+      (let ((match 
+                (iter
+                  (with tester := j)
+                  (with row := (aref binary-board i))
+                  (for k :from back-col)
+                  (while (< tester (expt 2 width)))
+                  (when (logandc1 row tester)
+                    (return k))
+                  (setf tester (ash j (incf k)))
+                  (finally (return -1)))))
+        (if (> 0 match)
+            (if (= 0 j)
+                (return (cons i match))
+                (progn
+                  (decf i)
+                  (decf j)
+                  (setf back-col match)))
+            (if (< back-col (1- width))
+                (progn
+                  (incf back-col)
+                  (setf i back-row))
+                (setf back-col 0
+                      i (1- back-row))))))))
 
 ;; testing
 
