@@ -1,4 +1,5 @@
-(defsystem "icfp-2015-cl"
+(in-package #:asdf-user)
+(asdf:defsystem :icfp-2015-cl
   :version "0.1"
   :author ("Oleg Sivokon <olegsivokon@gmail.com>"
            "Zach Kost-Smith <zachkostsmith@gmail.com>"
@@ -7,7 +8,7 @@
   :license "MIT"
   :depends-on ("alexandria" "iterate" "split-sequence" "optima"
                             "cl-containers" "drakma" "cl-json"
-                            "cl-svg")
+                            "cl-svg" "cl-ppcre")
   :build-operation program-op
   :entry-point "icfp-2015-cl::entry-point"
   :serial t
@@ -20,5 +21,6 @@
             ((:file "lcg")
              (:file "submit")
              (:file "stats")
-             (:file "render-svg"))))
+             (:file "render-svg")
+	     (:file "rankings"))))
   :description "ICFP 2015")
