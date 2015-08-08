@@ -2,17 +2,18 @@
 (in-package :icfp-2015-cl)
 
 (defparameter *hex-keymap*
-  '((west #\d)
-    (east #\t)
-    (south-west #\b)
-    (south-east #\m)
-    (rot-clockwise #\x)
-    (rot-counterclockwise #\w)))
+  '((#\d :w)
+    (#\t :e)
+    (#\b :sw)
+    (#\m :se)
+    (#\x :cw)
+    (#\w :ccw)))
 
 (defmethod glut:keyboard ((window glut:window) key x y)
-  (let ((member? (member key (reduce 'append *hex-keymap* :key 'rest))))
-    (when member?
-      (issue-command (first member?)))))
+  (ignore-errors
+   (let ((member? (member key *hex-keymap* :key 'first)))
+     (when member?
+       (issue-command (second (first member?)))))))
 
 (defvar *board*
   nil
@@ -88,7 +89,14 @@
                           :unit-command-list *unit-command-list*)))))
 
 (defun issue-command (command)
-  (print command))
+  (push command *unit-command-list*)
+  (setf envisage:*objects-to-draw*
+        (list
+         (make-instance 'game-state
+                        :board *board*
+                        :unit *unit*
+                        :command-list *command-list*
+                        :unit-command-list *unit-command-list*))))
 
 (defclass game-state ()
   ((board :initarg :board :initform nil :accessor board)
@@ -120,10 +128,23 @@
           (setf x-min (first mem)))
         (when (or (not x-max) (< x-max (first mem)))
           (setf x-max (first mem))))
-      (let* ((unit-width (- x-max x-min))
+      (let* ((rot 0)
+             (unit-width (- x-max x-min))
              (east-shift (floor (- (second dim) unit-width) 2))
-             (init-pos (list (- east-shift x-min) (- y-min))))
-        (destructuring-bind (x y) init-pos
+             (pos (list (- east-shift x-min) (- y-min))))
+        (iter (for com :in (reverse (unit-command-list state)))
+          (case com
+            (:cw (decf rot (/ pi 3)))
+            (:ccw (incf rot (/ pi 3)))
+            (:e (setf pos (v:+ '(1 0) pos)))
+            (:w (setf pos (v:+ '(-1 0) pos)))
+            (:se (if (evenp (second pos))
+                     (setf pos (v:+ '(0 1) pos))
+                     (setf pos (v:+ '(1 1) pos))))
+            (:sw (if (evenp (second pos))
+                     (setf pos (v:+ '(-1 1) pos))
+                     (setf pos (v:+ '(0 1) pos))))))
+        (destructuring-bind (x y) pos
           (gl:with-pushed-matrix* (:modelview)
             (when (oddp y)
               (gl:translate 5 0 0))
@@ -134,6 +155,6 @@
             (gl:with-pushed-matrix* (:modelview)
               (when (oddp (+ mem-y y))
                 (gl:translate 5 0 0))
-              (gl:translate (* (+ x mem-x) 10) (* (+ mem-y y) -8.6) -1)
+              (gl:translate (* (+ x mem-x) 10) (* (+ y mem-y) -8.6) -1)
               (gl:color .3 .4 1)
               (glut:solid-sphere 5 16 3))))))))
