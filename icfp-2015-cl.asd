@@ -1,4 +1,4 @@
-(in-package :icfp-2015-cl)
+(in-package #:asdf-user)
 (asdf:defsystem :icfp-2015-cl
   :version "0.1"
   :author ("Oleg Sivokon <olegsivokon@gmail.com>"
