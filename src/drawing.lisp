@@ -68,6 +68,11 @@
     (destructuring-bind (pivot members)
         (position-unit *board* *unit* *unit-command-list*)
       (gl:with-pushed-matrix* (:modelview)
+        (gl:translate 0 0 -10)
+        (gl:color .3 .4 1)
+        (apply 'fill-cell pivot))
+
+      (gl:with-pushed-matrix* (:modelview)
         (gl:translate 0 0 -5)
         (iter (for member :in members)
           (destructuring-bind (x y) member
