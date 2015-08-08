@@ -1,14 +1,6 @@
 
 (in-package :icfp-2015-cl)
 
-(defparameter *hex-keymap*
-  '((#\d :w)
-    (#\t :e)
-    (#\b :sw)
-    (#\m :se)
-    (#\x :cw)
-    (#\w :ccw)))
-
 (defvar *board*
   nil
   "This holds the state of the grid")

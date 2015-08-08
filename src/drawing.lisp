@@ -10,6 +10,14 @@
                         :command-list *command-list*
                         :unit-command-list *unit-command-list*))))
 
+(defparameter *hex-keymap*
+  '((#\d :w)
+    (#\t :e)
+    (#\b :sw)
+    (#\m :se)
+    (#\x :cw)
+    (#\w :ccw)))
+
 (defmethod glut:keyboard ((window glut:window) key x y)
   (ignore-errors
    (let ((member? (member key *hex-keymap* :key 'first)))
