@@ -62,7 +62,7 @@
 (defun start-server (&key (port 8888))
   (setf *server*
         (tbnl:start (make-instance
-                     'hunchentoot:easy-acceptor
+                     'tbnl:easy-acceptor
                      :port port
                      :access-log-destination
                      (asdf:system-relative-pathname

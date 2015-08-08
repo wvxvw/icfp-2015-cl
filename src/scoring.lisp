@@ -12,18 +12,19 @@
                    (cond
                      ;; corners
                      ((or (and (= i 0) (= j 0))
-                          (and (= i (1- width)) (= j (1- height)))
-                          (and (= i 0) (= j (1- height)))
-                          (and (= i (1- width)) (= j 0)))
+                          (and (oddp height) (and (= i 0) (= j (1- height))))
+                          (and (evenp height) (and (= i (1- width)) (= j (1- height)))))
                       4)
                      ;; outermost vertical borders
-                     ((and (or (= i 0) (= i (1- width))) (oddp j))
+                     ((or (and (evenp j) (= i 0))
+                          (and (oddp j) (= i (1- width))))
                       3)
                      ;; top and bottom
                      ((or (= j 0) (= j (1- height)))
                       2)
                      ;; innermost vertical borders
-                     ((or (= i 0) (= i (1- width)))
+                     ((or (and (oddp j) (= i 0))
+                          (and (evenp j) (= i (1- width))))
                       1))))
               (in :outer (summing (or cnt 0))))))))
 
