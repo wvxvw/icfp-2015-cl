@@ -1096,3 +1096,9 @@ power":
 - Ia! Ia! (problem 3)
 - R'lyeh (problem 5)
 - Yuggoth (problem 7)
+
+* Game interface
+  After loading the project, run =(icfp-2015-cl::start-server)=, then navigate
+  your browser to http://localhost:8888 it will start the game.
+  WASD moves pieces, arrows rotate pieces (not implemented yet).  See server.lisp
+  for more details.
