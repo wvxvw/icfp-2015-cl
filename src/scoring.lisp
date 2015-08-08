@@ -2,8 +2,8 @@
 
 (defun count-outer-ribs (board)
   (iter :outer
-        (with width := (array-dimension board 0))
-        (with height := (array-dimension board 1))
+        (with width := (array-dimension board 1))
+        (with height := (array-dimension board 0))
         (for j :below height)
         (iter
           (for i :below width)
@@ -29,8 +29,8 @@
 
 (defun count-adjacent-ribs (board)
   (iter :outer
-        (with width := (array-dimension board 0))
-        (with height := (array-dimension board 1))
+        (with width := (array-dimension board 1))
+        (with height := (array-dimension board 0))
         (for j :from 1 :below height)
         (iter
           (for i :from 1 :below width)
@@ -53,9 +53,9 @@
 (defun board-score (board)
   (let ((filled
          (iter :outer
-           (for i :below (array-dimension board 0))
+           (for i :below (array-dimension board 1))
            (iter
-             (for j :below (array-dimension board 1))
+             (for j :below (array-dimension board 0))
              (in :outer (summing (aref board j i)))))))
     (list filled (count-outer-ribs board)
           (count-adjacent-ribs board))))
