@@ -59,11 +59,11 @@
     (with-output-to-string (stream)
       (output-svg (game-to-svg) stream)))
 
-(defun start-server ()
+(defun start-server (&key (port 8888))
   (setf *server*
         (tbnl:start (make-instance
                      'hunchentoot:easy-acceptor
-                     :port 8888
+                     :port port
                      :access-log-destination
                      (asdf:system-relative-pathname
                       (asdf:find-system :icfp-2015-cl) #p"./web/access.log")
