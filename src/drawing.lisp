@@ -24,6 +24,12 @@
      (when member?
        (issue-command (second (first member?)))))))
 
+(defun v+ (&rest vecs)
+  (apply 'map 'list '+ vecs))
+
+(defun v- (&rest vecs)
+  (apply 'map 'list '- vecs))
+
 (defun init-game (file-or-data)
   (let ((data (if (or (pathnamep file-or-data)
                       (stringp file-or-data))
