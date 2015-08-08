@@ -4,8 +4,8 @@
 
 (defun game-to-svg (&key (board *board*) (unit *unit*))
   (if (and board unit)
-      (let* ((width (array-dimension board 1))
-             (height (array-dimension board 0))
+      (let* ((width (board-dimension board 0))
+             (height (board-dimension board 1))
              (tunit (if (listp unit)
                         unit
                         (translate-unit unit :format 'list)))
@@ -27,7 +27,7 @@
                               ((some (alexandria:curry #'equal (list col row))
                                      tunit)
                                "red")
-                              ((= 1 (aref board row col))
+                              ((= 1 (bref board col row))
                                "yellow")
                               (t "none")))))
         svg)
@@ -39,25 +39,24 @@
 (tbnl:define-easy-handler (move :uri "/move.svg"
                                 :default-request-type :post)
     (direction)
-  (tbnl:log-message* :error "~&direction: ~s" direction)
-  (tbnl:log-message* :error "~&params: ~s" (tbnl:post-parameters*))
   (issue-command (intern (string-upcase direction) (find-package "KEYWORD")))
   (with-output-to-string (stream)
-    (output-svg (game-to-svg :unit
-                             (position-unit *board* *unit* *unit-command-list*))
-                stream)))
+    (destructuring-bind (pivot members)
+        (position-unit *board* *unit* *unit-command-list*)
+      (output-svg (game-to-svg :unit members)
+                  stream))))
 
 (tbnl:define-easy-handler (play :uri "/play.svg"
                                 :default-request-type :post)
     (game)
-  ;; sorry, I'm too lazy to set up logging.
-  (tbnl:log-message* :error "~&game: ~s" game)
-  (tbnl:log-message* :error "~&params: ~s" (tbnl:post-parameters*))
   (init-game (asdf:system-relative-pathname
               (asdf:find-system :icfp-2015-cl)
               (format nil "./problems/~a" game)))
-    (with-output-to-string (stream)
-      (output-svg (game-to-svg) stream)))
+  (with-output-to-string (stream)
+    (destructuring-bind (pivot members)
+        (position-unit *board* *unit* *unit-command-list*)
+      (output-svg (game-to-svg :unit members)
+                  stream))))
 
 (defun start-server (&key (port 8888))
   (setf *server*

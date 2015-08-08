@@ -30,13 +30,40 @@
 (defvar *unit-command-list* nil
   "This list holds the history of how the current unit got to where it is.")
 
+(defun shift (y) (floor y 2))
+
+(defun vshift- (v)
+  (destructuring-bind (x y) v
+    (list (- x (shift y)) y)))
+
+(defun vshift+ (v)
+  (destructuring-bind (x y) v
+    (list (+ x (shift y)) y)))
+
+(defun board-dimensions (board)
+  (array-dimensions board))
+
+(defun board-dimension (board i)
+  (array-dimension board (mod (+ i 1) 2)))
+
+(defun bref (board x y)
+  (aref board y
+        (mod (+ x (shift y)) (array-dimension board 1))))
+
+(defun set-bref (board x y val)
+  (setf
+   (aref board y
+         (mod (+ x (shift y)) (array-dimension board 1)))
+   val))
+
+(defsetf bref set-bref)
+
 (defun init-board (json-data)
   (let ((board (make-array (list (cdr (assoc :height json-data))
                                  (cdr (assoc :width json-data)))
                            :initial-element 0)))
     (iter (for cell :in (cdr (assoc :filled json-data)))
-      (setf (aref board (cdr (assoc :y cell)) (cdr (assoc :x cell)))
-            1))
+      (setf (bref board (cdr (assoc :x cell)) (cdr (assoc :y cell))) 1))
     board))
 
 (defclass game-state ()
@@ -46,11 +73,6 @@
                       :initform nil
                       :accessor unit-command-list)
    (command-list :initarg :command-list :initform nil :accessor command-list)))
-
-(defun rot-mat (theta)
-  (list (list (cos theta) (- (sin theta)))
-        (list (+ (sin theta)) (cos theta))))
-
 
 (defun issue-command (command)
   (push command *unit-command-list*))
@@ -72,14 +94,16 @@
           (iter (for unit :in (cdr (assoc :units data)))
             (collecting
              (let ((pivot
-                     (list (cdr (assoc :x (cdr (assoc :pivot unit))))
-                           (cdr (assoc :y (cdr (assoc :pivot unit)))))))
-               (make-instance 'unit
-                              :members (iter (for mem :in (cdr (assoc :members unit)))
-                                         (collect (v-
-                                                   (list (cdr (assoc :x mem))
-                                                         (cdr (assoc :y mem)))
-                                                   pivot)))))
+                     (vshift- (list (cdr (assoc :x (cdr (assoc :pivot unit))))
+                                    (cdr (assoc :y (cdr (assoc :pivot unit))))))))
+               (make-instance
+                'unit
+                :members
+                (iter (for mem :in (cdr (assoc :members unit)))
+                  (let ((y (cdr (assoc :y mem))))
+                    (collect (v-
+                              (list (- (cdr (assoc :x mem)) (shift y)) y)
+                              pivot))))))
              :result-type 'vector)))
     (when (< 1 (length (cdr (assoc :source-seeds data))))
       (warn "There are seeds that we're ignoring"))
@@ -113,41 +137,32 @@
           (:ccw (incf rot 1))
           (:e (setf pos (v+ '(1 0) pos)))
           (:w (setf pos (v+ '(-1 0) pos)))
-          (:se (if (evenp (second pos))
-                   (setf pos (v+ '(0 1) pos))
-                   (setf pos (v+ '(1 1) pos))))
-          (:sw (if (evenp (second pos))
-                   (setf pos (v+ '(-1 1) pos))
-                   (setf pos (v+ '(0 1) pos))))))
-      (iter (for mem :in (members unit))
-        (destructuring-bind (mem-x mem-y) (v+ pos (apply-rotation mem rot pos))
-          (if (or (< mem-x 0) (>= mem-x (second dim))
-                  (< mem-y 0) (>= mem-y (first dim))
-                  (= 1 (aref board mem-y mem-x)))
-              (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
-              (collect (list mem-x mem-y))))))))
+          (:se (setf pos (v+ '(0 1) pos)))
+          (:sw (setf pos (v+ '(-1 1) pos)))))
+      (list
+       (vshift+ pos)
+       (iter (for mem :in (members unit))
+         (destructuring-bind (mem-x mem-y) (v+ pos (apply-rotation mem rot pos))
+           (let ((mem-x (+ mem-x (shift mem-y))))
+             (if (or (< mem-x 0) (>= mem-x (second dim))
+                     (< mem-y 0) (>= mem-y (first dim))
+                     (= 1 (bref board mem-x mem-y)))
+                 (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
+                 (collect (list mem-x mem-y))))))))))
 
 ;; This code applies a rotation.  You can derive this by algebra.  The tricky
 ;; part here is that shift of the indexes between the style that the spec uses
 ;; and more traditional triangle lattice indexes.  To covert them, I use the
 ;; traditional-shift function which applied a shift to the x coordinate.
-(defun traditional-shift (pivot-y y)
-  (- (floor (+ pivot-y y) 2)
-     (floor pivot-y 2)))
-
 (defun apply-rotation (member rot pos)
   (destructuring-bind (mem-x mem-y) member
     (destructuring-bind (x y) pos
       (labels ((%apply-rotation (mem-x mem-y rot x y)
-                 (cond ((= rot 0) (list (+ mem-x
-                                            (traditional-shift y mem-y))
-                                        mem-y))
+                 (cond ((= rot 0) (list mem-x mem-y))
                        ((> rot 0)
                         (%apply-rotation (+ mem-x mem-y) (- mem-x)
                                          (- rot 1) x y))
                        ((< rot 0)
                         (%apply-rotation (- mem-y) (+ mem-x mem-y)
                                          (+ rot 1) x y)))))
-        (%apply-rotation
-         (- mem-x (traditional-shift y mem-y))
-         mem-y rot x y)))))
+        (%apply-rotation mem-x mem-y rot x y)))))
