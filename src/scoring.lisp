@@ -74,7 +74,7 @@
                       (finally (return row))))))
    'vector))
 
-(defun unit-to-binary (unit)
+(defun translate-unit (unit &key (format 'vector))
   (multiple-value-bind (tx ty width height)
       (iter
         (for (x y) :in (members unit))
@@ -86,11 +86,20 @@
          (return (values min-x min-y
                          (1+ (- max-x min-x))
                          (1+ (- max-y min-y))))))
-    (let ((translated (make-array (list width height) :initial-element 0)))
-      (iter
-        (for (x y) :in (members unit))
-        (setf (aref translated (- x tx) (- y ty)) 1))
-      (board-to-binary translated))))
+    (ecase format
+      (vector 
+       (let ((translated (make-array (list width height) :initial-element 0)))
+         (iter
+           (for (x y) :in (members unit))
+           (setf (aref translated (- x tx) (- y ty)) 1))
+         translated))
+      (list
+       (iter
+         (for (x y) :in (members unit))
+         (collect (list (- x tx) (- y ty))))))))
+
+(defun unit-to-binary (unit)
+  (board-to-binary (translate-unit unit)))
 
 (defun find-match (board unit)
   (let ((width (array-dimension board 1))

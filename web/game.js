@@ -14,7 +14,7 @@ $(function ($) {
         // 37 - left
         // 39 - right
         if ([65, 70, 83, 68, 37, 39].indexOf(event.keyCode) > -1) {
-            $.post('/move.svg', { move: keys[event.keyCode] }, function (data) {
+            $.post('/move.svg', { direction: keys[event.keyCode] }, function (data) {
                 loadBoard(data);
             }).fail(function () {
                 alert('error');
