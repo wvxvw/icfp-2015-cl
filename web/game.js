@@ -1,6 +1,6 @@
 $(function ($) {
     var body = $('body'), play = $('#play'), container = $('#container'),
-        keys = { '65': 'e', '70': 'w', '83': 'se', '68': 'sw', '37': 'cw', '39': 'ccw' };
+        keys = { '65': 'w', '70': 'e', '83': 'sw', '68': 'se', '37': 'cw', '39': 'ccw' };
     function loadBoard(data) {
         container.empty();
         container.append(data);
@@ -14,7 +14,7 @@ $(function ($) {
         // 37 - left
         // 39 - right
         if ([65, 70, 83, 68, 37, 39].indexOf(event.keyCode) > -1) {
-            $.post('/move.svg', { move: keys[event.keyCode] }, function (data) {
+            $.post('/move.svg', { direction: keys[event.keyCode] }, function (data) {
                 loadBoard(data);
             }).fail(function () {
                 alert('error');
