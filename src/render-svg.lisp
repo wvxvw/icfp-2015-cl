@@ -8,7 +8,7 @@
       (scene 'svg:svg-1.1-toplevel
              :width (+ (/ *hex-width* 2) (* *hex-width* width))
              :height (* *hex-height* height))
-      ((pathname (concatenate 'string name ".svg")) :if-exists :supersede)
+      ((make-pathname :type "svg" :defaults (pathname name)) :if-exists :supersede)
     (mapcar #'(lambda (col)
                 (mapcar #'(lambda (row) (draw-hex scene col row))
                         (alexandria:iota height)))
