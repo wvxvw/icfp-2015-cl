@@ -1083,3 +1083,16 @@
    #+end_example                    
    occurs: 1 times
 
+* Known or Probable Phrases of Power 
+
+We are given:
+
+- Ei!
+
+Checking the maps, several spell out words which are most likely "phrases of
+power":
+
+- Ei! (problem 1)
+- Ia! Ia! (problem 3)
+- R'lyeh (problem 5)
+- Yuggoth (problem 7)
