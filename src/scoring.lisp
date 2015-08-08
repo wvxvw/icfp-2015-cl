@@ -2,8 +2,8 @@
 
 (defun count-outer-ribs (board)
   (iter :outer
-        (with width := (board-dimension board 1))
-        (with height := (board-dimension board 0))
+        (with width := (board-dimension board 0))
+        (with height := (board-dimension board 1))
         (for j :below height)
         (iter
           (for i :below width)
@@ -30,8 +30,8 @@
 
 (defun count-adjacent-ribs (board)
   (iter :outer
-        (with width := (board-dimension board 1))
-        (with height := (board-dimension board 0))
+        (with width := (board-dimension board 0))
+        (with height := (board-dimension board 1))
         (for j :from 1 :below height)
         (iter
           (for i :from 1 :below width)
@@ -54,9 +54,9 @@
 (defun board-score (board)
   (let ((filled
          (iter :outer
-           (for i :below (board-dimension board 1))
+           (for i :below (board-dimension board 0))
            (iter
-             (for j :below (board-dimension board 0))
+             (for j :below (board-dimension board 1))
              (in :outer (summing (bref board i j)))))))
     (list filled (count-outer-ribs board)
           (count-adjacent-ribs board))))
@@ -121,10 +121,10 @@
 (defun board-to-binary (board)
   (coerce 
    (iter
-     (for i :below (board-dimension board 1))
+     (for i :below (board-dimension board 0))
      (collect (iter
                 (with row := 0)
-                (for j :below (board-dimension board 0))
+                (for j :below (board-dimension board 1))
                 (for bit := (bref board i j))
                 (setf row (ash row 1)
                       row (logior row bit))
@@ -168,8 +168,8 @@
     (setf peg (ash peg 1))))
 
 (defun find-match (board unit)
-  (let* ((width (board-dimension board 1))
-         (height (board-dimension board 0))
+  (let* ((width (board-dimension board 0))
+         (height (board-dimension board 1))
          (binary-board (board-to-binary board))
          (translated (translate-unit unit))
          (binary-unit (board-to-binary translated)))
