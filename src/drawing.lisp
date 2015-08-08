@@ -66,12 +66,11 @@
             (gl:color .25 .25 .25))
         (fill-cell x y)))
     ;; Initial position for unit
-    (gl:with-pushed-matrix* (:modelview)
-      (gl:translate 0 0 -10)
-      (iter (for member :in (position-unit
-                             *board*
-                             *unit*
-                             *unit-command-list*))
-        (destructuring-bind (x y) member
-          (gl:color .3 1 .4)
-          (fill-cell x y))))))
+    (destructuring-bind (pivot members)
+        (position-unit *board* *unit* *unit-command-list*)
+      (gl:with-pushed-matrix* (:modelview)
+        (gl:translate 0 0 -5)
+        (iter (for member :in members)
+          (destructuring-bind (x y) member
+            (gl:color .3 1 .4)
+            (fill-cell x y)))))))

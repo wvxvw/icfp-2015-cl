@@ -32,6 +32,14 @@
 
 (defun shift (y) (floor y 2))
 
+(defun vshift- (v)
+  (destructuring-bind (x y) v
+    (list (- x (shift y)) y)))
+
+(defun vshift+ (v)
+  (destructuring-bind (x y) v
+    (list (+ x (shift y)) y)))
+
 (defun board-dimensions (board)
   (array-dimensions board))
 
@@ -129,14 +137,16 @@
           (:w (setf pos (v+ '(-1 0) pos)))
           (:se (setf pos (v+ '(0 1) pos)))
           (:sw (setf pos (v+ '(-1 1) pos)))))
-      (iter (for mem :in (members unit))
-        (destructuring-bind (mem-x mem-y) (v+ pos (apply-rotation mem rot pos))
-          (let ((mem-x (+ mem-x (shift mem-y))))
-            (if (or (< mem-x 0) (>= mem-x (second dim))
-                    (< mem-y 0) (>= mem-y (first dim))
-                    (= 1 (bref board mem-x mem-y)))
-                (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
-                (collect (list mem-x mem-y)))))))))
+      (list
+       (vshift+ pos)
+       (iter (for mem :in (members unit))
+         (destructuring-bind (mem-x mem-y) (v+ pos (apply-rotation mem rot pos))
+           (let ((mem-x (+ mem-x (shift mem-y))))
+             (if (or (< mem-x 0) (>= mem-x (second dim))
+                     (< mem-y 0) (>= mem-y (first dim))
+                     (= 1 (bref board mem-x mem-y)))
+                 (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
+                 (collect (list mem-x mem-y))))))))))
 
 ;; This code applies a rotation.  You can derive this by algebra.  The tricky
 ;; part here is that shift of the indexes between the style that the spec uses

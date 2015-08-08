@@ -43,9 +43,10 @@
   (tbnl:log-message* :error "~&params: ~s" (tbnl:post-parameters*))
   (issue-command (intern (string-upcase direction) (find-package "KEYWORD")))
   (with-output-to-string (stream)
-    (output-svg (game-to-svg :unit
-                             (position-unit *board* *unit* *unit-command-list*))
-                stream)))
+    (destructuring-bind (pivot members)
+        (position-unit *board* *unit* *unit-command-list*)
+      (output-svg (game-to-svg :unit members)
+                  stream))))
 
 (tbnl:define-easy-handler (play :uri "/play.svg"
                                 :default-request-type :post)
