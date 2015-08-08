@@ -30,13 +30,29 @@
 (defvar *unit-command-list* nil
   "This list holds the history of how the current unit got to where it is.")
 
+(defun shift (y) (floor y 2))
+
+(defun board-dimensions (board)
+  (array-dimensions board))
+
+(defun bref (board x y)
+  (aref board y
+        (mod (+ x (shift y)) (array-dimension board 1))))
+
+(defun set-bref (board x y val)
+  (setf
+   (aref board y
+         (mod (+ x (shift y)) (array-dimension board 1)))
+   val))
+
+(defsetf bref set-bref)
+
 (defun init-board (json-data)
   (let ((board (make-array (list (cdr (assoc :height json-data))
                                  (cdr (assoc :width json-data)))
                            :initial-element 0)))
     (iter (for cell :in (cdr (assoc :filled json-data)))
-      (setf (aref board (cdr (assoc :y cell)) (cdr (assoc :x cell)))
-            1))
+      (setf (bref board (cdr (assoc :x cell)) (cdr (assoc :y cell))) 1))
     board))
 
 (defclass game-state ()
@@ -113,19 +129,16 @@
           (:ccw (incf rot 1))
           (:e (setf pos (v+ '(1 0) pos)))
           (:w (setf pos (v+ '(-1 0) pos)))
-          (:se (if (evenp (second pos))
-                   (setf pos (v+ '(0 1) pos))
-                   (setf pos (v+ '(1 1) pos))))
-          (:sw (if (evenp (second pos))
-                   (setf pos (v+ '(-1 1) pos))
-                   (setf pos (v+ '(0 1) pos))))))
+          (:se (setf pos (v+ '(0 1) pos)))
+          (:sw (setf pos (v+ '(-1 1) pos)))))
       (iter (for mem :in (members unit))
         (destructuring-bind (mem-x mem-y) (v+ pos (apply-rotation mem rot pos))
-          (if (or (< mem-x 0) (>= mem-x (second dim))
-                  (< mem-y 0) (>= mem-y (first dim))
-                  (= 1 (aref board mem-y mem-x)))
-              (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
-              (collect (v+ pos (list mem-x mem-y)))))))))
+          (let ((mem-x (+ mem-x (shift mem-y))))
+            (if (or (< mem-x 0) (>= mem-x (second dim))
+                    (< mem-y 0) (>= mem-y (first dim))
+                    (= 1 (bref board mem-x mem-y)))
+                (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
+                (collect (list mem-x mem-y)))))))))
 
 ;; This code applies a rotation.  You can derive this by algebra.  The tricky
 ;; part here is that shift of the indexes between the style that the spec uses
@@ -139,15 +152,11 @@
   (destructuring-bind (mem-x mem-y) member
     (destructuring-bind (x y) pos
       (labels ((%apply-rotation (mem-x mem-y rot x y)
-                 (cond ((= rot 0) (list (+ mem-x
-                                            (traditional-shift y mem-y))
-                                        mem-y))
+                 (cond ((= rot 0) (list mem-x mem-y))
                        ((> rot 0)
                         (%apply-rotation (+ mem-x mem-y) (- mem-x)
                                          (- rot 1) x y))
                        ((< rot 0)
                         (%apply-rotation (- mem-y) (+ mem-x mem-y)
                                          (+ rot 1) x y)))))
-        (%apply-rotation
-         (- mem-x (traditional-shift y mem-y))
-         mem-y rot x y)))))
+        (%apply-rotation mem-x mem-y rot x y)))))
