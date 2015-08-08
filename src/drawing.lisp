@@ -45,8 +45,7 @@
                            (cdr (assoc :y (cdr (assoc :pivot unit)))))))
                (make-instance 'unit
                               :members (iter (for mem :in (cdr (assoc :members unit)))
-                                         (collect (mapcar
-                                                   '-
+                                         (collect (v-
                                                    (list (cdr (assoc :x mem))
                                                          (cdr (assoc :y mem)))
                                                    pivot)))))
