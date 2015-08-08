@@ -14,4 +14,4 @@
             (alexandria:iota height))))
 
 (defun draw-hex (scene column row)
-  (svg:draw scene (:polyline :points '(0 0 100 100 100 200))))
+  (svg:draw scene (:polyline :points "1,2 2,100")))
