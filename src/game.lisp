@@ -41,7 +41,7 @@
     (list (+ x (shift y)) y)))
 
 (defun board-dimensions (board)
-  (array-dimensions board))
+  (reverse (array-dimensions board)))
 
 (defun board-dimension (board i)
   (array-dimension board (mod (+ i 1) 2)))
@@ -116,9 +116,23 @@
     (setf *unit-command-list* nil
           *command-list* nil)))
 
-(defun position-unit (board unit unit-command-list)
+(defun translate-coords (board pivot rot unit)
+  (let ((dim (board-dimensions board)))
+    (list
+     (vshift+ pivot)
+     (iter (for mem :in (members unit))
+       (destructuring-bind (mem-x mem-y)
+           (v+ pivot (apply-rotation mem rot pivot))
+         (let ((mem-x (+ mem-x (shift mem-y))))
+           (if (or (< mem-x 0) (>= mem-x (first dim))
+                   (< mem-y 0) (>= mem-y (second dim))
+                   (= 1 (bref board mem-x mem-y)))
+               (error "Invalid state")
+               (collect (list mem-x mem-y)))))))))
+
+(defun initial-position (board unit)
   ;; Initial position for unit
-  (let ((dim (array-dimensions board))
+  (let ((dim (board-dimensions board))
         y-min x-min x-max)
     (iter (for mem :in (members unit))
       (when (or (not y-min) (> y-min (second mem)))
@@ -127,28 +141,24 @@
         (setf x-min (first mem)))
       (when (or (not x-max) (< x-max (first mem)))
         (setf x-max (first mem))))
-    (let* ((rot 0)
-           (unit-width (- x-max x-min))
-           (east-shift (floor (- (second dim) unit-width) 2))
+    (let* ((unit-width (- x-max x-min))
+           (east-shift (floor (- (first dim) unit-width) 2))
            (pos (list (- east-shift x-min) (- y-min))))
-      (iter (for com :in (reverse unit-command-list))
-        (case com
-          (:cw (decf rot 1))
-          (:ccw (incf rot 1))
-          (:e (setf pos (v+ '(1 0) pos)))
-          (:w (setf pos (v+ '(-1 0) pos)))
-          (:se (setf pos (v+ '(0 1) pos)))
-          (:sw (setf pos (v+ '(-1 1) pos)))))
-      (list
-       (vshift+ pos)
-       (iter (for mem :in (members unit))
-         (destructuring-bind (mem-x mem-y) (v+ pos (apply-rotation mem rot pos))
-           (let ((mem-x (+ mem-x (shift mem-y))))
-             (if (or (< mem-x 0) (>= mem-x (second dim))
-                     (< mem-y 0) (>= mem-y (first dim))
-                     (= 1 (bref board mem-x mem-y)))
-                 (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
-                 (collect (list mem-x mem-y))))))))))
+      pos)))
+
+(defun position-unit (board unit unit-command-list)
+  (let ((pos (initial-position board unit))
+        (rot 0))
+    ;; Process the commands
+    (iter (for com :in (reverse unit-command-list))
+      (case com
+        (:cw (decf rot 1))
+        (:ccw (incf rot 1))
+        (:e (setf pos (v+ '(1 0) pos)))
+        (:w (setf pos (v+ '(-1 0) pos)))
+        (:se (setf pos (v+ '(0 1) pos)))
+        (:sw (setf pos (v+ '(-1 1) pos)))))
+    (translate-coords board pos rot unit)))
 
 ;; This code applies a rotation.  You can derive this by algebra.  The tricky
 ;; part here is that shift of the indexes between the style that the spec uses
