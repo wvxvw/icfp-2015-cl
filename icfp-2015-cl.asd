@@ -18,5 +18,6 @@
             :components
             ((:file "lcg")
              (:file "submit")
-             (:file "stats"))))
+             (:file "stats")
+             (:file "game"))))
   :description "ICFP 2015")
