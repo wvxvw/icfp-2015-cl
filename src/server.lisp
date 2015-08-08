@@ -34,12 +34,15 @@
     (direction)
     (with-output-to-string (stream)
       (output-svg (game-to-svg) stream)))
-    
 
 (defun start-server ()
   (setf *server*
         (tbnl:start (make-instance
-                     'hunchentoot:easy-acceptor :port 8888
+                     'hunchentoot:easy-acceptor
+                     :port 8888
+                     :access-log-destination
+                     (asdf:system-relative-pathname
+                      (asdf:find-system :icfp-2015-cl) #p"./web/access.log")
                      :document-root (asdf:system-relative-pathname
                                      (asdf:find-system :icfp-2015-cl) #p"./web/")))))
 
