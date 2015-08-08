@@ -23,5 +23,6 @@
              (:file "stats")
              (:file "render-svg")
              (:file "rankings")
-             (:file "game"))))
+             (:file "game")
+             (:file "scoring"))))
   :description "ICFP 2015")
