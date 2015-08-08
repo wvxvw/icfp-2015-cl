@@ -94,14 +94,16 @@
           (iter (for unit :in (cdr (assoc :units data)))
             (collecting
              (let ((pivot
-                     (list (cdr (assoc :x (cdr (assoc :pivot unit))))
-                           (cdr (assoc :y (cdr (assoc :pivot unit)))))))
-               (make-instance 'unit
-                              :members (iter (for mem :in (cdr (assoc :members unit)))
-                                         (collect (v-
-                                                   (list (cdr (assoc :x mem))
-                                                         (cdr (assoc :y mem)))
-                                                   pivot)))))
+                     (vshift- (list (cdr (assoc :x (cdr (assoc :pivot unit))))
+                                    (cdr (assoc :y (cdr (assoc :pivot unit))))))))
+               (make-instance
+                'unit
+                :members
+                (iter (for mem :in (cdr (assoc :members unit)))
+                  (let ((y (cdr (assoc :y mem))))
+                    (collect (v-
+                              (list (- (cdr (assoc :x mem)) (shift y)) y)
+                              pivot))))))
              :result-type 'vector)))
     (when (< 1 (length (cdr (assoc :source-seeds data))))
       (warn "There are seeds that we're ignoring"))

@@ -54,7 +54,6 @@
     (when (oddp y)
       (gl:translate 5 0 0))
     (gl:translate (* x 10) (* y -8.66) -1)
-    ;; (gl:color .3 .4 1)
     (glut:solid-sphere 5 16 3)))
 
 (defmethod envisage:draw-object ((state game-state) w dist)
