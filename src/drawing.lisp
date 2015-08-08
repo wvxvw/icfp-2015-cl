@@ -69,12 +69,6 @@
                           :command-list *command-list*
                           :unit-command-list *unit-command-list*)))))
 
-(defun round* (val &optional (divider 1))
-  (multiple-value-bind (i rem) (round val divider)
-    (if (> (abs rem) 2d-1)
-        (error "This wasn't close to an integer")
-        i)))
-
 (defmethod envisage:draw-object ((state game-state) w dist)
   (let ((dim (array-dimensions (board state))))
     (iter (for y :below (first dim))
