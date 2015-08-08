@@ -13,7 +13,7 @@
 (defun submit (problem-number seed commands &optional (tag "test-submission"))
   (drakma:http-request
    "https://davar.icfpcontest.org/teams/168/solutions"
-   :basic-authorization '("" "***REMOVED***")
+   :basic-authorization '("" "")
    :method :post
    :content-type "application/json"
    :content (with-output-to-string (out)
