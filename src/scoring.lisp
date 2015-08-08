@@ -64,17 +64,33 @@
   (coerce 
    (iter
      (for i :below (array-dimension board 1))
-     (collect (cons i
+     (collect (list i
                     (iter
                       (with row := 0)
                       (for j :below (array-dimension board 0))
                       (for bit := (aref board j i))
-                      (setf row (ash row -1)
-                            row (logior row bit))))))
+                      (setf row (ash row 1)
+                            row (logior row bit))
+                      (finally (return row))))))
    'vector))
 
 (defun unit-to-binary (unit)
-  unit)
+  (multiple-value-bind (tx ty width height)
+      (iter
+        (for (x y) :in (members unit))
+        (minimizing x :into min-x)
+        (minimizing y :into min-y)
+        (maximizing x :into max-x)
+        (maximizing y :into max-y)
+        (finally
+         (return (values min-x min-y
+                         (1+ (- max-x min-x))
+                         (1+ (- max-y min-y))))))
+    (let ((translated (make-array (list width height) :initial-element 0)))
+      (iter
+        (for (x y) :in (members unit))
+        (setf (aref translated (- x tx) (- y ty)) 1))
+      (board-to-binary translated))))
 
 (defun find-match (board unit)
   (let ((binary-board (board-to-binary board))
@@ -84,15 +100,14 @@
 ;; testing
 
 (defun test-scoring (file)
-  (with-open-file (stream file)
-    (let* ((data (cl-json:decode-json stream))
-           (board (init-board data))
-           (score (board-score board)))
-      (values board score))))
+  (init-game file)
+  (let* ((score (board-score *board*)))
+    (values *board* score)))
 
 (defun test-find-match (file)
-  (with-open-file (stream file)
-    (let* ((data (cl-json:decode-json stream))
-           (board (init-board data))
-           (match (find-match board nil)))
-      (values board match))))
+  (init-game file)
+  (multiple-value-bind (match-board match-unit)
+      (find-match *board* *unit*)
+    (format t "~&~s~&~{~{~d:~b~}~^~&~}~&~s"
+            *board* (coerce match-board 'list) match-unit)
+    (values)))

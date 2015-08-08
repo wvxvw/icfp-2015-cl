@@ -10,11 +10,25 @@
                         :command-list *command-list*
                         :unit-command-list *unit-command-list*))))
 
+(defparameter *hex-keymap*
+  '((#\d :w)
+    (#\t :e)
+    (#\b :sw)
+    (#\m :se)
+    (#\x :cw)
+    (#\w :ccw)))
+
 (defmethod glut:keyboard ((window glut:window) key x y)
   (ignore-errors
    (let ((member? (member key *hex-keymap* :key 'first)))
      (when member?
        (issue-command (second (first member?)))))))
+
+(defun v+ (&rest vecs)
+  (apply 'map 'list '+ vecs))
+
+(defun v- (&rest vecs)
+  (apply 'map 'list '- vecs))
 
 (defun init-game (file-or-data)
   (let ((data (if (or (pathnamep file-or-data)
@@ -31,8 +45,7 @@
                            (cdr (assoc :y (cdr (assoc :pivot unit)))))))
                (make-instance 'unit
                               :members (iter (for mem :in (cdr (assoc :members unit)))
-                                         (collect (mapcar
-                                                   '-
+                                         (collect (v-
                                                    (list (cdr (assoc :x mem))
                                                          (cdr (assoc :y mem)))
                                                    pivot)))))
@@ -83,40 +96,49 @@
              (pos (list (- east-shift x-min) (- y-min))))
         (iter (for com :in (reverse (unit-command-list state)))
           (case com
-            (:cw (decf rot (/ pi 3)))
-            (:ccw (incf rot (/ pi 3)))
-            (:e (setf pos (v:+ '(1 0) pos)))
-            (:w (setf pos (v:+ '(-1 0) pos)))
+            (:cw (decf rot 1))
+            (:ccw (incf rot 1))
+            (:e (setf pos (v+ '(1 0) pos)))
+            (:w (setf pos (v+ '(-1 0) pos)))
             (:se (if (evenp (second pos))
-                     (setf pos (v:+ '(0 1) pos))
-                     (setf pos (v:+ '(1 1) pos))))
+                     (setf pos (v+ '(0 1) pos))
+                     (setf pos (v+ '(1 1) pos))))
             (:sw (if (evenp (second pos))
-                     (setf pos (v:+ '(-1 1) pos))
-                     (setf pos (v:+ '(0 1) pos))))))
+                     (setf pos (v+ '(-1 1) pos))
+                     (setf pos (v+ '(0 1) pos))))))
         (destructuring-bind (x y) pos
           (gl:with-pushed-matrix* (:modelview)
             (when (oddp y)
               (gl:translate 5 0 0))
-            (gl:translate (* x 10) (* y -8.6) -10)
+            (gl:translate (* x 10) (* y -8.66) -10)
             (gl:color .3 1 .4)
             (glut:solid-sphere 1 5 5))
-          (iter (for (mem-x mem-y) :in (members (unit state)))
-            ;; (print (list mem-x mem-y))
-            (let ((mem-xp (if (oddp (+ mem-y y))
-                              (+ mem-x 0.5)
-                              mem-x))
-                  (mem-yp (* mem-y .86)))
-              ;; (print (list mem-xp mem-yp))
-              (destructuring-bind (mem-xpp mem-ypp)
-                  (mv:* (rot-mat rot) (list mem-xp mem-yp))
-                (let* ((mem-y (round (/ mem-ypp .86)))
-                       (mem-x (round (if (oddp (+ mem-y y))
-                                         (- mem-xpp 0.5)
-                                         mem-xpp))))
-                  (print (list mem-x mem-y))
-                  (gl:with-pushed-matrix* (:modelview)
-                    (when (oddp (+ mem-y y))
-                      (gl:translate 5 0 0))
-                    (gl:translate (* (+ x mem-x) 10) (* (+ y mem-y) -8.6) -1)
-                    (gl:color .3 .4 1)
-                    (glut:solid-sphere 5 16 3)))))))))))
+          (iter (for mem :in (members (unit state)))
+            (destructuring-bind (mem-x mem-y) (apply-rotation mem rot pos)
+              (gl:with-pushed-matrix* (:modelview)
+                (when (oddp (+ mem-y y))
+                  (gl:translate 5 0 0))
+                (gl:translate (* (+ x mem-x) 10) (* (+ y mem-y) -8.66) -1)
+                (gl:color .3 .4 1)
+                (glut:solid-sphere 5 16 3)))))))))
+
+(defun apply-rotation (member rot pos)
+  (destructuring-bind (mem-x mem-y) member
+    (destructuring-bind (x y) pos
+      (labels ((%apply-rotation (mem-x mem-y rot x y)
+                 (print (list mem-x mem-y rot x y))
+                 (cond ((= rot 0) (list (- mem-x
+                                           (floor mem-y 2)
+                                           (mod (+ mem-y y) 2))
+                                        mem-y))
+                       ((> rot 0)
+                        (%apply-rotation (+ mem-x mem-y) (- mem-x)
+                                         (- rot 1) x y))
+                       ((< rot 0)
+                        (%apply-rotation (- mem-x mem-y) mem-y
+                                         (+ rot 1) x y)))))
+        (%apply-rotation
+         (+ mem-x
+            (floor mem-y 2)
+            (mod (+ mem-y y) 2))
+         mem-y rot x y)))))
