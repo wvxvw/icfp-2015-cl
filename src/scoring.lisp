@@ -63,7 +63,7 @@
 
 (defun ranges (board row)
   (iter
-    (with width := (board-dimension board 1))
+    (with width := (board-dimension board 0))
     (with started := nil)
     (for col :below width)
     (for cell := (bref board col row))
@@ -79,9 +79,44 @@
 
 (defun board-tunnel (board)
   (iter
-    (with height := (board-dimension board 0))
+    (with height := (board-dimension board 1))
     (for row :below height)
     (collect (ranges board row))))
+
+(defun ranges-intersect (range other-ranges)
+  (iter
+    (with start := (first range))
+    (with end := (second range))
+    (for (ostart oend) :in other-ranges)
+    (unless (or (> ostart end)
+                (< oend start))
+      (collect (list (max ostart start)
+                     (min oend end))))))
+
+(defun board-tunnel-reduced (tunnel)
+  (nreverse
+   (iter
+     (with top := (car tunnel))
+     (for bottom :in (cdr tunnel))
+     (collect
+         (iter
+           (for top-range :in top)
+           (nconcing (ranges-intersect top-range bottom)))
+       :into raccum :at :beginning)
+     (setf top (car raccum))
+     (finally (return raccum)))))
+
+(defun board-rank-depths (board)
+  (mapcar
+   (lambda (row)
+     (reduce 'max
+             (mapcar
+              (lambda (range)
+                (destructuring-bind (low high) range
+                  (- high low)))
+              row)))
+   (board-tunnel-reduced
+    (board-tunnel board))))
 
 (defun board-to-binary (board)
   (coerce 
@@ -185,3 +220,7 @@
 (defun test-tunnel (file)
   (init-game file)
   (board-tunnel *board*))
+
+(defun test-rank-depth (file)
+  (init-game file)
+  (board-rank-depths *board*))
