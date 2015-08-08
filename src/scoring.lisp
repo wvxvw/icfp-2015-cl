@@ -2,12 +2,12 @@
 
 (defun count-outer-ribs (board)
   (iter :outer
-        (with width := (array-dimension board 1))
-        (with height := (array-dimension board 0))
+        (with width := (board-dimension board 1))
+        (with height := (board-dimension board 0))
         (for j :below height)
         (iter
           (for i :below width)
-          (when (= 1 (aref board j i))
+          (when (= 1 (bref board i j))
             (let ((cnt
                    (cond
                      ;; corners
@@ -30,43 +30,43 @@
 
 (defun count-adjacent-ribs (board)
   (iter :outer
-        (with width := (array-dimension board 1))
-        (with height := (array-dimension board 0))
+        (with width := (board-dimension board 1))
+        (with height := (board-dimension board 0))
         (for j :from 1 :below height)
         (iter
           (for i :from 1 :below width)
-          (when (= 1 (aref board j i))
+          (when (= 1 (bref board i j))
             ;; hexagon directly th the left of the current one
-            (when (= 1 (aref board j (1- i)))
+            (when (= 1 (bref board (1- i) j))
               (in :outer (summing 2)))
             ;; haxagon directly on top of the current one
-            (when (= 1 (aref board (1- j) i))
+            (when (= 1 (bref board i (1- j)))
               (in :outer (summing 2)))
             (if (oddp i)
                 ;; haxagon on top and to the left of the current one
-                (when (= 1 (aref board (1- j) (1- i)))
+                (when (= 1 (bref board (1- i) (1- j)))
                   (in :outer (summing 2)))
                 ;; hexagon on top and to the right of the current one
                 (when (and (< (1+ i) width)
-                           (= 1 (aref board (1- j) (1+ i))))
+                           (= 1 (bref board (1+ i) (1- j))))
                   (in :outer (summing 2))))))))
 
 (defun board-score (board)
   (let ((filled
          (iter :outer
-           (for i :below (array-dimension board 1))
+           (for i :below (board-dimension board 1))
            (iter
-             (for j :below (array-dimension board 0))
-             (in :outer (summing (aref board j i)))))))
+             (for j :below (board-dimension board 0))
+             (in :outer (summing (bref board i j)))))))
     (list filled (count-outer-ribs board)
           (count-adjacent-ribs board))))
 
 (defun ranges (board row)
   (iter
-    (with width := (array-dimension board 1))
+    (with width := (board-dimension board 1))
     (with started := nil)
     (for col :below width)
-    (for cell := (aref board row col))
+    (for cell := (bref board col row))
     (cond
       ((and (null started) (= 0 cell))
        (setf started col))
@@ -79,18 +79,18 @@
 
 (defun board-tunnel (board)
   (iter
-    (with height := (array-dimension board 0))
+    (with height := (board-dimension board 0))
     (for row :below height)
     (collect (ranges board row))))
 
 (defun board-to-binary (board)
   (coerce 
    (iter
-     (for i :below (array-dimension board 1))
+     (for i :below (board-dimension board 1))
      (collect (iter
                 (with row := 0)
-                (for j :below (array-dimension board 0))
-                (for bit := (aref board j i))
+                (for j :below (board-dimension board 0))
+                (for bit := (bref board i j))
                 (setf row (ash row 1)
                       row (logior row bit))
                 (finally (return row)))))
@@ -133,8 +133,8 @@
     (setf peg (ash peg 1))))
 
 (defun find-match (board unit)
-  (let* ((width (array-dimension board 1))
-         (height (array-dimension board 0))
+  (let* ((width (board-dimension board 1))
+         (height (board-dimension board 0))
          (binary-board (board-to-binary board))
          (translated (translate-unit unit))
          (binary-unit (board-to-binary translated)))
