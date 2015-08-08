@@ -127,22 +127,27 @@
               (error "Invalid state, lock at last state: ~A" (rest unit-command-list))
               (collect (v+ pos (list mem-x mem-y)))))))))
 
+;; This code applies a rotation.  You can derive this by algebra.  The tricky
+;; part here is that shift of the indexes between the style that the spec uses
+;; and more traditional triangle lattice indexes.  To covert them, I use the
+;; traditional-shift function which applied a shift to the x coordinate.
+(defun traditional-shift (pivot-y y)
+  (- (floor (+ pivot-y y) 2)
+     (floor pivot-y 2)))
+
 (defun apply-rotation (member rot pos)
   (destructuring-bind (mem-x mem-y) member
     (destructuring-bind (x y) pos
       (labels ((%apply-rotation (mem-x mem-y rot x y)
-                 (cond ((= rot 0) (list (- mem-x
-                                           (floor mem-y 2)
-                                           (mod (+ mem-y y) 2))
+                 (cond ((= rot 0) (list (+ mem-x
+                                            (traditional-shift y mem-y))
                                         mem-y))
                        ((> rot 0)
                         (%apply-rotation (+ mem-x mem-y) (- mem-x)
                                          (- rot 1) x y))
                        ((< rot 0)
-                        (%apply-rotation (- mem-x mem-y) mem-y
+                        (%apply-rotation (- mem-y) (+ mem-x mem-y)
                                          (+ rot 1) x y)))))
         (%apply-rotation
-         (+ mem-x
-            (floor mem-y 2)
-            (mod (+ mem-y y) 2))
+         (- mem-x (traditional-shift y mem-y))
          mem-y rot x y)))))
