@@ -63,11 +63,6 @@
                       :accessor unit-command-list)
    (command-list :initarg :command-list :initform nil :accessor command-list)))
 
-(defun rot-mat (theta)
-  (list (list (cos theta) (- (sin theta)))
-        (list (+ (sin theta)) (cos theta))))
-
-
 (defun issue-command (command)
   (push command *unit-command-list*))
 
@@ -144,10 +139,6 @@
 ;; part here is that shift of the indexes between the style that the spec uses
 ;; and more traditional triangle lattice indexes.  To covert them, I use the
 ;; traditional-shift function which applied a shift to the x coordinate.
-(defun traditional-shift (pivot-y y)
-  (- (floor (+ pivot-y y) 2)
-     (floor pivot-y 2)))
-
 (defun apply-rotation (member rot pos)
   (destructuring-bind (mem-x mem-y) member
     (destructuring-bind (x y) pos
