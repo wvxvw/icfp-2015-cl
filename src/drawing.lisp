@@ -11,12 +11,12 @@
                         :unit-command-list *unit-command-list*))))
 
 (defparameter *hex-keymap*
-  '((#\d :w)
-    (#\t :e)
-    (#\b :sw)
-    (#\m :se)
-    (#\x :cw)
-    (#\w :ccw)))
+  '((#\a :w)
+    (#\u :e)
+    (#\o :sw)
+    (#\e :se)
+    (#\, :cw)
+    (#\. :ccw)))
 
 (defparameter *command-mapping*
   '((:W #\P #\' #\! #\. #\0 #\3)
@@ -34,29 +34,24 @@
 
 ;; This needs to be implemented on the server.
 
-;; (defmethod glut:keyboard ((window envisage::visu-window) key x y)
-;;   (ignore-errors
-;;    (let ((member?
-;;            (member key *command-mapping*
-;;                    :test (lambda (x y)
-;;                            (member (char-upcase x)
-;;                                    (rest y))))))
-;;      (when member?
-;;        (push key *character-log*)
-;;        (issue-command (first (first member?)))))
-;;    (setf envisage:*objects-to-draw*
-;;          (list
-;;           (make-instance 'game-state
-;;                          :board *board*
-;;                          :unit *unit*
-;;                          :command-list *command-list*
-;;                          :unit-command-list *unit-command-list*)))))
+(defvar *letter-commands-p* nil
+  "Controls whether the commands are based on ergonomics or the command
+  letters")
 
-(defmethod glut:keyboard ((window glut:window) key x y)
+(defmethod glut:keyboard ((window envisage::visu-window) key x y)
   (ignore-errors
-   (let ((member? (member key *hex-keymap* :key 'first)))
-     (when member?
-       (issue-command (second (first member?)))))
+   (cond (*letter-commands-p*
+          (let ((member?
+                  (member key *command-mapping*
+                          :test (lambda (x y)
+                                  (member (char-upcase x)
+                                          (rest y))))))
+            (when member?
+              (push key *character-log*)
+              (issue-command (first (first member?))))))
+         (t (let ((member? (member key *hex-keymap* :key 'first)))
+              (when member?
+                (issue-command (second (first member?)))))))
    (setf envisage:*objects-to-draw*
          (list
           (make-instance 'game-state
