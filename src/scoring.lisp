@@ -3,7 +3,7 @@
 (defun score-phrases (commands
                       &optional
                       (words '("ei!" "ia! ia!"
-                               "yoggoth" "r'lyeh")))
+                               "yuggoth" "r'lyeh")))
   (let ((commands (string-downcase commands))
         (tallies (make-hash-table :test 'equal)))
     (iter (for w :in words)
