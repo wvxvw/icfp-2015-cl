@@ -59,11 +59,17 @@
            :arg-parser #'identity
            :meta-var "STRING")
     (:name :range
-           :description "Tag to use when submitting online."
+           :description "Range of the generated command sequence to send."
            :short #\r
            :long "range"
            :arg-parser #'read-from-string 
-           :meta-var "LIST")))
+           :meta-var "LIST")
+    (:name :raw
+           :description "Raw sequence of commands to send."
+           :short #\s
+           :long "raw"
+           :arg-parser #'identity
+           :meta-var "STRING")))
 
 (defun unknown-option (condition)
     (log:warn "~s option is unknown!~%" (opts:option condition))
@@ -91,7 +97,8 @@
    (submit-online :initarg :submit-online :initform nil :accessor submit-online)
    (dry-run :initarg :dry-run :initform nil :accessor dry-run)
    (tag :initarg :tag :initform nil :accessor tag)
-   (range :initarg :range :initform (list 0 -1) :accessor range)))
+   (range :initarg :range :initform (list 0 -1) :accessor range)
+   (raw :initarg :raw :initform nil :accessor raw)))
 
 (defun read-arguments ()
   (let ((config (make-instance 'configuration)))
@@ -137,6 +144,9 @@
       (when-option (options :range)
         (log:info "Emit commands in range: ~s" (getf options :range))
         (setf (range config) (getf options :range)))
+      (when-option (options :raw)
+        (log:info "Raw command sequence: ~s" (getf options :raw))
+        (setf (raw config) (getf options :raw)))
       (iter
         (for phrase := (getf options :phrase))
         (while phrase)
@@ -147,10 +157,11 @@
 
 (defun entry-point ()
   (labels ((%trunkate-commands (config)
-             (let ((cmds (alexandria:flatten (play-game))))
-               (destructuring-bind (from to) (range config)
-                 (when (< to 0) (setf to (length cmds)))
-                 (subseq cmds from to)))))
+             (or (raw config)
+                 (let ((cmds (alexandria:flatten (play-game))))
+                   (destructuring-bind (from to) (range config)
+                     (when (< to 0) (setf to (length cmds)))
+                     (subseq cmds from to))))))
     (init)
     (let ((config (read-arguments)))
       (iter
