@@ -173,7 +173,9 @@
                   (position-unit *board* *unit* *unit-command-list*)
                 (declare (ignorable pivot))
                 (in :outer (collect (append *unit-command-list* (list :se))))
-                (setf *unit* (aref *unit-array* (funcall *rng*)))
+                (setf *unit* (aref *unit-array* (funcall *rng*))
+                      *unit-command-list*
+                      (optimal-trajectory *board* *unit*))
                 (blit-unit :board *board* :unit filled)
                 (when listener (unit-locked listener filled))
                 (clear-filled-rows :board *board*)
