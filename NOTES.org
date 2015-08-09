@@ -1102,3 +1102,10 @@ power":
   your browser to http://localhost:8888 it will start the game.
   WASD moves pieces, arrows rotate pieces (not implemented yet).  See server.lisp
   for more details.
+
+* Building the program
+  Start a separate shell and run this in it:
+  #+begin_src lisp
+    (asdf:operate 'asdf:program-op :icfp-2015-cl)
+  #+end_src
+  This will not run from SLIME due to SLIME using multithreaded environment.
