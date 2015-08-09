@@ -130,7 +130,7 @@
 (defun possible-sizes (unit)
   (let ((rotations
          (iter
-           (for rot :below 6)
+           (for rot :below 4)
            (collect
                (iter
                  (for mem :in (members unit))
