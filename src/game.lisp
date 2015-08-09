@@ -202,8 +202,9 @@
 
 (defun rotate-into-optimal (board unit)
   (let* ((sizes (possible-sizes unit))
-         (sizes-sorted (sort sizes '< :key 'first))
+         (sizes-sorted (sort (copy-list sizes) '< :key 'first))
          (ranks (board-rank-depths board)))
+    (log:debug "ranks: ~s, sizes: ~s" ranks sizes-sorted)
     (iter
       (for rank :in ranks)
       (for depth :from 0)
@@ -213,10 +214,11 @@
         (when (<= w rank)
           (setf sizes-sorted new-sizes)
           (return)))
-      (finally (return (list
-                        (position (first sizes-sorted) sizes)
-                        (first sizes-sorted)
-                        depth))))))
+      (finally
+       (return (list
+                (position (first sizes-sorted) sizes)
+                (first sizes-sorted)
+                depth))))))
 
 (defun optimal-trajectory (board unit)
   (destructuring-bind (rotations (uw uh) depth)
@@ -231,12 +233,15 @@
                          (return pos))
                      (error (er)
                        (declare (ignore er))
-                       (log:debug "~&couldn't fit: ~d" pos))))))
+                       (log:debug "couldn't fit: ~d" pos))))))
+      (log:debug "rotations: ~s" rotations)
       (append
        (make-list rotations :initial-element :cw)
-       (make-list goal :initial-element :se)
-       (make-list (floor (- offset-h goal) 2) :initial-element :se)
-       (make-list (ceiling (- offset-h goal) 2) :initial-element :sw)))))
+       (when goal
+         (append
+          (make-list goal :initial-element :se)
+          (make-list (floor (- offset-h goal) 2) :initial-element :se)
+          (make-list (ceiling (- offset-h goal) 2) :initial-element :sw)))))))
 
 (defun translate-coords (board pivot rot unit)
   (let ((dim (board-dimensions board)))
