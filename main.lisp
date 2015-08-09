@@ -45,6 +45,12 @@
            :short #\u
            :long "submit"
            :arg-parser #'identity
+           :meta-var "BOOLEAN")
+    (:name :dry-run
+           :description "Only print the log, but not the results."
+           :short #\d
+           :long "dry-run"
+           :arg-parser #'identity
            :meta-var "BOOLEAN")))
 
 (defun unknown-option (condition)
@@ -70,7 +76,8 @@
    (phrases :initarg :phrases :initform nil :accessor phrases)
    (mem-limits :initarg :mem-limits :initform nil :accessor mem-limits)
    (time-limits :initarg :time-limits :initform nil :accessor time-limits)
-   (submit-online :initarg :submit-online :initform nil :accessor submit-online)))
+   (submit-online :initarg :submit-online :initform nil :accessor submit-online)
+   (dry-run :initarg :dry-run :initform nil :accessor dry-run)))
 
 (defun read-arguments ()
   (let ((config (make-instance 'configuration)))
@@ -107,6 +114,9 @@
       (when-option (options :submit)
         (log:info "will submit online")
         (setf (submit-online config) t))
+      (when-option (options :dry-run)
+        (log:info "will not submit, only go through motions")
+        (setf (dry-run config) t))
       (iter
         (for phrase := (getf options :phrase))
         (while phrase)
@@ -121,12 +131,15 @@
     (iter
       (for board :in (boards config))
       (init-game board)
-      (if (submit-online config)
-          (submit *board-id* (car *seeds*)
-                  (alexandria:flatten (play-game)))
-          (progn
-            (princ (solution-to-string
-                    *board-id* (car *seeds*)
-                    (alexandria:flatten (play-game))))
-            (terpri)))))
+      (log:info "submitting board: ~s" board)
+      (cond
+        ((dry-run config) (play-game))
+        ((submit-online config)
+         (submit *board-id* (car *seeds*)
+                 (alexandria:flatten (play-game))))
+        (t
+         (princ (solution-to-string
+                 *board-id* (car *seeds*)
+                 (alexandria:flatten (play-game))))
+         (terpri)))))
   (quit))
