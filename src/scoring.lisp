@@ -126,16 +126,18 @@
      (finally (return raccum)))))
 
 (defun board-rank-depths (board)
-  (mapcar
-   (lambda (row)
-     (reduce 'max
+  (delete-if 'null
              (mapcar
-              (lambda (range)
-                (destructuring-bind (low high) range
-                  (- high low)))
-              row)))
-   (board-tunnel-reduced
-    (board-tunnel board))))
+              (lambda (row)
+                (when row
+                  (reduce 'max
+                          (mapcar
+                           (lambda (range)
+                             (destructuring-bind (low high) range
+                               (- high low)))
+                           row))))
+              (board-tunnel-reduced
+               (board-tunnel board)))))
 
 (defun board-to-binary (board)
   (coerce
