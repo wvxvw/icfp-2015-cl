@@ -10,13 +10,30 @@
                        #p"api-token"))
     (read-line in)))
 
+(defparameter *translation-table*
+  (let ((table (make-hash-table)))
+    (setf (gethash :w table) "p'!.03"
+          (gethash :e table) "bcefy2"
+          (gethash :sw table) "aghij4"
+          (gethash :se table) "lmno 5"
+          (gethash :cw table) "dqrvz1"
+          (gethash :ccw table) "kstuwx")
+    table))
+
+(defun encode-solution (commands)
+  (with-output-to-string (stream)
+    (iter
+      (for cmd :in commands)
+      (princ (aref (gethash cmd *translation-table*) (random 6))
+             stream))))
+
 (defun solution-to-string (problem-number seed commands &optional (tag "test-submission"))
   (with-output-to-string (out)
     (cl-json:encode-json
      `((("problemId" . ,problem-number)
         ("seed" . ,seed)
         ("tag" . ,tag)
-        ("solution" . ,commands)))
+        ("solution" . ,(encode-solution commands))))
      out)))
 
 (defun submit (problem-number seed commands &optional (tag "test-submission"))
