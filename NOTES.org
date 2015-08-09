@@ -1097,6 +1097,64 @@ power":
 - R'lyeh (problem 5)
 - Yuggoth (problem 7)
 
+** Sniffing out words
+
+First attempt for a word use.
+
+(submit 0 0 "ei!!!!!!" "Ei! test")
+
+This received 307 points and had a significant impact on our standings (which
+suggests that there are many teams struggling).
+
+We also recorded one use of a power word.  It is marked in the total rankings
+and in the rankings for the problem.
+
+#+BEGIN_EXAMPLE
+  Point explanation:
+
+  - size = 1
+  - ls = 0
+  - ls_old = 0
+
+  This totals to 1 point for locking in the unit.
+
+  - length of phrase = 3
+  - reps = 1
+
+  We get a power bonus of 300 because we used a phrase.
+
+  This totals to 2*3*1 + 300 = 306
+
+  This makes the grand total _307_
+#+END_EXAMPLE
+
+I submitted a blank command set and it erased all of that.
+
+I did a submission with several "Ei!" phrases in it.
+
+(submit 0 0 "eeei! ei! ei! ei! ei! " "many ei!s")
+
+This scored 331.
+
+#+BEGIN_EXAMPLE
+  Point explanation:
+
+  - size = 1
+  - ls = 0
+  - ls_old = 0
+
+  This totals to 1 point for locking in the unit.
+
+  - length of phrase = 3
+  - reps = 5
+
+  We get a power bonus of 300 because we used a phrase.
+
+  This totals to 2*3*5 + 300 = 330
+
+  This makes the grand total _331_
+#+END_EXAMPLE
+
 * Game interface
   After loading the project, run =(icfp-2015-cl::start-server)=, then navigate
   your browser to http://localhost:8888 it will start the game.
