@@ -152,13 +152,16 @@
       (clear-filled-rows :board board)
       (return))))
 
-(defun play-game ()
+;;; (with-open-file (f #p"test.svg" :direction :output :if-exists :supersede) (output-svg (game-to-svg) f))
+;;; svg-list will contain svgs of each step in play, later to be ouputted to an html for sequence view
+(defun play-game (&optional (svg-output t))
   (iter :outer
         (for placed :below *source-length*)
         (iter
           (initially
            (setf *unit-command-list*
-                 (optimal-trajectory *board* *unit*)))
+                 (optimal-trajectory *board* *unit*))
+	   (if svg-output (setf *svgs* nil)))
           (while *unit-command-list*)
           (handler-case
               (destructuring-bind (pivot filled)
@@ -168,11 +171,13 @@
                 (setf *unit* (aref *unit-array* (funcall *rng*)))
                 (blit-unit :board *board* :unit filled)
                 (clear-filled-rows :board *board*)
+		(if svg-output (push (game-to-svg) *svgs*))
                 (return))
             (error (er)
               (declare (ignore er))
               (setf *unit-command-list*
-                    (butlast *unit-command-list*)))))))
+                    (butlast *unit-command-list*))))
+	  (finally (svgs-to-html "problem0.html" *svgs*)))))
 
 (defun unit-dimensions (members)
   (iter

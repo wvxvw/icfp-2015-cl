@@ -61,3 +61,16 @@
 (defun test-draw-board (input &optional (output "test"))
   (init-game input)
   (draw-board output *board*))
+
+(defparameter *svgs* nil)
+
+;; html svg gameplay view
+;;; (with-open-file (f #p"test.svg" :direction :output :if-exists :supersede) (output-svg (game-to-svg) f))
+(defun svgs-to-html (name svgs)
+  (with-open-file (f name :direction :output :if-exists :supersede)
+    (format f "<html><head><title>~A</title></head>" name)
+    (format f "<body>")
+    (loop for svg in (reverse svgs)
+	  do (output-svg svg f)
+	  do (format f "<br />"))
+    (format f "</body></html>")))
