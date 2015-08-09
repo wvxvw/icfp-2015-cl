@@ -234,14 +234,21 @@
                      (error (er)
                        (declare (ignore er))
                        (log:debug "couldn't fit: ~d" pos))))))
-      (log:debug "rotations: ~s" rotations)
+      (log:debug "rotations: ~s, goal: ~s, ow: ~s, oh: ~s"
+                 rotations goal offset-w offset-h)
       (append
        (make-list rotations :initial-element :cw)
        (when goal
-         (append
-          (make-list goal :initial-element :se)
-          (make-list (floor (- offset-h goal) 2) :initial-element :se)
-          (make-list (ceiling (- offset-h goal) 2) :initial-element :sw)))))))
+         (let ((left (floor (- offset-h goal) 2))
+               (right (ceiling (- offset-h goal) 2)))
+           (append
+            (make-list goal :initial-element :se)
+            (if (< left 0)
+                (make-list (abs left) :initial-element :e)
+                (make-list left :initial-element :se))
+            (if (< right 0)
+                (make-list (abs right) :initial-element :w)
+                (make-list right :initial-element :sw)))))))))
 
 (defun translate-coords (board pivot rot unit)
   (let ((dim (board-dimensions board)))
