@@ -111,8 +111,9 @@
     (iter
       (for board :in (boards config))
       (init-game board)
-      (print (solution-to-string
+      (princ (solution-to-string
               *board-id*
               (car *seeds*)
               (optimal-trajectory *board* *unit*)))))
+  (terpri)
   (quit))

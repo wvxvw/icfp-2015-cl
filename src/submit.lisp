@@ -16,7 +16,8 @@
      `((("problemId" . ,problem-number)
         ("seed" . ,seed)
         ("tag" . ,tag)
-        ("solution" . ,commands))))))
+        ("solution" . ,commands)))
+     out)))
 
 (defun submit (problem-number seed commands &optional (tag "test-submission"))
   (drakma:http-request
