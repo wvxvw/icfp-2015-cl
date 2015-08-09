@@ -133,6 +133,7 @@
 
 (defun translate-unit (unit &key (format 'vector))
   (multiple-value-bind (tx ty width height)
+      ;; this is similar to unit-dimensions
       (iter
         (for (x y) :in (members unit))
         (minimizing x :into min-x)

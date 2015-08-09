@@ -116,6 +116,48 @@
     (setf *unit-command-list* nil
           *command-list* nil)))
 
+(defun unit-dimensions (members)
+  (iter
+    (for (x y) :in members)
+    (minimizing x :into min-x)
+    (minimizing y :into min-y)
+    (maximizing x :into max-x)
+    (maximizing y :into max-y)
+    (finally
+     (return (list (1+ (- max-x min-x))
+                   (1+ (- max-y min-y)))))))
+
+(defun possible-sizes (unit)
+  (let ((rotations
+         (iter
+           (for rot :below 6)
+           (collect
+               (iter
+                 (for mem :in (members unit))
+                 (destructuring-bind (mem-x mem-y)
+                     (apply-rotation mem rot '(0 0))
+                   (let ((mem-x (+ mem-x (shift mem-y))))
+                     (collect (list mem-x mem-y)))))))))
+    (iter
+      (for rot :in rotations)
+      (collect (unit-dimensions rot)))))
+
+(defun rotate-into-optimal (board unit)
+  (let* ((sizes (possible-sizes unit))
+         (sizes-sorted (sort sizes '< :key 'first))
+         (ranks (board-rank-depths board)))
+    (iter
+      (for rank :in ranks)
+      (for depth :from 0)
+      (iter
+        (for (w h) :in sizes-sorted)
+        (for new-sizes :on sizes-sorted)
+        (when (<= w rank)
+          (setf sizes-sorted new-sizes)
+          (return)))
+      (finally (return (cons (position (first sizes-sorted) sizes)
+                             depth))))))
+
 (defun translate-coords (board pivot rot unit)
   (let ((dim (board-dimensions board)))
     (list
