@@ -10,16 +10,18 @@
                        #p"api-token"))
     (read-line in)))
 
+(defun solution-to-string (problem-number seed commands &optional (tag "test-submission"))
+  (with-output-to-string (out)
+    (cl-json:encode-json
+     `((("problemId" . ,problem-number)
+        ("seed" . ,seed)
+        ("tag" . ,tag)
+        ("solution" . ,commands))))))
+
 (defun submit (problem-number seed commands &optional (tag "test-submission"))
   (drakma:http-request
    "https://davar.icfpcontest.org/teams/168/solutions"
    :basic-authorization (list "" *api-token*)
    :method :post
    :content-type "application/json"
-   :content (with-output-to-string (out)
-              (cl-json:encode-json
-               `((("problemId" . ,problem-number)
-                  ("seed" . ,seed)
-                  ("tag" . ,tag)
-                  ("solution" . ,commands)))
-               out))))
+   :content (solution-to-string problem-number seed commands tag)))

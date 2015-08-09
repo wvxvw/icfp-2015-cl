@@ -30,6 +30,12 @@
 (defvar *unit-command-list* nil
   "This list holds the history of how the current unit got to where it is.")
 
+(defvar *board-id* nil
+  "The id of the board currently being played.")
+
+(defvar *seeds* nil
+  "All seeds associated with the current board.")
+
 (defun shift (y) (floor y 2))
 
 (defun vshift- (v)
@@ -109,6 +115,8 @@
       (warn "There are seeds that we're ignoring"))
     (setf *rng* (lcg (cadr (assoc :source-seeds data))))
     (setf *source-length* (cdr (assoc :source-length data)))
+    (setf *board-id* (cdr (assoc :id data)))
+    (setf *seeds* (cdr (assoc :source-seeds data)))
 
     ;; Now, place the first unit
     (setf *unit* (aref *unit-array* (funcall *rng*)))

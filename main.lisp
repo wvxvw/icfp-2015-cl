@@ -102,9 +102,17 @@
         (while phrase)
         (log:info "phrase: ~s" phrase)
         (push phrase (phrases config))
-        (remf options :phrase)))))
+        (remf options :phrase)))
+    config))
 
 (defun entry-point ()
   (init)
-  (read-arguments)
+  (let ((config (read-arguments)))
+    (iter
+      (for board :in (boards config))
+      (init-game board)
+      (print (solution-to-string
+              *board-id*
+              (car *seeds*)
+              (optimal-trajectory *board* *unit*)))))
   (quit))
