@@ -51,7 +51,19 @@
            :short #\d
            :long "dry-run"
            :arg-parser #'identity
-           :meta-var "BOOLEAN")))
+           :meta-var "BOOLEAN")
+    (:name :tag
+           :description "Tag to use when submitting online."
+           :short #\g
+           :long "tag"
+           :arg-parser #'identity
+           :meta-var "STRING")
+    (:name :range
+           :description "Tag to use when submitting online."
+           :short #\r
+           :long "range"
+           :arg-parser #'read-from-string 
+           :meta-var "LIST")))
 
 (defun unknown-option (condition)
     (log:warn "~s option is unknown!~%" (opts:option condition))
@@ -77,7 +89,9 @@
    (mem-limits :initarg :mem-limits :initform nil :accessor mem-limits)
    (time-limits :initarg :time-limits :initform nil :accessor time-limits)
    (submit-online :initarg :submit-online :initform nil :accessor submit-online)
-   (dry-run :initarg :dry-run :initform nil :accessor dry-run)))
+   (dry-run :initarg :dry-run :initform nil :accessor dry-run)
+   (tag :initarg :tag :initform nil :accessor tag)
+   (range :initarg :range :initform (list 0 -1) :accessor range)))
 
 (defun read-arguments ()
   (let ((config (make-instance 'configuration)))
@@ -117,6 +131,12 @@
       (when-option (options :dry-run)
         (log:info "will not submit, only go through motions")
         (setf (dry-run config) t))
+      (when-option (options :tag)
+        (log:info "Submitting using tag: ~s" (getf options :tag))
+        (setf (tag config) (getf options :tag)))
+      (when-option (options :range)
+        (log:info "Emit commands in range: ~s" (getf options :range))
+        (setf (range config) (getf options :range)))
       (iter
         (for phrase := (getf options :phrase))
         (while phrase)
@@ -126,20 +146,27 @@
     config))
 
 (defun entry-point ()
-  (init)
-  (let ((config (read-arguments)))
-    (iter
-      (for board :in (boards config))
-      (init-game board)
-      (log:info "submitting board: ~s" board)
-      (cond
-        ((dry-run config) (play-game))
-        ((submit-online config)
-         (submit *board-id* (car *seeds*)
-                 (alexandria:flatten (play-game))))
-        (t
-         (princ (solution-to-string
-                 *board-id* (car *seeds*)
-                 (alexandria:flatten (play-game))))
-         (terpri)))))
-  (quit))
+  (labels ((%trunkate-commands (config)
+             (let ((cmds (alexandria:flatten (play-game))))
+               (destructuring-bind (from to) (range config)
+                 (when (< to 0) (setf to (length cmds)))
+                 (subseq cmds from to)))))
+    (init)
+    (let ((config (read-arguments)))
+      (iter
+        (for board :in (boards config))
+        (init-game board)
+        (log:info "submitting board: ~s" board)
+        (cond
+          ((dry-run config) (play-game))
+          ((submit-online config)
+           (submit *board-id* (car *seeds*)
+                   (%trunkate-commands config)
+                   (tag config)))
+          (t
+           (princ (solution-to-string
+                   *board-id* (car *seeds*)
+                   (%trunkate-commands config)
+                   (tag config)))
+           (terpri)))))
+    (quit)))
