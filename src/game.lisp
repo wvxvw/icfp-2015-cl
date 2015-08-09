@@ -155,8 +155,30 @@
         (when (<= w rank)
           (setf sizes-sorted new-sizes)
           (return)))
-      (finally (return (cons (position (first sizes-sorted) sizes)
-                             depth))))))
+      (finally (return (list
+                        (position (first sizes-sorted) sizes)
+                        (first sizes-sorted)
+                        depth))))))
+
+(defun optimal-trajectory (board unit)
+  (destructuring-bind (rotations (uw uh) depth)
+      (rotate-into-optimal board unit)
+    (let* ((offset-w (floor uw 2))
+           (offset-h (- depth (floor uh 2)))
+           (goal (iter
+                   (for pos :from offset-w :below (board-dimension board 0))
+                   (handler-case
+                       (progn
+                         (translate-coords board (list pos offset-h) rotations unit)
+                         (return pos))
+                     (error (er)
+                       (declare (ignore er))
+                       (format t "~&couldn't fit: ~d" pos))))))
+      (append
+       (make-list rotations :initial-element :cw)
+       (make-list goal :initial-element :se)
+       (make-list (floor (- offset-h goal) 2) :initial-element :se)
+       (make-list (ceiling (- offset-h goal) 2) :initial-element :sw)))))
 
 (defun translate-coords (board pivot rot unit)
   (let ((dim (board-dimensions board)))
