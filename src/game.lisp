@@ -152,7 +152,8 @@
 
 (defclass listener () ())
 
-(defmethod unit-locked ((this listener) unit))
+(defmethod unit-locked ((this listener) unit)
+  (log:info "unit-locked (shouldn't get here)"))
 
 (defmethod reset-commands ((this listener)))
 
@@ -171,15 +172,18 @@
                   (position-unit *board* *unit* *unit-command-list*)
                 (declare (ignorable pivot))
                 (in :outer (collect (append *unit-command-list* (list :se))))
-                (setf *unit* (aref *unit-array* (funcall *rng*))
+                (setf *unit* (aref *unit-array*
+                                   (mod (funcall *rng*) (length *unit-array*)))
                       *unit-command-list*
                       (optimal-trajectory *board* *unit*))
                 (blit-unit :board *board* :unit filled)
-                (when listener (unit-locked listener filled))
                 (clear-filled-rows :board *board*)
+                (log:info "will stash SVG: ~s" (not (null listener)))
+                (when listener (unit-locked listener filled))
+                (log:info "rows cleard")
                 (return))
             (error (er)
-              (declare (ignore er))
+              ;; (log:info "couldn't position unit: ~s" er)
               (setf *unit-command-list*
                     (butlast *unit-command-list*)))))))
 

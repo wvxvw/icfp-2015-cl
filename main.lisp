@@ -69,7 +69,13 @@
            :short #\s
            :long "raw"
            :arg-parser #'identity
-           :meta-var "STRING")))
+           :meta-var "STRING")
+    (:name :svg
+           :description "Output html with SVG drawing steps."
+           :short #\c
+           :long "svg"
+           :arg-parser #'parse-namestring
+           :meta-var "FILE")))
 
 (defun unknown-option (condition)
     (log:warn "~s option is unknown!~%" (opts:option condition))
@@ -98,7 +104,8 @@
    (dry-run :initarg :dry-run :initform nil :accessor dry-run)
    (tag :initarg :tag :initform nil :accessor tag)
    (range :initarg :range :initform (list 0 -1) :accessor range)
-   (raw :initarg :raw :initform nil :accessor raw)))
+   (raw :initarg :raw :initform nil :accessor raw)
+   (svg :initarg :svg :initform nil :accessor svg)))
 
 (defun read-arguments ()
   (let ((config (make-instance 'configuration)))
@@ -115,11 +122,12 @@
             (log:error "Cannot parse ~s as argument of ~s"
                        (opts:raw-arg condition)
                        (opts:option condition))))
+      
+      (config-logger (or (getf options :verbose) 1))
       (when-option (options :help)
         (opts:describe
          :prefix "ICFP 2015 contest submission by Chaitin's Omega Men team"
          :suffix ""))
-      (config-logger (or (getf options :verbose) 1))
       (iter
         (for board := (getf options :board))
         (while board)
@@ -147,6 +155,9 @@
       (when-option (options :raw)
         (log:info "Raw command sequence: ~s" (getf options :raw))
         (setf (raw config) (getf options :raw)))
+      (when-option (options :svg)
+        (log:info "Output SVG to: ~s" (getf options :svg))
+        (setf (svg config) (getf options :svg)))
       (iter
         (for phrase := (getf options :phrase))
         (while phrase)
@@ -156,14 +167,17 @@
     config))
 
 (defun entry-point ()
-  (labels ((%trunkate-commands (config)
-             (or (raw config)
-                 (let ((cmds (alexandria:flatten (play-game))))
-                   (destructuring-bind (from to) (range config)
-                     (when (< to 0) (setf to (length cmds)))
-                     (subseq cmds from to))))))
-    (init)
-    (let ((config (read-arguments)))
+  (init)
+  (let* ((config (read-arguments))
+         (svg-listener
+          (when (svg config) (make-instance 'svg-listener))))
+    (labels ((%trunkate-commands ()
+               (or (raw config)
+                   (let ((cmds (alexandria:flatten (play-game svg-listener))))
+                     (destructuring-bind (from to) (range config)
+                       (when (< to 0) (setf to (length cmds)))
+                       (subseq cmds from to))))))
+      
       (iter
         (for board :in (boards config))
         (init-game board)
@@ -174,15 +188,17 @@
           (unless (first-time-p)
             (setf *rng* (lcg seed)))
           (cond
-            ((dry-run config) (play-game))
+            ((dry-run config) (play-game svg-listener))
             ((submit-online config)
              (submit *board-id* seed
-                     (%trunkate-commands config)
+                     (%trunkate-commands)
                      (tag config)))
             (t
              (princ (solution-to-string
                      *board-id* seed
-                     (%trunkate-commands config)
+                     (%trunkate-commands)
                      (tag config)))
              (terpri))))))
+    (when svg-listener
+      (svgs-to-html (svg config) (svgs svg-listener)))
     (quit)))

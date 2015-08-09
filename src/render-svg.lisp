@@ -61,3 +61,24 @@
 (defun test-draw-board (input &optional (output "test"))
   (init-game input)
   (draw-board output *board*))
+
+(defparameter *svgs* nil)
+
+(defclass svg-listener (listener)
+  ((svgs :initarg :svgs :initform nil :accessor svgs)))
+
+(defmethod unit-locked ((this svg-listener) unit)
+  (push (game-to-svg :unit unit) (svgs this))
+  (log:info "added svg"))
+
+;; html svg gameplay view
+;;; (with-open-file (f #p"test.svg" :direction :output :if-exists :supersede) (output-svg (game-to-svg) f))
+(defun svgs-to-html (name svgs)
+  (with-open-file (f name :direction :output :if-exists :supersede)
+    (format f "<html><head><title>~A</title></head>" name)
+    (format f "<body>")
+    (log:info "generating ~d svgs:" (length svgs))
+    (loop for svg in (reverse svgs)
+	  do (output-svg svg f)
+	  do (format f "<br />"))
+    (format f "</body></html>")))

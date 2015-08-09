@@ -12,7 +12,7 @@
              (svg (svg:make-svg-toplevel 'svg:svg-1.1-toplevel
                                          :width (+ (/ *hex-width* 2) (* *hex-width* width))
                                          :height (* *hex-height* height))))
-        (tbnl:log-message* :error "~&tunit: ~s" tunit)
+        (log:info "tunit: ~s" tunit)
         (svg:draw svg
                   (:rect :x 0 :y 0
                          :width (* *hex-width* (+ 1 width))
@@ -30,6 +30,7 @@
                               ((= 1 (bref board col row))
                                "yellow")
                               (t "none")))))
+        (log:info "svg produced")
         svg)
       (error "No active game")))
 
