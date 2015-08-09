@@ -25,7 +25,7 @@
       commands
       (with-output-to-string (stream)
         (iter
-          (for cmd :in commands)
+          (for cmd :in-sequence commands)
           (cond ((gethash cmd *translation-table*)
                  (princ (aref (gethash cmd *translation-table*) 0)
                         stream))
