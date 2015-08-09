@@ -114,6 +114,6 @@
       (princ (solution-to-string
               *board-id*
               (car *seeds*)
-              (optimal-trajectory *board* *unit*)))))
-  (terpri)
+              (optimal-trajectory *board* *unit*)))
+      (terpri)))
   (quit))
