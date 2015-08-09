@@ -86,33 +86,32 @@
 
 (defun init-game (file-or-data &optional (seed 0))
   (let* ((data (if (or (pathnamep file-or-data)
-                      (stringp file-or-data))
-                  (with-open-file (in file-or-data)
-                    (cl-json:decode-json in))
-                  file-or-data))
-	 (board (init-board data))
-	 (unit-array
-	       (iter (for unit :in (cdr (assoc :units data)))
-		 (collecting
-		  (let ((pivot
-			  (vshift- (list (cdr (assoc :x (cdr (assoc :pivot unit))))
-					 (cdr (assoc :y (cdr (assoc :pivot unit))))))))
-		    (make-instance
-		     'unit
-		     :members
-		     (iter (for mem :in (cdr (assoc :members unit)))
-		       (let ((y (cdr (assoc :y mem))))
-			 (collect (v-
-				   (list (- (cdr (assoc :x mem)) (shift y)) y)
-				   pivot))))))
-		  :result-type 'vector)))
-	 (rng (lcg (nth seed (cdr (assoc :source-seeds data)))))
-	 (source-length (cdr (assoc :source-length data)))
-	 (source-list (loop for i in (funcall rng)
-			    for j from 0 to source-length
-			    collect (elt unit-array (mod i source-length))))
-	 (unit (elt unit-array 0)))
-    
+                       (stringp file-or-data))
+                   (with-open-file (in file-or-data)
+                     (cl-json:decode-json in))
+                   file-or-data))
+         (board (init-board data))
+         (unit-array
+           (iter (for unit :in (cdr (assoc :units data)))
+             (collecting
+              (let ((pivot
+                      (vshift- (list (cdr (assoc :x (cdr (assoc :pivot unit))))
+                                     (cdr (assoc :y (cdr (assoc :pivot unit))))))))
+                (make-instance
+                 'unit
+                 :members
+                 (iter (for mem :in (cdr (assoc :members unit)))
+                   (let ((y (cdr (assoc :y mem))))
+                     (collect (v-
+                               (list (- (cdr (assoc :x mem)) (shift y)) y)
+                               pivot))))))
+              :result-type 'vector)))
+         (rng (lcg (nth seed (cdr (assoc :source-seeds data)))))
+         (source-length (cdr (assoc :source-length data)))
+         (source-list (loop for i in (funcall rng)
+                            for j from 0 to source-length
+                            collect (elt unit-array (mod i source-length))))
+         (unit (elt unit-array 0)))
 
     ;; Reset the command lists
     ;; don't know what to do with these yet
