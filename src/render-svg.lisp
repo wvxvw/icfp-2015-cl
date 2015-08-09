@@ -70,6 +70,7 @@
   (with-open-file (f name :direction :output :if-exists :supersede)
     (format f "<html><head><title>~A</title></head>" name)
     (format f "<body>")
+    (log:info "generating ~d svgs:" (length svgs))
     (loop for svg in (reverse svgs)
 	  do (output-svg svg f)
 	  do (format f "<br />"))

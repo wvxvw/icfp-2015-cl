@@ -156,28 +156,34 @@
 ;;; svg-list will contain svgs of each step in play, later to be ouputted to an html for sequence view
 (defun play-game (&optional (svg-output t))
   (iter :outer
+        (initially (when svg-output (setf *svgs* nil)))
         (for placed :below *source-length*)
         (iter
           (initially
            (setf *unit-command-list*
-                 (optimal-trajectory *board* *unit*))
-	   (if svg-output (setf *svgs* nil)))
+                 (optimal-trajectory *board* *unit*)))
           (while *unit-command-list*)
           (handler-case
               (destructuring-bind (pivot filled)
                   (position-unit *board* *unit* *unit-command-list*)
                 (declare (ignorable pivot))
                 (in :outer (collect (append *unit-command-list* (list :se))))
-                (setf *unit* (aref *unit-array* (funcall *rng*)))
+                (setf *unit* (aref *unit-array*
+                                   (mod (funcall *rng*) (length *unit-array*))))
                 (blit-unit :board *board* :unit filled)
                 (clear-filled-rows :board *board*)
-		(if svg-output (push (game-to-svg) *svgs*))
+                (log:info "rows cleard")
+                (when svg-output
+                  (push (game-to-svg :unit filled) *svgs*)
+                  (log:info "added svg"))
                 (return))
             (error (er)
               (declare (ignore er))
               (setf *unit-command-list*
-                    (butlast *unit-command-list*))))
-	  (finally (svgs-to-html "problem0.html" *svgs*)))))
+                    (butlast *unit-command-list*)))))
+        (finally
+         (when svg-output
+           (svgs-to-html "problem0.html" *svgs*)))))
 
 (defun unit-dimensions (members)
   (iter
