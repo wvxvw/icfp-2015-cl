@@ -7,8 +7,8 @@
            "Joshua Kordani <joshua.kordani@gmail.com>")
   :license "MIT"
   :depends-on ("alexandria" "iterate" "split-sequence"
-                            "drakma" "cl-json" "cl-svg"
-                            "cl-ppcre" "hunchentoot")
+                            "drakma" "cl-json" "cl-svg" "log4cl"
+                            "cl-ppcre" "hunchentoot" "unix-opts")
   :build-operation program-op
   :entry-point "icfp-2015-cl::entry-point"
   :serial t

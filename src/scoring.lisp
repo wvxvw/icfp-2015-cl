@@ -1,5 +1,24 @@
 (in-package :icfp-2015-cl)
 
+(defun score-phrases (commands
+                      &optional
+                      (words '("ei!" "ia! ia!"
+                               "yuggoth" "r'lyeh")))
+  (let ((commands (string-downcase commands))
+        (tallies (make-hash-table :test 'equal)))
+    (iter (for w :in words)
+      (let ((start 0))
+        (iter (while (< start (length commands)))
+          (let ((match (search w commands :start2 start)))
+            (unless match (finish))
+            (incf (gethash w tallies 0))
+            (setf start (+ 1 match))))))
+    (iter (for (word count) :in-hashtable tallies)
+      ;; For using the word the first time
+      (summing 300)
+      ;; Score per use
+      (summing (* 2 (length word) count)))))
+
 (defun count-outer-ribs (board)
   (iter :outer
         (with width := (board-dimension board 0))
@@ -107,19 +126,21 @@
      (finally (return raccum)))))
 
 (defun board-rank-depths (board)
-  (mapcar
-   (lambda (row)
-     (reduce 'max
+  (delete-if 'null
              (mapcar
-              (lambda (range)
-                (destructuring-bind (low high) range
-                  (- high low)))
-              row)))
-   (board-tunnel-reduced
-    (board-tunnel board))))
+              (lambda (row)
+                (when row
+                  (reduce 'max
+                          (mapcar
+                           (lambda (range)
+                             (destructuring-bind (low high) range
+                               (- high low)))
+                           row))))
+              (board-tunnel-reduced
+               (board-tunnel board)))))
 
 (defun board-to-binary (board)
-  (coerce 
+  (coerce
    (iter
      (for i :below (board-dimension board 0))
      (collect (iter
@@ -133,6 +154,7 @@
 
 (defun translate-unit (unit &key (format 'vector))
   (multiple-value-bind (tx ty width height)
+      ;; this is similar to unit-dimensions
       (iter
         (for (x y) :in (members unit))
         (minimizing x :into min-x)
@@ -144,7 +166,7 @@
                          (1+ (- max-x min-x))
                          (1+ (- max-y min-y))))))
     (ecase format
-      (vector 
+      (vector
        (let ((translated (make-array (list width height) :initial-element 0)))
          (iter
            (for (x y) :in (members unit))

@@ -18,6 +18,40 @@
     (#\x :cw)
     (#\w :ccw)))
 
+(defparameter *command-mapping*
+  '((:W #\P #\' #\! #\. #\0 #\3)
+    (:E #\B #\C #\E #\F #\Y #\2)
+    (:SW #\A #\G #\H #\I #\J #\4)
+    (:SE #\L #\M #\N #\O #\5 #\SPACE)
+    (:CW #\D #\Q #\R #\V #\Z #\1)
+    (:CCW #\K #\S #\T #\U #\W #\X)))
+
+(defvar *character-log* ())
+
+;; This handler will process any key and translate it into the proper command
+;; and save a log of what was pressed.  It allows you to try things out easily.
+;; It is commented because it breaks basic interaction.
+
+;; This needs to be implemented on the server.
+
+;; (defmethod glut:keyboard ((window envisage::visu-window) key x y)
+;;   (ignore-errors
+;;    (let ((member?
+;;            (member key *command-mapping*
+;;                    :test (lambda (x y)
+;;                            (member (char-upcase x)
+;;                                    (rest y))))))
+;;      (when member?
+;;        (push key *character-log*)
+;;        (issue-command (first (first member?)))))
+;;    (setf envisage:*objects-to-draw*
+;;          (list
+;;           (make-instance 'game-state
+;;                          :board *board*
+;;                          :unit *unit*
+;;                          :command-list *command-list*
+;;                          :unit-command-list *unit-command-list*)))))
+
 (defmethod glut:keyboard ((window glut:window) key x y)
   (ignore-errors
    (let ((member? (member key *hex-keymap* :key 'first)))

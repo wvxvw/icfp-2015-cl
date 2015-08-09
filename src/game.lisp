@@ -30,6 +30,12 @@
 (defvar *unit-command-list* nil
   "This list holds the history of how the current unit got to where it is.")
 
+(defvar *board-id* nil
+  "The id of the board currently being played.")
+
+(defvar *seeds* nil
+  "All seeds associated with the current board.")
+
 (defun shift (y) (floor y 2))
 
 (defun vshift- (v)
@@ -106,15 +112,136 @@
                               pivot))))))
              :result-type 'vector)))
     (when (< 1 (length (cdr (assoc :source-seeds data))))
-      (warn "There are seeds that we're ignoring"))
+      (log:warn "There are seeds that we're ignoring"))
     (setf *rng* (lcg (cadr (assoc :source-seeds data))))
     (setf *source-length* (cdr (assoc :source-length data)))
+    (setf *board-id* (cdr (assoc :id data)))
+    (setf *seeds* (cdr (assoc :source-seeds data)))
 
     ;; Now, place the first unit
     (setf *unit* (aref *unit-array* (funcall *rng*)))
     ;; Reset the command lists
     (setf *unit-command-list* nil
           *command-list* nil)))
+
+(defun blit-unit (&key (board *board*) (unit *unit*))
+  (iter
+    (for (x y) :in (if (listp unit) unit (members unit)))
+    (setf (bref board x y) 1)))
+
+(defun shift-board (y &key (board *board*))
+  (iter
+    (for depth :from y :downto 0)
+    (iter
+      (for x :below (board-dimension board 0))
+      (setf (bref board x (1+ depth)) (bref board x depth))))
+  (iter
+    (for x :below (board-dimension board 0))
+    (setf (bref board x 0) 0)))
+
+(defun clear-filled-rows (&key (board *board*))
+  (iter
+    (for y :from (1- (board-dimension board 1)) :downto 0)
+    (when
+        (iter
+          (for x :below (board-dimension board 0))
+          (when (= 0 (bref board x y))
+            (return))
+          (finally (return t)))
+      (shift-board y :board board)
+      (clear-filled-rows :board board)
+      (return))))
+
+(defun play-game ()
+  (iter :outer
+        (for placed :below *source-length*)
+        (iter
+          (initially
+           (setf *unit-command-list*
+                 (optimal-trajectory *board* *unit*)))
+          (while *unit-command-list*)
+          (handler-case
+              (destructuring-bind (pivot filled)
+                  (position-unit *board* *unit* *unit-command-list*)
+                (declare (ignorable pivot))
+                (in :outer (collect (append *unit-command-list* (list :se))))
+                (setf *unit* (aref *unit-array* (funcall *rng*)))
+                (blit-unit :board *board* :unit filled)
+                (clear-filled-rows :board *board*)
+                (return))
+            (error (er)
+              (declare (ignore er))
+              (setf *unit-command-list*
+                    (butlast *unit-command-list*)))))))
+
+(defun unit-dimensions (members)
+  (iter
+    (for (x y) :in members)
+    (minimizing x :into min-x)
+    (minimizing y :into min-y)
+    (maximizing x :into max-x)
+    (maximizing y :into max-y)
+    (finally
+     (return (list (1+ (- max-x min-x))
+                   (1+ (- max-y min-y)))))))
+
+(defun possible-sizes (unit)
+  (let ((rotations
+         (iter
+           (for rot :below 4)
+           (collect
+               (iter
+                 (for mem :in (members unit))
+                 (destructuring-bind (mem-x mem-y)
+                     (apply-rotation mem rot '(0 0))
+                   (let ((mem-x (+ mem-x (shift mem-y))))
+                     (collect (list mem-x mem-y)))))))))
+    (iter
+      (for rot :in rotations)
+      (collect (unit-dimensions rot)))))
+
+(defun rotate-into-optimal (board unit)
+  (let* ((sizes (possible-sizes unit))
+         (sizes-sorted (sort (copy-list sizes) '< :key 'first))
+         (ranks (board-rank-depths board)))
+    (log:debug "ranks: ~s, sizes: ~s" ranks sizes-sorted)
+    (iter
+      (for rank :in ranks)
+      (for depth :from 0)
+      (iter
+        (for (w h) :in sizes-sorted)
+        (for new-sizes :on sizes-sorted)
+        (when (<= w rank)
+          (setf sizes-sorted new-sizes)
+          (return)))
+      (finally
+       (return (list
+                (position (first sizes-sorted) sizes)
+                (first sizes-sorted)
+                depth))))))
+
+(defun optimal-trajectory (board unit)
+  (destructuring-bind (rotations (uw uh) depth)
+      (rotate-into-optimal board unit)
+    (let* ((offset-w (floor uw 2))
+           (offset-h (- depth (floor uh 2)))
+           (goal (iter
+                   (for pos :from offset-w :below (board-dimension board 0))
+                   (handler-case
+                       (progn
+                         (translate-coords board (list pos offset-h) rotations unit)
+                         (return pos))
+                     (error (er)
+                       (declare (ignore er))
+                       (log:debug "couldn't fit: ~d" pos))))))
+      (log:debug "rotations: ~s" rotations)
+      (append
+       (make-list rotations :initial-element :cw)
+       (when goal
+         (append
+          (make-list goal :initial-element :se)
+          (make-list (floor (- offset-h goal) 2) :initial-element :se)
+          (make-list (ceiling (- offset-h goal) 2) :initial-element :sw)))))))
 
 (defun translate-coords (board pivot rot unit)
   (let ((dim (board-dimensions board)))
