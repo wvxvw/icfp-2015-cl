@@ -152,13 +152,21 @@
       (clear-filled-rows :board board)
       (return))))
 
-(defun play-game ()
+(defclass listener () ())
+
+(defmethod unit-locked ((this listener) unit))
+
+(defmethod reset-commands ((this listener)))
+
+(defun play-game (&optional listener)
   (iter :outer
         (for placed :below *source-length*)
         (iter
           (initially
            (setf *unit-command-list*
-                 (optimal-trajectory *board* *unit*)))
+                 (optimal-trajectory *board* *unit*))
+           (when listener
+             (reset-commands listener)))
           (while *unit-command-list*)
           (handler-case
               (destructuring-bind (pivot filled)
@@ -167,6 +175,7 @@
                 (in :outer (collect (append *unit-command-list* (list :se))))
                 (setf *unit* (aref *unit-array* (funcall *rng*)))
                 (blit-unit :board *board* :unit filled)
+                (when listener (unit-locked listener filled))
                 (clear-filled-rows :board *board*)
                 (return))
             (error (er)
