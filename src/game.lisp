@@ -164,7 +164,7 @@
               (destructuring-bind (pivot filled)
                   (position-unit *board* *unit* *unit-command-list*)
                 (declare (ignorable pivot))
-                (in :outer (collect *unit-command-list*))
+                (in :outer (collect (append *unit-command-list* (list :se))))
                 (setf *unit* (aref *unit-array* (funcall *rng*)))
                 (blit-unit :board *board* :unit filled)
                 (clear-filled-rows :board *board*)
@@ -231,7 +231,7 @@
                          (return pos))
                      (error (er)
                        (declare (ignore er))
-                       (format t "~&couldn't fit: ~d" pos))))))
+                       (log:debug "~&couldn't fit: ~d" pos))))))
       (append
        (make-list rotations :initial-element :cw)
        (make-list goal :initial-element :se)

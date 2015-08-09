@@ -39,7 +39,13 @@
            :short #\p
            :long "memory-limit"
            :arg-parser #'identity
-           :meta-var "STRING")))
+           :meta-var "STRING")
+    (:name :submit
+           :description "Submit solution instead of printing it."
+           :short #\u
+           :long "submit"
+           :arg-parser #'identity
+           :meta-var "BOOLEAN")))
 
 (defun unknown-option (condition)
     (log:warn "~s option is unknown!~%" (opts:option condition))
@@ -63,7 +69,8 @@
   ((boards :initarg :boards :initform nil :accessor boards)
    (phrases :initarg :phrases :initform nil :accessor phrases)
    (mem-limits :initarg :mem-limits :initform nil :accessor mem-limits)
-   (time-limits :initarg :time-limits :initform nil :accessor time-limits)))
+   (time-limits :initarg :time-limits :initform nil :accessor time-limits)
+   (submit-online :initarg :submit-online :initform nil :accessor submit-online)))
 
 (defun read-arguments ()
   (let ((config (make-instance 'configuration)))
@@ -97,6 +104,9 @@
       (when-option (options :memory-limit)
         (log:info "memory limit: ~s" (getf options :memory-limit))
         (setf (mem-limits config) (getf options :memory-limit)))
+      (when-option (options :submit)
+        (log:info "will submit online")
+        (setf (submit-online config) t))
       (iter
         (for phrase := (getf options :phrase))
         (while phrase)
@@ -111,8 +121,12 @@
     (iter
       (for board :in (boards config))
       (init-game board)
-      (princ (solution-to-string
-              *board-id* (car *seeds*)
-              (alexandria:flatten (play-game))))
-      (terpri)))
+      (if (submit-online config)
+          (submit *board-id* (car *seeds*)
+                  (alexandria:flatten (play-game)))
+          (progn
+            (princ (solution-to-string
+                    *board-id* (car *seeds*)
+                    (alexandria:flatten (play-game))))
+            (terpri)))))
   (quit))
