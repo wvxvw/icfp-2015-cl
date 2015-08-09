@@ -168,16 +168,21 @@
         (for board :in (boards config))
         (init-game board)
         (log:info "submitting board: ~s" board)
-        (cond
-          ((dry-run config) (play-game))
-          ((submit-online config)
-           (submit *board-id* (car *seeds*)
-                   (%trunkate-commands config)
-                   (tag config)))
-          (t
-           (princ (solution-to-string
-                   *board-id* (car *seeds*)
-                   (%trunkate-commands config)
-                   (tag config)))
-           (terpri)))))
+        (iter
+          (for seed :in *seeds*)
+          (log:info "submitting seed: ~s" seed)
+          (unless (first-time-p)
+            (setf *rng* (lcg seed)))
+          (cond
+            ((dry-run config) (play-game))
+            ((submit-online config)
+             (submit *board-id* seed
+                     (%trunkate-commands config)
+                     (tag config)))
+            (t
+             (princ (solution-to-string
+                     *board-id* seed
+                     (%trunkate-commands config)
+                     (tag config)))
+             (terpri))))))
     (quit)))
