@@ -56,7 +56,7 @@
                         (2 . :warn)
                         (1 . :error)))))
     (when Level
-      (format t "~&log level: ~s" (cdr level))
+      ;; (format t "~&log level: ~s" (cdr level))
       (log:config (cdr level)))))
 
 (defclass configuration ()
@@ -84,8 +84,7 @@
         (opts:describe
          :prefix "ICFP 2015 contest submission by Chaitin's Omega Men team"
          :suffix ""))
-      (when-option (options :verbose)
-        (config-logger (getf options :verbose)))
+      (config-logger (or (getf options :verbose) 1))
       (iter
         (for board := (getf options :board))
         (while board)
