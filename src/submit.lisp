@@ -24,8 +24,12 @@
   (with-output-to-string (stream)
     (iter
       (for cmd :in commands)
-      (princ (aref (gethash cmd *translation-table*) (random 6))
-             stream))))
+      (cond ((gethash cmd *translation-table*)
+             (princ (aref (gethash cmd *translation-table*) 0)
+                    stream))
+            ((characterp cmd)
+             (princ cmd stream))
+            (t (error "Garbage in command sequence"))))))
 
 (defun solution-to-string (problem-number seed commands &optional (tag "test-submission"))
   (with-output-to-string (out)
