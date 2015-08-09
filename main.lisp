@@ -112,8 +112,7 @@
       (for board :in (boards config))
       (init-game board)
       (princ (solution-to-string
-              *board-id*
-              (car *seeds*)
-              (optimal-trajectory *board* *unit*)))
+              *board-id* (car *seeds*)
+              (alexandria:flatten (play-game))))
       (terpri)))
   (quit))

@@ -124,6 +124,56 @@
     (setf *unit-command-list* nil
           *command-list* nil)))
 
+(defun blit-unit (&key (board *board*) (unit *unit*))
+  (iter
+    (for (x y) :in (if (listp unit) unit (members unit)))
+    (setf (bref board x y) 1)))
+
+(defun shift-board (y &key (board *board*))
+  (iter
+    (for depth :from y :downto 0)
+    (iter
+      (for x :below (board-dimension board 0))
+      (setf (bref board x (1+ depth)) (bref board x depth))))
+  (iter
+    (for x :below (board-dimension board 0))
+    (setf (bref board x 0) 0)))
+
+(defun clear-filled-rows (&key (board *board*))
+  (iter
+    (for y :from (1- (board-dimension board 1)) :downto 0)
+    (when
+        (iter
+          (for x :below (board-dimension board 0))
+          (when (= 0 (bref board x y))
+            (return))
+          (finally (return t)))
+      (shift-board y :board board)
+      (clear-filled-rows :board board)
+      (return))))
+
+(defun play-game ()
+  (iter :outer
+        (for placed :below *source-length*)
+        (iter
+          (initially
+           (setf *unit-command-list*
+                 (optimal-trajectory *board* *unit*)))
+          (while *unit-command-list*)
+          (handler-case
+              (destructuring-bind (pivot filled)
+                  (position-unit *board* *unit* *unit-command-list*)
+                (declare (ignorable pivot))
+                (in :outer (collect *unit-command-list*))
+                (setf *unit* (aref *unit-array* (funcall *rng*)))
+                (blit-unit :board *board* :unit filled)
+                (clear-filled-rows :board *board*)
+                (return))
+            (error (er)
+              (declare (ignore er))
+              (setf *unit-command-list*
+                    (butlast *unit-command-list*)))))))
+
 (defun unit-dimensions (members)
   (iter
     (for (x y) :in members)
