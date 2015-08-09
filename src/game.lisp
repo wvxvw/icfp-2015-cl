@@ -111,8 +111,6 @@
                               (list (- (cdr (assoc :x mem)) (shift y)) y)
                               pivot))))))
              :result-type 'vector)))
-    (when (< 1 (length (cdr (assoc :source-seeds data))))
-      (log:warn "There are seeds that we're ignoring"))
     (setf *rng* (lcg (cadr (assoc :source-seeds data))))
     (setf *source-length* (cdr (assoc :source-length data)))
     (setf *board-id* (cdr (assoc :id data)))
