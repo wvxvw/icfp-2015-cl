@@ -80,26 +80,30 @@
             (log:error "Cannot parse ~s as argument of ~s"
                        (opts:raw-arg condition)
                        (opts:option condition))))
-      ;; Here all options are checked independently, it's trivial to code any
-      ;; logic to process them.
       (when-option (options :help)
         (opts:describe
          :prefix "ICFP 2015 contest submission by Chaitin's Omega Men team"
          :suffix ""))
       (when-option (options :verbose)
         (config-logger (getf options :verbose)))
-      (when-option (options :board)
-        (log:info "selecting board: ~s" (getf options :board))
-        (push (getf options :board) (boards config)))
+      (iter
+        (for board := (getf options :board))
+        (while board)
+        (log:info "selecting board: ~s" board)
+        (push board (boards config))
+        (remf options :board))
       (when-option (options :time-limit)
         (log:info "time limit: ~s" (getf options :time-limit))
         (setf (time-limits config) (getf options :time-limit)))
       (when-option (options :memory-limit)
         (log:info "memory limit: ~s" (getf options :memory-limit))
         (setf (mem-limits config) (getf options :memory-limit)))
-      (when-option (options :phrase)
-        (log:info "phrase: ~s" (getf options :phrase))
-        (push (getf options :phrase) (phrases config))))))
+      (iter
+        (for phrase := (getf options :phrase))
+        (while phrase)
+        (log:info "phrase: ~s" phrase)
+        (push phrase (phrases config))
+        (remf options :phrase)))))
 
 (defun entry-point ()
   (init)
