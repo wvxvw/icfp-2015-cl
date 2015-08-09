@@ -37,7 +37,7 @@
     (:name :phrase
            :description "Phrase of power, as quoted string."
            :short #\p
-           :long "memory-limit"
+           :long "phrase"
            :arg-parser #'identity
            :meta-var "STRING")
     (:name :submit
