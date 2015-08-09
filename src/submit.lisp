@@ -38,7 +38,7 @@
 
 (defun submit (problem-number seed commands &optional (tag "test-submission"))
   (drakma:http-request
-   "https://davar.icfpcontest.org/teams/168/solutions"
+   *submission-url*
    :basic-authorization (list "" *api-token*)
    :method :post
    :content-type "application/json"
