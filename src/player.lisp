@@ -283,7 +283,7 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
       (declare (ignore pivot))
       (let ((rows-to-check nil))
         (iter (for m :in members)
-          (pushnew (first m) rows-to-check))
+          (pushnew (second m) rows-to-check))
         (iter (for row :in rows-to-check)
           (when (iter (for col :below (board-dimension board 0))
                   (always (or (= 1 (bref board col row))
@@ -315,12 +315,15 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
 
 (defun heuristic-score (board unit path ls-old)
   (float
-   (+ (* (length (members unit))
+   (+ (iter (for m :in
+                 (destructuring-bind (pivot rot)
+                     (get-pos path unit board)
+                   (second (translate-coords* board pivot rot unit))))
+        (summing
          (/ (mag-l1
-             (v- (first (get-pos path unit board))
-                 (list (floor (board-dimension board 0) 2) 0)))
+             (v- m (list (floor (board-dimension board 0) 2) 0)))
             (mag-l1
-             (board-dimensions board))))
+             (board-dimensions board)))))
       (score board unit path ls-old))))
 
 (defun modify-path (path unit board moves
