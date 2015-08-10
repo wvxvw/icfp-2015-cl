@@ -1,6 +1,16 @@
 
 (in-package :icfp-2015-cl)
 
+(defparameter *command-mapping*
+  '((:W #\P #\' #\! #\. #\0 #\3)
+    (:E #\B #\C #\E #\F #\Y #\2)
+    (:SW #\A #\G #\H #\I #\J #\4)
+    (:SE #\L #\M #\N #\O #\5 #\SPACE)
+    (:CW #\D #\Q #\R #\V #\Z #\1)
+    (:CCW #\K #\S #\T #\U #\W #\X)))
+
+
+
 ;; Find a valid path through the game, then modify it to be a better path.
 
 (defun initial-path (unit board)
@@ -149,6 +159,7 @@ again."
 (defun translate-coords* (board pivot rot unit)
   "Compute the translated coordinates but don't do any checking for invalid
 states."
+  (declare (ignore board))
   (list
    (vshift+ pivot)
    (iter (for mem :in (members unit))
@@ -334,22 +345,14 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
 (defparameter *moves*
   '(move-end hanger-grow hanger-shrink bubble-grow bubble-shrink))
 
-(defun place-unit (unit board)
-  (let* ((init-path (initial-path unit board))
-         (path (sample-paths init-path unit board *moves*)))
-    (lock-unit board unit path)
-    (let ((ls-old (remove-filled-rows board)))
-      (setf *unit* (aref *unit-array* (mod (funcall *rng*)
-                                           (length *unit-array*))))
-      ls-old)))
-
-(defun zach-player (problem)
-  (init-game problem)
-  (setf envisage:*redisplay* t)
-  (iter (repeat *source-length*)
-    (place-unit *unit* *board*)
-    (setf envisage:*redisplay* t)
-    (sleep 1)))
+(defun lock-unit (board unit path)
+  (destructuring-bind (pos rot)
+      (get-pos path unit board)
+    (destructuring-bind (pivot members)
+        (translate-coords board pos rot unit)
+      (declare (ignore pivot))
+      (iter (for (x y) :in members)
+        (setf (bref board x y) 1)))))
 
 (defun remove-filled-rows (board)
   (let ((filled-rows (sort (filled-rows board) #'>)))
@@ -370,37 +373,44 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
       (mapcar '1+ filled-rows))
     (length filled-rows)))
 
-(defun lock-unit (board unit path)
-  (destructuring-bind (pos rot)
-      (get-pos path unit board)
-    (destructuring-bind (pivot members)
-        (translate-coords board pos rot unit)
-      (declare (ignore pivot))
-      (iter (for (x y) :in members)
-        (setf (bref board x y) 1)))))
+(defun place-unit (unit board)
+  (let* ((init-path (initial-path unit board))
+         (path (sample-paths init-path unit board *moves*)))
+    (lock-unit board unit path)
+    (let ((ls-old (remove-filled-rows board)))
+      (setf *unit* (aref *unit-array* (mod (funcall *rng*)
+                                           (length *unit-array*))))
+      ls-old)))
 
+(defun zach-player (problem)
+  (init-game problem)
+  ;; (setf envisage:*redisplay* t)
+  (iter (repeat *source-length*)
+    (place-unit *unit* *board*)
+    ;; (setf envisage:*redisplay* t)
+    (sleep 1)))
 
-(defun place-unit (board unit unit-command-list)
-  (let ((pos (initial-position board unit))
-        (dim (board-dimensions board))
-        (rot 0))
-    ;; Process the commands
-    (iter (for com :in (reverse unit-command-list))
-      (case com
-        (:cw (decf rot 1))
-        (:ccw (incf rot 1))
-        (:e (setf pos (v+ '(1 0) pos)))
-        (:w (setf pos (v+ '(-1 0) pos)))
-        (:se (setf pos (v+ '(0 1) pos)))
-        (:sw (setf pos (v+ '(-1 1) pos)))))
-    (list
-     (vshift+ pos)
-     (iter (for mem :in (members unit))
-       (destructuring-bind (mem-x mem-y)
-           (v+ pos (apply-rotation mem rot pos))
-         (let ((mem-x (+ mem-x (shift mem-y))))
-           (if (or (< mem-x 0) (>= mem-x (first dim))
-                   (< mem-y 0) (>= mem-y (second dim))
-                   (= 1 (bref board mem-x mem-y)))
-               (error "Invalid state")
-               (collect (list mem-x mem-y)))))))))
+;; (defun place-unit (board unit unit-command-list)
+;;   (let ((pos (initial-position board unit))
+;;         (dim (board-dimensions board))
+;;         (rot 0))
+;;     ;; Process the commands
+;;     (iter (for com :in (reverse unit-command-list))
+;;       (case com
+;;         (:cw (decf rot 1))
+;;         (:ccw (incf rot 1))
+;;         (:e (setf pos (v+ '(1 0) pos)))
+;;         (:w (setf pos (v+ '(-1 0) pos)))
+;;         (:se (setf pos (v+ '(0 1) pos)))
+;;         (:sw (setf pos (v+ '(-1 1) pos)))))
+;;     (list
+;;      (vshift+ pos)
+;;      (iter (for mem :in (members unit))
+;;        (destructuring-bind (mem-x mem-y)
+;;            (v+ pos (apply-rotation mem rot pos))
+;;          (let ((mem-x (+ mem-x (shift mem-y))))
+;;            (if (or (< mem-x 0) (>= mem-x (first dim))
+;;                    (< mem-y 0) (>= mem-y (second dim))
+;;                    (= 1 (bref board mem-x mem-y)))
+;;                (error "Invalid state")
+;;                (collect (list mem-x mem-y)))))))))

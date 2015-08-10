@@ -1,14 +1,14 @@
 (in-package :icfp-2015-cl)
 
-(defun issue-command (command)
-  (push command *unit-command-list*)
-  (setf envisage:*objects-to-draw*
-        (list
-         (make-instance 'game-state
-                        :board *board*
-                        :unit *unit*
-                        :command-list *command-list*
-                        :unit-command-list *unit-command-list*))))
+;; (defun issue-command (command)
+;;   (push command *unit-command-list*)
+;;   (setf envisage:*objects-to-draw*
+;;         (list
+;;          (make-instance 'game-state
+;;                         :board *board*
+;;                         :unit *unit*
+;;                         :command-list *command-list*
+;;                         :unit-command-list *unit-command-list*))))
 
 (defparameter *hex-keymap*
   '((#\a :w)
@@ -17,14 +17,6 @@
     (#\e :se)
     (#\, :cw)
     (#\. :ccw)))
-
-(defparameter *command-mapping*
-  '((:W #\P #\' #\! #\. #\0 #\3)
-    (:E #\B #\C #\E #\F #\Y #\2)
-    (:SW #\A #\G #\H #\I #\J #\4)
-    (:SE #\L #\M #\N #\O #\5 #\SPACE)
-    (:CW #\D #\Q #\R #\V #\Z #\1)
-    (:CCW #\K #\S #\T #\U #\W #\X)))
 
 (defvar *character-log* ())
 
