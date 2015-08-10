@@ -182,34 +182,23 @@
 (defmethod reset-commands ((this listener)))
 
 (defun play-game (&optional listener)
-  (iter :outer
-        (for placed :below *source-length*)
-        (iter
-          (initially
-           (setf *unit-command-list*
-                 (optimal-trajectory *board* *unit*))
-           (when listener
-             (reset-commands listener)))
-          (while *unit-command-list*)
-          (handler-case
-              (destructuring-bind (pivot filled)
-                  (position-unit *board* *unit* *unit-command-list*)
-                (declare (ignorable pivot))
-                (in :outer (collect (append *unit-command-list* (list :se))))
-                (setf *unit* (aref *unit-array*
-                                   (mod (funcall *rng*) (length *unit-array*)))
-                      *unit-command-list*
-                      (optimal-trajectory *board* *unit*))
-                (blit-unit :board *board* :unit filled)
-                (clear-filled-rows :board *board*)
-                (log:info "will stash SVG: ~s" (not (null listener)))
-                (when listener (unit-locked listener filled))
-                (log:info "rows cleard")
-                (return))
-            (error (er)
-              ;; (log:info "couldn't position unit: ~s" er)
-              (setf *unit-command-list*
-                    (butlast *unit-command-list*)))))))
+  (iter
+    (repeat *source-length*)
+    (for init-path := (initial-path *unit* *board*))
+    (for path := (sample-paths init-path *unit* *board* *moves*))
+    (destructuring-bind (pos rot)
+        (get-pos path *unit* *board*)
+      (destructuring-bind (pivot filled)
+          (translate-coords* *board* pos rot *unit*)
+        (log:info "filled: ~s" filled)
+        (blit-unit :board *board* :unit filled)
+        (clear-filled-rows :board *board*)
+        (when listener (unit-locked listener filled))))
+    (setf *unit*
+          (aref *unit-array*
+                (mod (funcall *rng*) (length *unit-array*))))
+    (log:info "path: ~s" path)
+    (collect (mapcar 'car path))))
 
 (defun unit-dimensions (members)
   (iter
