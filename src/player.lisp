@@ -313,17 +313,21 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
 (defun mag-l1 (v)
   (reduce '+ (mapcar 'abs v)))
 
+(defun locked-top-p (path unit-pos)
+  (and (locked path)
+       (some 'zerop (mapcar 'second unit-pos))))
+
 (defun heuristic-score (board unit path ls-old)
   (float
    (+ (iter (for m :in
                  (destructuring-bind (pivot rot)
                      (get-pos path unit board)
                    (second (translate-coords* board pivot rot unit))))
-        (summing
-         (/ (mag-l1
-             (v- m (list (floor (board-dimension board 0) 2) 0)))
-            (mag-l1
-             (board-dimensions board)))))
+            (summing
+             (/ (mag-l1
+                 (v- m (list (floor (board-dimension board 0) 2) 0)))
+                (mag-l1
+                 (board-dimensions board)))))
       (score board unit path ls-old))))
 
 (defun modify-path (path unit board moves
