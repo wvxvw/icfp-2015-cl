@@ -143,7 +143,7 @@ again."
         (for try := (random 1d0))
         (setf choice (random (1+ (length path))))
         (until (< try (- 1d0 (/ choice (length path)))))))
-    (let ((new-path (nthcdr choice path)))
+    (let ((new-path (nthcdr (+ 1 choice) path)))
       (iter (while (not (locked new-path)))
         (let* ((new-command (random-command unit board))
                (potential-path (cons-command new-command new-path board unit)))
@@ -323,11 +323,13 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
                  (destructuring-bind (pivot rot)
                      (get-pos path unit board)
                    (second (translate-coords* board pivot rot unit))))
-            (summing
-             (/ (mag-l1
-                 (v- m (list (floor (board-dimension board 0) 2) 0)))
-                (mag-l1
-                 (board-dimensions board)))))
+        (summing
+         (/ (mag-l1
+             (v- m (list (floor (board-dimension board 0) 2) 0)))
+            (mag-l1
+             (board-dimensions board)))))
+      (* (board-dimension board 0)
+         (length (filled-rows-with-unit board unit path)))
       (score board unit path ls-old))))
 
 (defun modify-path (path unit board moves
