@@ -25,5 +25,6 @@
              (:file "rankings")
              (:file "game")
              (:file "scoring")
-             (:file "server"))))
+             (:file "server")
+             (:file "player"))))
   :description "ICFP 2015")
