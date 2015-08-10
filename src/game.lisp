@@ -146,10 +146,10 @@
     (setf *unit-command-list* nil
           *command-list* nil)))
 
-(defun blit-unit (&key (board *board*) (unit *unit*))
+(defun blit-unit (&key (board *board*) (unit *unit*) (val 1))
   (iter
     (for (x y) :in (if (listp unit) unit (members unit)))
-    (setf (bref board x y) 1)))
+    (setf (bref board x y) val)))
 
 (defun shift-board (y &key (board *board*))
   (iter
