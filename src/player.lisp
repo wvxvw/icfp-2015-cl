@@ -329,19 +329,22 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
        (some 'zerop (mapcar 'second unit-pos))))
 
 (defun heuristic-score (board unit path ls-old)
-  (float
-   (+ (iter (for m :in
-                 (destructuring-bind (pivot rot)
-                     (get-pos path unit board)
-                   (second (translate-coords* board pivot rot unit))))
-        (summing
-         (/ (mag-l1
-             (v- m (list (floor (board-dimension board 0) 2) 0)))
-            (mag-l1
-             (board-dimensions board)))))
-      (* (board-dimension board 0)
-         (length (filled-rows-with-unit board unit path)))
-      (score board unit path ls-old))))
+  (destructuring-bind (pivot rot)
+      (get-pos path unit board)
+    (float
+     (+ (iter (for m :in (second (translate-coords* board pivot rot unit)))
+          (summing
+           (/ (mag-l1
+               (v- m (list (floor (board-dimension board 0) 2) 0)))
+              (mag-l1
+               (board-dimensions board)))))
+        (* (board-dimension board 0)
+           (length (filled-rows-with-unit board unit path)))
+        ;; (with-temp-blit (board unit pivot rot)
+        ;;   (destructuring-bind (a b c) (board-score board)
+        ;;     (declare (ignore a))
+        ;;     (+ b c)))
+        (score board unit path ls-old)))))
 
 (defun modify-path (path unit board moves
                      &optional (score-fn 'heuristic-score))
