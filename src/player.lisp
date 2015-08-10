@@ -143,7 +143,7 @@ again."
         (for try := (random 1d0))
         (setf choice (random (1+ (length path))))
         (until (< try (- 1d0 (/ choice (length path)))))))
-    (let ((new-path (nthcdr choice path)))
+    (let ((new-path (nthcdr (+ 1 choice) path)))
       (iter (while (not (locked new-path)))
         (let* ((new-command (random-command unit board))
                (potential-path (cons-command new-command new-path board unit)))
