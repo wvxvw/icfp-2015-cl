@@ -324,6 +324,8 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
              (v- m (list (floor (board-dimension board 0) 2) 0)))
             (mag-l1
              (board-dimensions board)))))
+      (* (board-dimension board 0)
+         (length (filled-rows-with-unit board unit path)))
       (score board unit path ls-old))))
 
 (defun modify-path (path unit board moves
