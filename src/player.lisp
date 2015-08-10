@@ -283,7 +283,7 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
       (declare (ignore pivot))
       (let ((rows-to-check nil))
         (iter (for m :in members)
-          (pushnew (first m) rows-to-check))
+          (pushnew (second m) rows-to-check))
         (iter (for row :in rows-to-check)
           (when (iter (for col :below (board-dimension board 0))
                   (always (or (= 1 (bref board col row))
