@@ -122,10 +122,10 @@
     (setf *unit-command-list* nil
           *command-list* nil)))
 
-(defun blit-unit (&key (board *board*) (unit *unit*))
+(defun blit-unit (&key (board *board*) (unit *unit*) (value 1))
   (iter
     (for (x y) :in (if (listp unit) unit (members unit)))
-    (setf (bref board x y) 1)))
+    (incf (bref board x y) value)))
 
 (defun shift-board (y &key (board *board*))
   (iter
@@ -162,8 +162,8 @@
         (for placed :below *source-length*)
         (iter
           (initially
-           (setf *unit-command-list*
-                 (optimal-trajectory *board* *unit*))
+           ;; (setf *unit-command-list*
+           ;;       (optimal-trajectory *board* *unit*))
            (when listener
              (reset-commands listener)))
           (while *unit-command-list*)
@@ -186,6 +186,94 @@
               ;; (log:info "couldn't position unit: ~s" er)
               (setf *unit-command-list*
                     (butlast *unit-command-list*)))))))
+
+(defun construct-unit-from-json (unit)
+  (let ((pivot
+                     (vshift- (list (cdr (assoc :x (cdr (assoc :pivot unit))))
+                                    (cdr (assoc :y (cdr (assoc :pivot unit))))))))
+               (make-instance
+                'unit
+                :members
+                (iter (for mem :in (cdr (assoc :members unit)))
+                  (let ((y (cdr (assoc :y mem))))
+                    (collect (v-
+                              (list (- (cdr (assoc :x mem)) (shift y)) y)
+                              pivot)))))))
+
+(defun play-game2 (problem-file &optional (nth-seed 0))
+   (let* ((problem (with-open-file (in problem-file)
+		     (cl-json:decode-json in)))
+	  (source-list (cdr (assoc :units problem)))
+	  (seeds (cdr (assoc :source-seeds problem)))
+	  (seed (progn
+		  (nth nth-seed seeds))))
+
+     ;;looks weird but I need to make sure seed is valid before binding further
+     (assert (not (null seed))
+	     (seed)
+	     "Provided seed index ~A out of range ~A." seed (length (cdr (assoc :source-seeds problem))))
+
+     (let*
+	 ((rng (lcg seed))
+	  (unit-play-list (construct-unit-from-json (loop for i in (funcall rng)
+							  for j from 0 to (length source-list)
+							  collect (nth (mod i (length source-list)) source-list))))
+	  (active-unit (pop unit-play-list))
+	  (submission-moves nil)
+	  (board (init-board problem))
+	  (next-board nil)
+	  (active-unit-pos (initial-position board active-unit))
+	  (svg-list nil)
+	  (end-game nil))
+
+
+       (blit-unit :board board :unit (second (translate-coords board
+							       active-unit-pos
+							       0
+							       active-unit)))
+       
+       ;; loop while not end of game
+       (loop for move-record = '()
+	     while (null end-game)
+	 ;; find initial position then blit piece onto board.
+
+	     do (push (game-to-svg :board board :unit active-unit) svg-list)
+	     do (setf next-board (alexandria:copy-array board))
+	     do (blit-unit :board next-board :unit (position-unit2 next-board 
+								   active-unit
+								   active-unit-pos
+								   '())
+			   :value -1) ;subtract the current unit
+		
+	     do (blit-unit :board next-board :unit (position-unit2 next-board 
+								   active-unit
+								   active-unit-pos
+								   '(:se)))   ;add unit at new location
+		
+	     
+	     )
+       
+       )
+     
+     
+     )
+  ;;determine piece list
+  ;; if nth-seed is not a real seed, error out
+  ;; record real seed number for later submission
+  ;; place new piece on board
+
+  ;; capture board to svg
+  ;; make new board with new move (alternate se sw)  out of bounds check would happen here.
+  ;; check for conditions
+  ;;  hmm check for out of bounds? handle later.
+  ;;  check for piece lock
+  ;;    if truexs
+  ;;    work with copy of old board
+  ;;    check for cleared lines and clear them..
+  ;;    place new piece
+  ;;       if still locked, end game. return seed and moves list
+
+  )
 
 (defun unit-dimensions (members)
   (iter
@@ -295,9 +383,23 @@
            (pos (list (- east-shift x-min) (- y-min))))
       pos)))
 
+
 (defun position-unit (board unit unit-command-list)
   (let ((pos (initial-position board unit))
         (rot 0))
+    ;; Process the commands
+    (iter (for com :in (reverse unit-command-list))
+      (case com
+        (:cw (decf rot 1))
+        (:ccw (incf rot 1))
+        (:e (setf pos (v+ '(1 0) pos)))
+        (:w (setf pos (v+ '(-1 0) pos)))
+        (:se (setf pos (v+ '(0 1) pos)))
+        (:sw (setf pos (v+ '(-1 1) pos)))))
+    (translate-coords board pos rot unit)))
+
+(defun position-unit2 (board unit pos unit-command-list)
+  (let ((rot 0))
     ;; Process the commands
     (iter (for com :in (reverse unit-command-list))
       (case com
