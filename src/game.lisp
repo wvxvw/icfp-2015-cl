@@ -6,7 +6,26 @@
   "This holds the state of the grid")
 
 (defclass unit ()
-  ((members :initarg :members :initform nil :accessor members)))
+  ((members :initarg :members :initform nil :accessor members)
+   (symm :initarg :symm :initform nil :accessor symm)))
+
+(defun member-coords (rot unit)
+  (sort (iter (for mem :in (members unit))
+          (destructuring-bind (mem-x mem-y)
+              (apply-rotation mem rot '(0 0))
+            (collect (list mem-x mem-y))))
+        (lambda (x y)
+          (if (/= (first x) (first y))
+              (< (first x) (first y))
+              (< (second x) (second y))))))
+
+(defun detect-symmetry (unit)
+  (let ((initial-coords (member-coords 0 unit)))
+    (or (iter (for i :from 1 :to 3)
+          (finding i :such-that
+                   (equalp initial-coords
+                           (member-coords i unit))))
+        6)))
 
 (defvar *unit*
   nil
@@ -99,17 +118,21 @@
     (setf *unit-array*
           (iter (for unit :in (cdr (assoc :units data)))
             (collecting
-             (let ((pivot
-                     (vshift- (list (cdr (assoc :x (cdr (assoc :pivot unit))))
-                                    (cdr (assoc :y (cdr (assoc :pivot unit))))))))
-               (make-instance
-                'unit
-                :members
-                (iter (for mem :in (cdr (assoc :members unit)))
-                  (let ((y (cdr (assoc :y mem))))
-                    (collect (v-
-                              (list (- (cdr (assoc :x mem)) (shift y)) y)
-                              pivot))))))
+             (let* ((pivot
+                      (vshift- (list (cdr (assoc :x (cdr (assoc :pivot unit))))
+                                     (cdr (assoc :y (cdr (assoc :pivot unit)))))))
+                    (unit-obj
+                      (make-instance
+                       'unit
+                       :members
+                       (iter (for mem :in (cdr (assoc :members unit)))
+                         (let ((y (cdr (assoc :y mem))))
+                           (collect (v-
+                                     (list (- (cdr (assoc :x mem)) (shift y)) y)
+                                     pivot)))))))
+               (setf (symm unit-obj)
+                     (detect-symmetry unit-obj))
+               unit-obj)
              :result-type 'vector)))
     (setf *rng* (lcg (cadr (assoc :source-seeds data))))
     (setf *source-length* (cdr (assoc :source-length data)))
