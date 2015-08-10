@@ -203,7 +203,7 @@
           (aref *unit-array*
                 (mod (funcall *rng*) (length *unit-array*))))
     (log:info "path: ~s" path)
-    (collect (mapcar 'car path))))
+    (collect (nreverse (mapcar 'car path)))))
 
 (defun unit-dimensions (members)
   (iter
