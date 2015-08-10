@@ -118,7 +118,7 @@
             (log:error "Cannot parse ~s as argument of ~s"
                        (opts:raw-arg condition)
                        (opts:option condition))))
-      
+
       (config-logger (or (getf options :verbose) 1))
       (when-option (options :help)
         (opts:describe
@@ -173,7 +173,7 @@
                      (destructuring-bind (from to) (range config)
                        (when (< to 0) (setf to (length cmds)))
                        (subseq cmds from to))))))
-      
+
       (iter
         (for board :in (boards config))
         (init-game board)
