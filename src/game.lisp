@@ -304,7 +304,7 @@
         (when (or (not x-max) (< x-max shifted))
           (setf x-max shifted))))
     (let* ((unit-width (- x-max x-min))
-           (east-shift (floor (- (first dim) unit-width) 2))
+           (east-shift (floor (- (first dim) (1+ unit-width)) 2))
            (pos (list (- east-shift x-min) (- y-min))))
       pos)))
 
