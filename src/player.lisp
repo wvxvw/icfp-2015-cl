@@ -201,18 +201,29 @@ states."
 
 (defvar *strict-norepeat* nil)
 
+(defmacro with-temp-blit ((board unit pos rot)
+                          &body body)
+  (alexandria:with-gensyms (board-sym pos-sym rot-sym unit-sym)
+    `(let ((,board-sym ,board)
+           (,pos-sym ,pos)
+           (,rot-sym ,rot)
+           (,unit-sym ,unit))
+       (unwind-protect
+            (progn
+              (blit-unit :board ,board-sym
+                         :unit (second (translate-coords*
+                                        ,board-sym ,pos-sym
+                                        ,rot-sym ,unit-sym)))
+              ,@body)
+         (blit-unit :board ,board-sym
+                    :unit (second (translate-coords* ,board-sym ,pos-sym
+                                                     ,rot-sym ,unit-sym))
+                    :val 0)))))
+
 (defun board-hash (pos rot unit board)
   (if *strict-norepeat*
-      (unwind-protect
-           (progn
-             (blit-unit :board board
-                        :unit (second (translate-coords* board pos rot unit)))
-             ;; this is hackish, but I can't get sxhash to work the way I think
-             ;; it should with arrays and lists
-             (sxhash (princ-to-string board)))
-        (blit-unit :board board
-                   :unit (second (translate-coords* board pos rot unit))
-                   :val 0))
+      (with-temp-blit (board unit pos rot)
+        (sxhash (princ-to-string board)))
       nil))
 
 (defun cons-command (command path board unit)
