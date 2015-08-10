@@ -170,7 +170,7 @@
           (when (= 0 (bref board x y))
             (return))
           (finally (return t)))
-      (shift-board y :board board)
+      (shift-board (1- y) :board board)
       (clear-filled-rows :board board)
       (return))))
 
