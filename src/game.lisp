@@ -140,7 +140,8 @@
     (setf *seeds* (cdr (assoc :source-seeds data)))
 
     ;; Now, place the first unit
-    (setf *unit* (aref *unit-array* (funcall *rng*)))
+    (setf *unit* (aref *unit-array* (mod (funcall *rng*)
+                                         (length *unit-array*))))
     ;; Reset the command lists
     (setf *unit-command-list* nil
           *command-list* nil)))
