@@ -56,6 +56,11 @@
   (aref board y
         (mod (+ x (shift y)) (array-dimension board 1))))
 
+(defun board-search (board value &optional (test #'=))
+  (loop for i from 0 to (1- (first (board-dimensions *board*)))
+        for j from 0 to (1- (second (board-dimensions *board*)))
+	  thereis (funcall test (bref board i j) value)))
+
 (defun set-bref (board x y val)
   (setf
    (aref board y
@@ -205,8 +210,7 @@
 		     (cl-json:decode-json in)))
 	  (source-list (cdr (assoc :units problem)))
 	  (seeds (cdr (assoc :source-seeds problem)))
-	  (seed (progn
-		  (nth nth-seed seeds))))
+	  (seed (nth nth-seed seeds)))
 
      ;;looks weird but I need to make sure seed is valid before binding further
      (assert (not (null seed))
@@ -215,9 +219,9 @@
 
      (let*
 	 ((rng (lcg seed))
-	  (unit-play-list (construct-unit-from-json (loop for i in (funcall rng)
-							  for j from 0 to (length source-list)
-							  collect (nth (mod i (length source-list)) source-list))))
+	  (unit-play-list (mapcar #'construct-unit-from-json (loop for i = (funcall rng)
+								   for j from 0 to (length source-list)
+								   collect (nth (mod i (length source-list)) source-list))))
 	  (active-unit (pop unit-play-list))
 	  (submission-moves nil)
 	  (board (init-board problem))
@@ -226,15 +230,16 @@
 	  (svg-list nil)
 	  (end-game nil))
 
-
-       (blit-unit :board board :unit (second (translate-coords board
-							       active-unit-pos
-							       0
-							       active-unit)))
+       (let ((filled (translate-coords2 board
+					active-unit-pos
+					0
+					active-unit)))
+	 (if (eql filled 'oob)
+	     (setf end-game t)
+	     (blit-unit :board board :unit (second filled))))
        
        ;; loop while not end of game
-       (loop for move-record = '()
-	     while (null end-game)
+       (loop  while (null end-game)
 	 ;; find initial position then blit piece onto board.
 
 	     do (push (game-to-svg :board board :unit active-unit) svg-list)
@@ -245,18 +250,31 @@
 								   '())
 			   :value -1) ;subtract the current unit
 		
-	     do (blit-unit :board next-board :unit (position-unit2 next-board 
-								   active-unit
-								   active-unit-pos
-								   '(:se)))   ;add unit at new location
+	      do (let ((filled (position-unit2 next-board 
+					       active-unit
+					       active-unit-pos
+					       '(:se))))
+		   (if (eql filled 'oob)
+		       (setf end-game t)
+		       (blit-unit :board next-board :unit (second filled)))) ;add unit at new location
+		 
+	     do	(append '(:se) submission-moves)
 		
-	     
-	     )
-       
-       )
-     
-     
-     )
+		(when (board-search next-board 1 #'>)
+		  (progn
+		    (clear-filled-rows :board board)
+		    (let ((filled (translate-coords2 board
+						     (initial-position board (car unit-play-list))
+						     0
+						     (car unit-play-list))))
+		      (if (eql filled 'oob)
+			  (setf end-game t)
+			  (blit-unit :board board :unit (second filled))))
+		    (if (board-search board 1 #'>)
+			(setf end-game t)	;new piece is still locked, time to go
+			(setf active-unit (pop unit-play-list)) ;otherwise start playing with the new piece
+			)))
+	     finally (list seed submission-moves (reverse svg-list)))))
   ;;determine piece list
   ;; if nth-seed is not a real seed, error out
   ;; record real seed number for later submission
@@ -272,7 +290,6 @@
   ;;    check for cleared lines and clear them..
   ;;    place new piece
   ;;       if still locked, end game. return seed and moves list
-
   )
 
 (defun unit-dimensions (members)
@@ -365,6 +382,19 @@
                (error "Invalid state")
                (collect (list mem-x mem-y)))))))))
 
+(defun translate-coords2 (board pivot rot unit)
+  (let ((dim (board-dimensions board)))
+    (list
+     (vshift+ pivot)
+     (iter (for mem :in (members unit))
+       (destructuring-bind (mem-x mem-y)
+           (v+ pivot (apply-rotation mem rot pivot))
+         (let ((mem-x (+ mem-x (shift mem-y))))
+           (if (or (< mem-x 0) (>= mem-x (first dim))
+                   (< mem-y 0) (>= mem-y (second dim)))
+               'oob
+               (collect (list mem-x mem-y)))))))))
+
 (defun initial-position (board unit)
   ;; Initial position for unit
   (let ((dim (board-dimensions board))
@@ -409,7 +439,7 @@
         (:w (setf pos (v+ '(-1 0) pos)))
         (:se (setf pos (v+ '(0 1) pos)))
         (:sw (setf pos (v+ '(-1 1) pos)))))
-    (translate-coords board pos rot unit)))
+    (translate-coords2 board pos rot unit)))
 
 ;; This code applies a rotation.  You can derive this by algebra.  The tricky
 ;; part here is that shift of the indexes between the style that the spec uses
