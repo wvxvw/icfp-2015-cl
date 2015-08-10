@@ -313,6 +313,10 @@ the new command results in an error, the latest state will be \(C :ERROR NIL)."
 (defun mag-l1 (v)
   (reduce '+ (mapcar 'abs v)))
 
+(defun locked-top-p (path unit-pos)
+  (and (locked path)
+       (some 'zerop (mapcar 'second unit-pos))))
+
 (defun heuristic-score (board unit path ls-old)
   (float
    (+ (iter (for m :in

@@ -43,15 +43,11 @@
     (:name :submit
            :description "Submit solution instead of printing it."
            :short #\u
-           :long "submit"
-           :arg-parser #'identity
-           :meta-var "BOOLEAN")
+           :long "submit")
     (:name :dry-run
            :description "Only print the log, but not the results."
            :short #\d
-           :long "dry-run"
-           :arg-parser #'identity
-           :meta-var "BOOLEAN")
+           :long "dry-run")
     (:name :tag
            :description "Tag to use when submitting online."
            :short #\g
