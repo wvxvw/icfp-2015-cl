@@ -55,6 +55,9 @@
 (defvar *seeds* nil
   "All seeds associated with the current board.")
 
+(defvar *json-data* nil
+  "Pared JSON game data.")
+
 (defun shift (y) (floor y 2))
 
 (defun vshift- (v)
@@ -88,7 +91,7 @@
                                  (cdr (assoc :width json-data)))
                            :initial-element 0)))
     (iter (for cell :in (cdr (assoc :filled json-data)))
-      (setf (bref board (cdr (assoc :x cell)) (cdr (assoc :y cell))) 1))
+          (setf (bref board (cdr (assoc :x cell)) (cdr (assoc :y cell))) 1))
     board))
 
 (defclass game-state ()
@@ -114,6 +117,7 @@
                   (with-open-file (in file-or-data)
                     (cl-json:decode-json in))
                   file-or-data)))
+    (setf *json-data* data)
     (setf *board* (init-board data))
     (setf *unit-array*
           (iter (for unit :in (cdr (assoc :units data)))
@@ -182,6 +186,7 @@
 (defmethod reset-commands ((this listener)))
 
 (defun play-game (&optional listener)
+  (setf *board* (init-board *json-data*))
   (iter
     (repeat *source-length*)
     (for init-path := (initial-path *unit* *board*))
